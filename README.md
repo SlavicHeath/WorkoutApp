@@ -1,4 +1,7 @@
-# workoutpet
+# WorkoutPet
+
+Created by 
+- Slavic Heath
 
 A new Flutter project.
 
