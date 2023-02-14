@@ -5,6 +5,7 @@ Created by
 - Ryan Lehner
 - Mujuni Mutabiilwa
 - Sawyer Kent
+- Benjamin Williams
 
 A new Flutter project.
 
