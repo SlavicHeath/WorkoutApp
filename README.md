@@ -4,6 +4,7 @@ Created by
 - Slavic Heath
 - Ryan Lehner
 - Mujuni Mutabiilwa
+- Sawyer Kent
 
 A new Flutter project.
 
