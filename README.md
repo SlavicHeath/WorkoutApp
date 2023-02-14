@@ -1,4 +1,9 @@
-# workoutpet
+# WorkoutPet
+
+Created by 
+- Slavic Heath
+- Ryan Lehner
+- Mujuni Mutabiilwa
 
 A new Flutter project.
 
