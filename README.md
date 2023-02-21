@@ -1,7 +1,7 @@
 # WorkoutPet
 
 Created by 
-- Slavic Heath
+- Slavic Heath (User Sign Up), (User Sign in)
 - Ryan Lehner
 - Mujuni Mutabiilwa
 - Sawyer Kent
