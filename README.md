@@ -3,7 +3,7 @@
 Created by 
 - Slavic Heath (User Sign Up), (User Sign in)
 - Ryan Lehner
-- Mujuni Mutabiilwa (Workout Page)
+- Mujuni Mutabiilwa (Workout)
 - Sawyer Kent
 - Benjamin Williams
 
