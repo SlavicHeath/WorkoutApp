@@ -2,7 +2,7 @@
 
 Created by 
 - Slavic Heath (User Sign Up), (User Sign in)
-- Ryan Lehner
+- Ryan Lehner (Character)
 - Mujuni Mutabiilwa (Workout)
 - Sawyer Kent (Personal/User)
 - Benjamin Williams (Battle)
