@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'battle.dart';
 
 void main() {
   runApp(MaterialApp(title: "WorkoutPet", home: HomeScreen()));

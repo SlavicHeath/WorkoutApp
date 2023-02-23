@@ -5,7 +5,7 @@ Created by
 - Ryan Lehner
 - Mujuni Mutabiilwa (Workout)
 - Sawyer Kent (Personal/User)
-- Benjamin Williams
+- Benjamin Williams (Battle)
 
 A new Flutter project.
 
