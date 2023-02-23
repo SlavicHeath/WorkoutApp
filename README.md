@@ -4,7 +4,7 @@ Created by
 - Slavic Heath (User Sign Up), (User Sign in)
 - Ryan Lehner
 - Mujuni Mutabiilwa (Workout)
-- Sawyer Kent
+- Sawyer Kent (Personal/User)
 - Benjamin Williams (Battle)
 
 A new Flutter project.
