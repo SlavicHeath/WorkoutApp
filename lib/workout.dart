@@ -1,26 +1,109 @@
-class Workout {
-  /// A class representing muscle groups in addition to weight,
-  /// intensity and number of times workout was done.
+import 'package:flutter/material.dart';
 
-  String muscleGroup;
-  num weight;
-  String intensity;
-  num sets;
-  num reps;
-  num workoutNum;
+void main() => runApp(MyApp());
 
-  ///ID for workouts done each day
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
 
-  Workout(this.muscleGroup, this.weight, this.intensity, this.sets, this.reps,
-      this.workoutNum);
+  @override
+  State<MyApp> createState() => _MyAppState();
 }
 
-// A sample list of workouts.
-var SAMPLE_WORKOUTS = [
-  Workout("legs", 225, "high", 3, 5, 1),
-  Workout("arms", 35, "moderate", 4, 10, 1),
-  Workout("back", 110, "easy", 4, 10, 1),
+class _MyAppState extends State<MyApp> {
+  String buttonName = 'Arms';
 
-  ///Same sample but for the next day.
-  Workout("chest", 185, "moderate", 3, 5, 2),
-];
+  String butt2Name = 'Legs';
+
+  String butt3Name = 'Back';
+
+  String butt4Name = 'Chest';
+
+  int currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Center(child: Text('SELECT MUSCLE GROUP')),
+        ),
+        body: Center(
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Colors.black,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 100,
+                  width: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(buttonName),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
+                  width: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(butt2Name),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
+                  width: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(butt3Name),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
+                  width: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(butt4Name),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              label: 'Previous',
+              icon: Icon(Icons.arrow_back_ios_new_outlined),
+            ),
+            BottomNavigationBarItem(
+              label: 'Home',
+              icon: Icon(Icons.home),
+            )
+          ],
+          currentIndex: currentIndex,
+          onTap: (int index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+        ),
+      ),
+    );
+  }
+}
