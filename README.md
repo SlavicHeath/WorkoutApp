@@ -2,10 +2,10 @@
 
 Created by 
 - Slavic Heath (User Sign Up), (User Sign in)
-- Ryan Lehner
-- Mujuni Mutabiilwa (Workout Page)
-- Sawyer Kent
-- Benjamin Williams
+- Ryan Lehner (Character)
+- Mujuni Mutabiilwa (Workout)
+- Sawyer Kent (Personal/User)
+- Benjamin Williams (Battle)
 
 A new Flutter project.
 
