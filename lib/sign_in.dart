@@ -1,36 +1,36 @@
-// class User {
-//   String email;
-//   String password;
-
-//   User(this.email, this.password);
-// }
-
-// var USER_SAMPLE = [
-//   User(
-//     "firstSecond@gmail.com",
-//     "Password1234",
-//   ), //correct sample
-//   User(
-//     "",
-//     "Password1234",
-//   ), //Missing email
-//   User(
-//     "firstSecond@gmail.com",
-//     "",
-//   ), //Missing Password
-//   User("firstSecond@gmail.com",
-//       "1234"), //Password too short must be 8 characters
-//   User(
-//     "",
-//     "",
-//   ), //Missing all fields
-//   User("12345", "pass123") //Incorrect email
-// ];
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'main.dart';
+
+class User {
+  String email;
+  String password;
+
+  User(this.email, this.password);
+}
+
+var USER_SAMPLE = [
+  User(
+    "firstSecond@gmail.com",
+    "Password1234",
+  ), //correct sample
+  User(
+    "",
+    "Password1234",
+  ), //Missing email
+  User(
+    "firstSecond@gmail.com",
+    "",
+  ), //Missing Password
+  User("firstSecond@gmail.com",
+      "1234"), //Password too short must be 8 characters
+  User(
+    "",
+    "",
+  ), //Missing all fields
+  User("12345", "pass123") //Incorrect email
+];
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -119,12 +119,10 @@ class _LoginScreenState extends State<LoginScreen> {
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
 
-      // We need this next check to use the Navigator in an async method.
-      // It basically makes sure LoginScreen is still visible.
+      // Check to use the Navigator in an async method.
       if (!mounted) return;
 
-      // pop the navigation stack so people cannot "go back" to the login screen
-      // after logging in.
+      // pop the navigation stack so people cannot "go back" to the login screen after log in
       Navigator.of(context).pop();
       // Now go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
