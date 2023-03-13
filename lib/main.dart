@@ -5,6 +5,7 @@ import 'package:workoutpet/signup.dart';
 import 'battle.dart';
 import 'firebase_options.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
