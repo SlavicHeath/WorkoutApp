@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -200,7 +200,7 @@ class _ArmPageState extends State<ArmPage> {
             title: const Text('Enter Information below'),
             content: TextFormField(
                 autofocus: true,
-                decoration: InputDecoration(hintText: 'Enter Weight')),
+                decoration: const InputDecoration(hintText: 'Enter Weight')),
             actions: [
               TextButton(
                 child: const Text('SUBMIT'),
@@ -289,7 +289,7 @@ class _LegPageState extends State<LegPage> {
             title: const Text('Enter Information below'),
             content: TextFormField(
                 autofocus: true,
-                decoration: InputDecoration(hintText: 'Enter Weight')),
+                decoration: const InputDecoration(hintText: 'Enter Weight')),
             actions: [
               TextButton(
                 child: const Text('SUBMIT'),
@@ -378,7 +378,7 @@ class _BackPageState extends State<BackPage> {
             title: const Text('Enter Information below'),
             content: TextFormField(
                 autofocus: true,
-                decoration: InputDecoration(hintText: 'Enter Weight')),
+                decoration: const InputDecoration(hintText: 'Enter Weight')),
             actions: [
               TextButton(
                 child: const Text('SUBMIT'),
@@ -467,7 +467,7 @@ class _ChestPageState extends State<ChestPage> {
             title: const Text('Enter Information below'),
             content: TextFormField(
                 autofocus: true,
-                decoration: InputDecoration(hintText: 'Enter Weight')),
+                decoration: const InputDecoration(hintText: 'Enter Weight')),
             actions: [
               TextButton(
                 child: const Text('SUBMIT'),
