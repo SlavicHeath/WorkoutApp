@@ -90,7 +90,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => WorkoutPage()),
+                        builder: (context) => const WorkoutPage()),
                   );
                   if (_formKey.currentState!.validate()) {
                     _calculateBMI();
