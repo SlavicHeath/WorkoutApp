@@ -60,7 +60,7 @@ class CharacterScale extends Character {
 }
 
 class CharacterMult extends Character {
-  // lets the size of the character's body grow
+  // lets the size of the character's body grow for examples
   double legMult = 0.0;
   double chestMult = 0.0;
   double backMult = 0.0;
