@@ -1,5 +1,6 @@
 import 'dart:html';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/workout.dart';
 
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
@@ -83,6 +84,20 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 },
                 // ignore: prefer_const_constructors
                 child: Text('Calculate BMI'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => const WorkoutPage()),
+                  );
+                  if (_formKey.currentState!.validate()) {
+                    _calculateBMI();
+                  }
+                },
+                // ignore: prefer_const_constructors
+                child: Text('Next'),
               ),
               // ignore: prefer_const_constructors
               SizedBox(height: 16.0),

@@ -116,14 +116,14 @@ class _LoginScreenState extends State<LoginScreen> {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
 
-      print("Logged in ${credential.user}");
+      //print("Logged in ${credential.user}");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
 
       // Check to use the Navigator in an async method.
       if (!mounted) return;
-
       // pop the navigation stack so people cannot "go back" to the login screen after log in
+      Navigator.of(context).pop();
       Navigator.of(context).pop();
       // Now go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
