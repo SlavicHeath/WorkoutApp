@@ -1,7 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:workoutpet/personal.dart';
+
 
 void main() {
   runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
@@ -9,23 +8,6 @@ void main() {
 
 class HomeScreen extends StatelessWidget {
     const HomeScreen({super.key});
-=======
-import 'package:workoutpet/sign_in.dart';
-import 'package:workoutpet/signup.dart';
-import 'battle.dart';
-import 'firebase_options.dart';
-
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +25,8 @@ class HomeScreen extends StatelessWidget {
         child: Center(
 
           child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-=======
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
+          
             // Create button
             ElevatedButton(
               onPressed: () {
@@ -56,8 +37,8 @@ class HomeScreen extends StatelessWidget {
                       //The right side is the widget you want to go to
 
                       builder: (context) => const PersonalInfoPage()),
-=======
-                      builder: (context) => LoginScreen()),
+
+                  
 
                 );
               },
@@ -70,33 +51,11 @@ class HomeScreen extends StatelessWidget {
               ),
 
               child: const Text("Personal Information"),
-            ),
-         ]),
-        )
-      )
-=======
-              child: Text("LogIn"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      //The right side is the widget you want to go to
-                      builder: (context) => SignUpScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(200, 40),
-                backgroundColor: Colors.purple,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-              child: Text("SignUp"),
-            ),
-          ]),
+
+            )
+          ])
         ),
-      ),
+      )
     );
   }
 }
