@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => LoginScreen()),
+                        builder: (context) => PersonalInfoPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -85,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text("SignUp"),
+                child: Text("Personal"),
               ),
             ]),
           ),
