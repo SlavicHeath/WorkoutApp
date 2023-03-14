@@ -562,4 +562,3 @@ class _ChestPageState extends State<ChestPage> {
         )));
   }
 }
-
