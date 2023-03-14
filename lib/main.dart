@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
+import 'package:workoutpet/workout.dart';
 import 'battle.dart';
 import 'firebase_options.dart';
 
@@ -75,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => PersonalInfoPage()),
+                        builder: (context) => LoginScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -86,6 +87,23 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text("Personal"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => WorkoutPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Workout"),
               ),
             ]),
           ),
