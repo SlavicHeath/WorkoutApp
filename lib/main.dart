@@ -1,15 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'package:workoutpet/personal.dart';
-
-void main() {
-  runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
-}
-
-class HomeScreen extends StatelessWidget {
-    const HomeScreen({super.key});
-=======
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'battle.dart';
@@ -41,11 +31,7 @@ class HomeScreen extends StatelessWidget {
         //       image: AssetImage(""), fit: BoxFit.cover),
         // ),
         child: Center(
-
-          child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-=======
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-
             // Create button
             ElevatedButton(
               onPressed: () {
@@ -54,11 +40,7 @@ class HomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       //The right side is the widget you want to go to
-
-                      builder: (context) => const PersonalInfoPage()),
-=======
                       builder: (context) => LoginScreen()),
-
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -68,13 +50,6 @@ class HomeScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-
-              child: const Text("Personal Information"),
-            ),
-         ]),
-        )
-      )
-=======
               child: Text("LogIn"),
             ),
             ElevatedButton(
