@@ -22,14 +22,14 @@ class Battle {
   }
 }
 
-class BattleScreen extends StatefulWidget {
-  const BattleScreen({super.key});
+class BattleInitScreen extends StatefulWidget {
+  const BattleInitScreen({super.key});
   @override
   // ignore: library_private_types_in_public_api
-  _BattleScreenState createState() => _BattleScreenState();
+  _BattleInitScreenState createState() => _BattleInitScreenState();
 }
 
-class _BattleScreenState extends State<BattleScreen> {
+class _BattleInitScreenState extends State<BattleInitScreen> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController _healthController = TextEditingController();
@@ -49,6 +49,15 @@ class _BattleScreenState extends State<BattleScreen> {
       _botHealth = newBattle.botCharacter.health;
       _botStrength = newBattle.botCharacter.health;
     });
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MainBattleScreen(
+              battle: newBattle,
+              botHealth: _botHealth,
+              botStrength: _botStrength)),
+    );
   }
 
   @override
@@ -68,7 +77,7 @@ class _BattleScreenState extends State<BattleScreen> {
               TextFormField(
                 controller: _healthController,
                 decoration: const InputDecoration(
-                  labelText: 'User Health',
+                  labelText: 'User\'s Health',
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -82,7 +91,7 @@ class _BattleScreenState extends State<BattleScreen> {
               TextFormField(
                 controller: _strengthController,
                 decoration: const InputDecoration(
-                  labelText: 'Height (inch)',
+                  labelText: 'User\'s Strength',
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -103,10 +112,6 @@ class _BattleScreenState extends State<BattleScreen> {
               ),
               SizedBox(height: 16.0),
               // ignore: prefer_const_constructors
-              Text(
-                'Opp Health = $_botHealth, ',
-                style: TextStyle(fontSize: 20.0),
-              ),
             ],
           ),
         ),
@@ -115,6 +120,134 @@ class _BattleScreenState extends State<BattleScreen> {
   }
 }
 
+class MainBattleScreen extends StatefulWidget {
+  Battle battle;
+  int botHealth, botStrength;
+  MainBattleScreen(
+      {super.key,
+      required this.battle,
+      required this.botHealth,
+      required this.botStrength});
+  @override
+  _MainBattleScreenState createState() => _MainBattleScreenState(battle);
+}
+
+class _MainBattleScreenState extends State<MainBattleScreen> {
+  Battle battle;
+  _MainBattleScreenState(this.battle);
+
+  @override
+  Widget build(BuildContext context) {
+    int userCurHealth = battle.userCurHealth;
+    int botCurHealth = battle.botCurHealth;
+    int userStrength = battle.userCharacter.strength;
+    int botStrength = battle.botCharacter.strength;
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Battle'),
+          backgroundColor: Colors.purple,
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('HEALTH',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                        )),
+                  ),
+                  Expanded(
+                    child: Text('HEALTH',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                        )),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(child: SizedBox(height: 10.0)),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('$userCurHealth',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        )),
+                  ),
+                  Expanded(
+                    child: Text('$botCurHealth',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        )),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(child: SizedBox(height: 20.0)),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('STRENGTH',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                        )),
+                  ),
+                  Expanded(
+                    child: Text('STRENGTH',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                        )),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(child: SizedBox(height: 10.0)),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('$userStrength',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        )),
+                  ),
+                  Expanded(
+                    child: Text('$botStrength',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        )),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
+}
 /* battle examples do not work until character incorporates stats (health, strength, etc...)
 var battle = [
   //complete constructor

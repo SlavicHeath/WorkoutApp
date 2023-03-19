@@ -13,7 +13,6 @@ class battleCharacter {
 class Bot extends battleCharacter {
   //Health and strength are being stored here until they are incorporated
   //into the character class
-  var botCharacter;
 
   //Constructor passes in a user's health and strength in order to create an
   //opponent that possesses similar stats to the user and has character
@@ -27,15 +26,15 @@ class Bot extends battleCharacter {
     //varries only by 20% of the user's respective stat
     //Health:
     if (rand.nextInt(2) > 0) {
-      health = ((randMultiplier + 1) * healthTemplate) as int;
+      health = ((randMultiplier + 1) * healthTemplate).round();
     } else {
-      health = ((1 - randMultiplier) * healthTemplate) as int;
+      health = ((1 - randMultiplier) * healthTemplate).round();
     }
     //Strength:
     if (rand.nextInt(2) > 0) {
-      strength = ((randMultiplier + 1) * strengthTemplate) as int;
+      strength = ((randMultiplier + 1) * strengthTemplate).round();
     } else {
-      strength = ((1 - randMultiplier) * strengthTemplate) as int;
+      strength = ((1 - randMultiplier) * strengthTemplate).round();
     }
 
     //opponent will have images based on their strength once images are created
