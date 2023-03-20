@@ -5,6 +5,7 @@ import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'package:workoutpet/workout.dart';
 import 'battle.dart';
+import 'database_test.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -104,6 +105,40 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text("Workout"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => DataWrite()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Add Data to Database"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => DataRead()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Read Data to Database"),
               ),
             ]),
           ),
