@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
 
   String butt4Name = 'Chest';
 
-  int currentIndex = 0;
+  int currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   String butt4Name = 'Chest';
 
-  int currentIndex = 0;
+  int currentIndex = 1;
 
   final ButtonStyle workoutButton = ElevatedButton.styleFrom(
       backgroundColor: Colors.red,
@@ -81,128 +81,103 @@ class _WorkoutPageState extends State<WorkoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: currentIndex == 1
-            ? const Center(child: Text('SELECT MUSCLE GROUP'))
-            : const SizedBox(),
-      ),
+      appBar: AppBar(title: const Center(child: Text('SELECT MUSCLE GROUP'))),
       body: Center(
-        child: currentIndex == 1
-            ? Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 100,
-                      width: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: workoutButton,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return const ArmPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: Text(buttonName,
-                              style: const TextStyle(color: Colors.black)),
-                        ),
+          child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 100,
+              width: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: workoutButton,
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const ArmPage();
+                        },
                       ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: workoutButton,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return const LegPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: Text(butt2Name,
-                              style: const TextStyle(color: Colors.black)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: workoutButton,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return const BackPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: Text(butt3Name,
-                              style: const TextStyle(color: Colors.black)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: workoutButton,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return const ChestPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: Text(butt4Name,
-                              style: const TextStyle(color: Colors.black)),
-                        ),
-                      ),
-                    ),
-                  ],
+                    );
+                  },
+                  child: Text(buttonName,
+                      style: const TextStyle(color: Colors.black)),
                 ),
-              )
-            : const SizedBox(),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            label: 'Previous',
-            icon: Icon(Icons.arrow_back_ios_new_outlined),
-          ),
-          BottomNavigationBarItem(
-            label: 'Workouts',
-            icon: Icon(Icons.workspaces_sharp),
-          )
-        ],
-        currentIndex: currentIndex,
-        onTap: (int index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-      ),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              width: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: workoutButton,
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const LegPage();
+                        },
+                      ),
+                    );
+                  },
+                  child: Text(butt2Name,
+                      style: const TextStyle(color: Colors.black)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              width: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: workoutButton,
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const BackPage();
+                        },
+                      ),
+                    );
+                  },
+                  child: Text(butt3Name,
+                      style: const TextStyle(color: Colors.black)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              width: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: workoutButton,
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const ChestPage();
+                        },
+                      ),
+                    );
+                  },
+                  child: Text(butt4Name,
+                      style: const TextStyle(color: Colors.black)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      )),
     );
   }
 }
@@ -220,17 +195,43 @@ class _ArmPageState extends State<ArmPage> {
   String armName3 = 'Shoulders';
 
   Future openDialog() => showDialog(
+        //pop up dialog for when user presses one of the specific muscle buttons
         context: context,
         builder: (context) => AlertDialog(
-            title: const Text('Enter Information below'),
-            content: TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Enter Weight')),
+            title: const Text('Enter workout information'),
+            content: Column(children: [
+              // creates a list of textfields
+              TextFormField(
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Name*')),
+              TextFormField(
+                  //optional textfield to enter name of workout (if user wants to keep track of such information)
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Weight (lbs)')),
+              TextFormField(
+                  //enter the weight
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Sets')),
+              TextFormField(
+                  //enter amount of reps
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Reps'))
+            ]),
             actions: [
               TextButton(
-                child: const Text('SUBMIT'),
+                child: const Text(
+                    'CANCEL'), //User presses this button to cancel/back out if they desire
                 onPressed: () {
                   Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                    //User presses this button to submit valid information
+                    'SUBMIT'),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(); //action that allows user to return to specific muscle group screen
                 },
               )
             ]),
@@ -309,17 +310,43 @@ class _LegPageState extends State<LegPage> {
   String legName3 = 'Calves';
 
   Future openDialog() => showDialog(
+        //pop up dialog for when user presses one of the specific muscle buttons
         context: context,
         builder: (context) => AlertDialog(
-            title: const Text('Enter Information below'),
-            content: TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Enter Weight')),
+            title: const Text('Enter workout information'),
+            content: Column(children: [
+              // creates a list of textfields
+              TextFormField(
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Name*')),
+              TextFormField(
+                  //optional textfield to enter name of workout (if user wants to keep track of such information)
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Weight (lbs)')),
+              TextFormField(
+                  //enter the weight
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Sets')),
+              TextFormField(
+                  //enter amount of reps
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Reps'))
+            ]),
             actions: [
               TextButton(
-                child: const Text('SUBMIT'),
+                child: const Text(
+                    'CANCEL'), //User presses this button to cancel/back out if they desire
                 onPressed: () {
                   Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                    //User presses this button to submit valid information
+                    'SUBMIT'),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(); //action that allows user to return to specific muscle group screen
                 },
               )
             ]),
@@ -398,17 +425,43 @@ class _BackPageState extends State<BackPage> {
   String backName3 = 'Lower Back';
 
   Future openDialog() => showDialog(
+        //pop up dialog for when user presses one of the specific muscle buttons
         context: context,
         builder: (context) => AlertDialog(
-            title: const Text('Enter Information below'),
-            content: TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Enter Weight')),
+            title: const Text('Enter workout information'),
+            content: Column(children: [
+              // creates a list of textfields
+              TextFormField(
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Name*')),
+              TextFormField(
+                  //optional textfield to enter name of workout (if user wants to keep track of such information)
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Weight (lbs)')),
+              TextFormField(
+                  //enter the weight
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Sets')),
+              TextFormField(
+                  //enter amount of reps
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Reps'))
+            ]),
             actions: [
               TextButton(
-                child: const Text('SUBMIT'),
+                child: const Text(
+                    'CANCEL'), //User presses this button to cancel/back out if they desire
                 onPressed: () {
                   Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                    //User presses this button to submit valid information
+                    'SUBMIT'),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(); //action that allows user to return to specific muscle group screen
                 },
               )
             ]),
@@ -487,17 +540,43 @@ class _ChestPageState extends State<ChestPage> {
   String chestName3 = 'Lower Chest';
 
   Future openDialog() => showDialog(
+        //pop up dialog for when user presses one of the specific muscle buttons
         context: context,
         builder: (context) => AlertDialog(
-            title: const Text('Enter Information below'),
-            content: TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Enter Weight')),
+            title: const Text('Enter workout information'),
+            content: Column(children: [
+              // creates a list of textfields
+              TextFormField(
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Name*')),
+              TextFormField(
+                  //optional textfield to enter name of workout (if user wants to keep track of such information)
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Weight (lbs)')),
+              TextFormField(
+                  //enter the weight
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Sets')),
+              TextFormField(
+                  //enter amount of reps
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: 'Reps'))
+            ]),
             actions: [
               TextButton(
-                child: const Text('SUBMIT'),
+                child: const Text(
+                    'CANCEL'), //User presses this button to cancel/back out if they desire
                 onPressed: () {
                   Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                    //User presses this button to submit valid information
+                    'SUBMIT'),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(); //action that allows user to return to specific muscle group screen
                 },
               )
             ]),
