@@ -73,15 +73,18 @@ class _WorkoutPageState extends State<WorkoutPage> {
   int currentIndex = 1;
 
   final ButtonStyle workoutButton = ElevatedButton.styleFrom(
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.black,
+      backgroundColor: Colors.purple,
+      foregroundColor: Colors.white,
       shape: const StadiumBorder(),
       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Center(child: Text('SELECT MUSCLE GROUP'))),
+      appBar: AppBar(
+        title: const Center(child: Text('SELECT MUSCLE GROUP')),
+        backgroundColor: Colors.purple,
+      ),
       body: Center(
           child: Container(
         height: double.infinity,
@@ -108,7 +111,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     );
                   },
                   child: Text(buttonName,
-                      style: const TextStyle(color: Colors.black)),
+                      style: const TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -129,7 +132,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     );
                   },
                   child: Text(butt2Name,
-                      style: const TextStyle(color: Colors.black)),
+                      style: const TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -150,7 +153,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     );
                   },
                   child: Text(butt3Name,
-                      style: const TextStyle(color: Colors.black)),
+                      style: const TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -171,7 +174,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     );
                   },
                   child: Text(butt4Name,
-                      style: const TextStyle(color: Colors.black)),
+                      style: const TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -193,6 +196,12 @@ class _ArmPageState extends State<ArmPage> {
   String armName1 = 'Biceps';
   String armName2 = 'Triceps';
   String armName3 = 'Shoulders';
+
+  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
+      backgroundColor: Colors.purple,
+      foregroundColor: Colors.white,
+      shape: const StadiumBorder(),
+      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
 
   Future openDialog() => showDialog(
         //pop up dialog for when user presses one of the specific muscle buttons
@@ -242,52 +251,56 @@ class _ArmPageState extends State<ArmPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('ARMS')),
+          backgroundColor: Colors.purple,
         ),
         body: Center(
             child: Container(
           height: double.infinity,
           width: double.infinity,
           color: Colors.white,
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(armName1),
+                    child: Center(child: Text(armName1)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(armName2),
+                    child: Center(child: Text(armName2)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(armName3),
+                    child: Center(child: Text(armName3)),
                   ),
                 ),
               )
@@ -308,6 +321,12 @@ class _LegPageState extends State<LegPage> {
   String legName1 = 'Quads';
   String legName2 = 'Glutes/Hamstring';
   String legName3 = 'Calves';
+
+  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
+      backgroundColor: Colors.purple,
+      foregroundColor: Colors.white,
+      shape: const StadiumBorder(),
+      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
 
   Future openDialog() => showDialog(
         //pop up dialog for when user presses one of the specific muscle buttons
@@ -357,52 +376,56 @@ class _LegPageState extends State<LegPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('LEGS')),
+          backgroundColor: Colors.purple,
         ),
         body: Center(
             child: Container(
           height: double.infinity,
           width: double.infinity,
-          color: Colors.black,
-          child: Row(
+          color: Colors.white,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(legName1),
+                    child: Center(child: Text(legName1)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(legName2),
+                    child: Center(child: Text(legName2)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(legName3),
+                    child: Center(child: Text(legName3)),
                   ),
                 ),
               )
@@ -423,6 +446,12 @@ class _BackPageState extends State<BackPage> {
   String backName1 = 'Upper Back';
   String backName2 = 'Middle Back';
   String backName3 = 'Lower Back';
+
+  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
+      backgroundColor: Colors.purple,
+      foregroundColor: Colors.white,
+      shape: const StadiumBorder(),
+      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
 
   Future openDialog() => showDialog(
         //pop up dialog for when user presses one of the specific muscle buttons
@@ -477,47 +506,50 @@ class _BackPageState extends State<BackPage> {
             child: Container(
           height: double.infinity,
           width: double.infinity,
-          color: Colors.black,
-          child: Row(
+          color: Colors.white,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(backName1),
+                    child: Center(child: Text(backName1)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(backName2),
+                    child: Center(child: Text(backName2)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(backName3),
+                    child: Center(child: Text(backName3)),
                   ),
                 ),
               )
@@ -538,6 +570,12 @@ class _ChestPageState extends State<ChestPage> {
   String chestName1 = 'Upper Chest';
   String chestName2 = 'Middle Chest';
   String chestName3 = 'Lower Chest';
+
+  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
+      backgroundColor: Colors.purple,
+      foregroundColor: Colors.white,
+      shape: const StadiumBorder(),
+      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
 
   Future openDialog() => showDialog(
         //pop up dialog for when user presses one of the specific muscle buttons
@@ -592,47 +630,50 @@ class _ChestPageState extends State<ChestPage> {
             child: Container(
           height: double.infinity,
           width: double.infinity,
-          color: Colors.black,
-          child: Row(
+          color: Colors.white,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(chestName1),
+                    child: Center(child: Text(chestName1)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(chestName2),
+                    child: Center(child: Text(chestName2)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
                       openDialog();
                     },
-                    child: Text(chestName3),
+                    child: Center(child: Text(chestName3)),
                   ),
                 ),
               )
