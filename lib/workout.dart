@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Workout {
   /// A class representing muscle groups in addition to weight,
@@ -185,7 +187,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 }
 
-class ArmPage extends StatefulWidget {
+class ArmPage extends WorkoutPage {
   const ArmPage({super.key});
 
   @override
@@ -501,6 +503,7 @@ class _BackPageState extends State<BackPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('BACK')),
+          backgroundColor: Colors.purple,
         ),
         body: Center(
             child: Container(
@@ -570,6 +573,12 @@ class _ChestPageState extends State<ChestPage> {
   String chestName1 = 'Upper Chest';
   String chestName2 = 'Middle Chest';
   String chestName3 = 'Lower Chest';
+  int? weight;
+  int? sets;
+  int? reps;
+  String? workoutName;
+
+  final _formKey = GlobalKey<FormState>();
 
   final ButtonStyle workoutButton = ElevatedButton.styleFrom(
       backgroundColor: Colors.purple,
@@ -581,43 +590,80 @@ class _ChestPageState extends State<ChestPage> {
         //pop up dialog for when user presses one of the specific muscle buttons
         context: context,
         builder: (context) => AlertDialog(
-            title: const Text('Enter workout information'),
-            content: Column(children: [
+          title: const Text('Enter workout information'),
+          content: Form(
+            key: _formKey,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // creates a list of textfields
               TextFormField(
                   autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Name*')),
+                  decoration: const InputDecoration(hintText: 'Name'),
+                  onChanged: (value) => workoutName = value,
+                  validator: (value) {
+                    // Check for weight input
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter name of workout';
+                    }
+                    return null;
+                  }),
               TextFormField(
                   //optional textfield to enter name of workout (if user wants to keep track of such information)
                   autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Weight (lbs)')),
+                  decoration: const InputDecoration(hintText: 'Weight (lbs)'),
+                  onChanged: (value) => workoutName = value,
+                  validator: (value) {
+                    // Check for weight input
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the weight';
+                    }
+                    return null;
+                  }),
               TextFormField(
                   //enter the weight
                   autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Sets')),
+                  decoration: const InputDecoration(hintText: 'Sets'),
+                  validator: (value) {
+                    // Check for empty value for sets
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the amount of sets';
+                    }
+                    return null;
+                  }),
               TextFormField(
                   //enter amount of reps
                   autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Reps'))
+                  decoration: const InputDecoration(hintText: 'Reps'),
+                  validator: (value) {
+                    // Checks for empty value of reps
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the number of reps';
+                    }
+                    return null;
+                  }),
             ]),
-            actions: [
-              TextButton(
-                child: const Text(
-                    'CANCEL'), //User presses this button to cancel/back out if they desire
-                onPressed: () {
+          ),
+          actions: [
+            TextButton(
+              child: const Text(
+                  'CANCEL'), //User presses this button to cancel/back out if they desire
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                  //User presses this button to submit valid information
+                  'SUBMIT'),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
                   Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text(
-                    //User presses this button to submit valid information
-                    'SUBMIT'),
-                onPressed: () {
-                  Navigator.of(context)
-                      .pop(); //action that allows user to return to specific muscle group screen
-                },
-              )
-            ]),
+                }
+              },
+              //action that allows user to return to specific muscle group screen
+            )
+          ],
+        ),
       );
 
   @override
@@ -625,6 +671,7 @@ class _ChestPageState extends State<ChestPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('CHEST')),
+          backgroundColor: Colors.purple,
         ),
         body: Center(
             child: Container(

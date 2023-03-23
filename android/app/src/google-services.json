@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "564336449826",
+    "project_id": "workoutpet",
+    "storage_bucket": "workoutpet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564336449826:android:a811e93efba5b9f57d6d7b",
+        "android_client_info": {
+          "package_name": "com.example.workoutpet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564336449826-vhkc8rs1fsejtpgpu2eoen5j9b5ti93a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHvChbHAiHyQPp2Rt7j6icZlo5X3KKyIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564336449826-vhkc8rs1fsejtpgpu2eoen5j9b5ti93a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "564336449826-opsob62kji9jfu0k0urkakcv0ujpum6g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.workoutpet"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
