@@ -1,26 +1,6 @@
 import 'dart:html';
 import 'package:flutter/material.dart';
-
-//class Personal {
- //   double PersonalWeight;
-  //  double PersonalHeight;
-  //  Personal(this.PersonalWeight,this.PersonalHeight);
-
-//}
-
-//var personal_sample = [
-  //Personal(155.5 , 70), // sample of personal data that is correct
-
-  //Personal(130, 6), // sample of personal data that is incorrect by including feeet and inches
-
- // Personal(5.5, 60), // sample of personal data that is imcomplete
-
- // Personal(45, 0), //sample of personal data that is incomplete
-
-  //Personal(5, 5), //Sample of data with both fields that are incomplete
-// ];
-
-
+import 'package:workoutpet/main.dart';
 
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
@@ -53,6 +33,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       _bmiResult = bmi;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,25 +101,56 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       ),
     );
   }
+ // final PerosonalUser = <String, String>{
+ // "Weight": _weightController.text,
+ // "Height": _heightController.text,
+ // "BMI": _bmiResult
+//};
+
+//db
+  //  .collection("PersonalUser")
+  //  .doc("Weight")
+  //  .set(Weight)
+  //  .onError((e, _) => print("Error writing document: $e"));
+// 
+@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("WorkoutPet"),
+        backgroundColor: Colors.purple,
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(8),
+        // decoration: const BoxDecoration(
+        //   image: DecorationImage(
+        //       image: AssetImage(""), fit: BoxFit.cover),
+        // ),
+        child: Center(
+          child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            // Create button
+            ElevatedButton(
+              onPressed: () {
+                // Pushes on a stack for back arrow button to form
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      //The right side is the widget you want to go to
+                      builder: (context) => HomeScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(200, 40),
+                backgroundColor: Colors.purple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text("HomeScreen"),
+            )
+          ])
+        )
+      )
+    );
+  }
 }
-class personal {
-  double personalWeight;
-  double personalHeight;
-  personal(this.personalWeight, this.personalHeight);
-}
-
-var personal_sample = [
-  personal(155.5, 70), // sample of personal data that is correct
-
-  personal(130,
-      65), // sample of personal data that is incorrect by including feeet and inches
-
-  personal(0, 60), // sample of personal data that is imcomplete
-
-  personal(145, 0), //sample of personal data that is incomplete
-
-  personal(0, 0), //Sample of data with both fields that are incomplete
-
-  personal(145,
-      71) //Sample of Data is that is complete and correct (should debate whether real or int )
-];
