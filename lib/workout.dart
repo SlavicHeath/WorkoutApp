@@ -876,10 +876,10 @@ final _formKey = GlobalKey<FormState>();
 
 //Controllers for each text field in pop up
 
-TextEditingController field1 = new TextEditingController();
-TextEditingController field2 = new TextEditingController();
-TextEditingController field3 = new TextEditingController();
-TextEditingController field4 = new TextEditingController();
+TextEditingController field1 = TextEditingController();
+TextEditingController field2 = TextEditingController();
+TextEditingController field3 = TextEditingController();
+TextEditingController field4 = TextEditingController();
 
 void submitinfo() {
   // this is how we will save the inputted data to firebase
@@ -891,5 +891,10 @@ void submitinfo() {
     "sets": int.parse(field3.text),
     "reps": int.parse(field4.text)
   };
-  FirebaseFirestore.instance.collection("workout information").add(data);
+  FirebaseFirestore.instance
+      .collection("workout information")
+      .add(data)
+      .then((value) => print(" Information added"))
+      .catchError((error) => print("Failed to add: $error"));
+  ;
 }
