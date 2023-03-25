@@ -2,31 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Workout {
-  /// A class representing muscle groups in addition to weight,
-  /// intensity and number of times workout was done.
-  String muscleGroup;
-  num weight;
-  String intensity;
-  num sets;
-  num reps;
-  num workoutNum;
-
-  ///ID for workouts done each day
-  Workout(this.muscleGroup, this.weight, this.intensity, this.sets, this.reps,
-      this.workoutNum);
-}
-
-// A sample list of workouts.
-var SAMPLE_WORKOUTS = [
-  Workout("legs", 225, "high", 3, 5, 1),
-  Workout("arms", 35, "moderate", 4, 10, 1),
-  Workout("back", 110, "easy", 4, 10, 1),
-
-  ///Same sample but for the next day.
-  Workout("chest", 185, "moderate", 3, 5, 2),
-];
-
 void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
@@ -37,16 +12,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String buttonName = 'Arms';
-
-  String butt2Name = 'Legs';
-
-  String butt3Name = 'Back';
-
-  String butt4Name = 'Chest';
-
-  int currentIndex = 1;
-
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -64,22 +29,6 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  String buttonName = 'Arms';
-
-  String butt2Name = 'Legs';
-
-  String butt3Name = 'Back';
-
-  String butt4Name = 'Chest';
-
-  int currentIndex = 1;
-
-  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
-      backgroundColor: Colors.purple,
-      foregroundColor: Colors.white,
-      shape: const StadiumBorder(),
-      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,14 +150,6 @@ class _ArmPageState extends State<ArmPage> {
 
   String? workoutName;
 
-  final _formKey = GlobalKey<FormState>();
-
-  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
-      backgroundColor: Colors.purple,
-      foregroundColor: Colors.white,
-      shape: const StadiumBorder(),
-      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
-
   Future openDialog() => showDialog(
         //pop up dialog for when user presses one of the specific muscle buttons
         context: context,
@@ -222,12 +163,14 @@ class _ArmPageState extends State<ArmPage> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // creates a list of textfields
               TextFormField(
+                controller: field1,
                 //optional textfield to enter name of workout (if user wants to keep track of such information)
                 autofocus: true,
                 decoration: const InputDecoration(hintText: 'Name*'),
                 onChanged: (value) => workoutName = value,
               ),
               TextFormField(
+                  controller: field2,
                   keyboardType:
                       TextInputType.number, //eliminates confusion of typing
                   //in letters(strings) rather integers
@@ -246,6 +189,7 @@ class _ArmPageState extends State<ArmPage> {
                     return null;
                   }),
               TextFormField(
+                  controller: field3,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -261,6 +205,7 @@ class _ArmPageState extends State<ArmPage> {
                     return null;
                   }),
               TextFormField(
+                  controller: field4,
                   //enter amount of reps
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
@@ -295,6 +240,7 @@ class _ArmPageState extends State<ArmPage> {
                 if (_formKey.currentState!.validate()) {
                   //if user submissions are valid, saves information to data
                   //and allows user to move on to next input/next screen
+                  submitinfo();
                   Navigator.of(context).pop();
                 }
               },
@@ -384,12 +330,6 @@ class _LegPageState extends State<LegPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
-      backgroundColor: Colors.purple,
-      foregroundColor: Colors.white,
-      shape: const StadiumBorder(),
-      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
-
   Future openDialog() => showDialog(
         //pop up dialog for when user presses one of the specific muscle buttons
         context: context,
@@ -403,12 +343,14 @@ class _LegPageState extends State<LegPage> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // creates a list of textfields
               TextFormField(
+                controller: field1,
                 //optional textfield to enter name of workout (if user wants to keep track of such information)
                 autofocus: true,
                 decoration: const InputDecoration(hintText: 'Name*'),
                 onChanged: (value) => workoutName = value,
               ),
               TextFormField(
+                  controller: field2,
                   keyboardType:
                       TextInputType.number, //eliminates confusion of typing
                   //in letters(strings) rather integers
@@ -427,6 +369,7 @@ class _LegPageState extends State<LegPage> {
                     return null;
                   }),
               TextFormField(
+                  controller: field3,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -442,6 +385,7 @@ class _LegPageState extends State<LegPage> {
                     return null;
                   }),
               TextFormField(
+                  controller: field4,
                   //enter amount of reps
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
@@ -476,6 +420,7 @@ class _LegPageState extends State<LegPage> {
                 if (_formKey.currentState!.validate()) {
                   //if user submissions are valid, saves information to data
                   //and allows user to move on to next input/next screen
+                  submitinfo();
                   Navigator.of(context).pop();
                 }
               },
@@ -562,17 +507,6 @@ class _BackPageState extends State<BackPage> {
   String backName3 = 'Lower Back';
 
   String? workoutName;
-  String? workoutWeight;
-  String? workoutReps;
-  String? workoutSets;
-
-  final _formKey = GlobalKey<FormState>();
-
-  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
-      backgroundColor: Colors.purple,
-      foregroundColor: Colors.white,
-      shape: const StadiumBorder(),
-      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
 
   Future openDialog() => showDialog(
         //pop up dialog for when user presses one of the specific muscle buttons
@@ -587,12 +521,14 @@ class _BackPageState extends State<BackPage> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // creates a list of textfields
               TextFormField(
+                controller: field1,
                 //optional textfield to enter name of workout (if user wants to keep track of such information)
                 autofocus: true,
                 decoration: const InputDecoration(hintText: 'Name*'),
                 onChanged: (value) => workoutName = value,
               ),
               TextFormField(
+                  controller: field2,
                   keyboardType:
                       TextInputType.number, //eliminates confusion of typing
                   //in letters(strings) rather integers
@@ -611,6 +547,7 @@ class _BackPageState extends State<BackPage> {
                     return null;
                   }),
               TextFormField(
+                  controller: field3,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -626,6 +563,7 @@ class _BackPageState extends State<BackPage> {
                     return null;
                   }),
               TextFormField(
+                  controller: field4,
                   //enter amount of reps
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
@@ -660,6 +598,7 @@ class _BackPageState extends State<BackPage> {
                 if (_formKey.currentState!.validate()) {
                   //if user submissions are valid, saves information to data
                   //and allows user to move on to next input/next screen
+                  submitinfo();
                   Navigator.of(context).pop();
                 }
               },
@@ -746,17 +685,9 @@ class _ChestPageState extends State<ChestPage> {
   String chestName3 = 'Lower Chest';
 
   String? workoutName;
-  String? workoutWeight;
-  String? workoutReps;
-  String? workoutSets;
-
-  final _formKey = GlobalKey<FormState>();
-
-  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
-      backgroundColor: Colors.purple,
-      foregroundColor: Colors.white,
-      shape: const StadiumBorder(),
-      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+  int? workoutWeight;
+  int? workoutReps;
+  int? workoutSets;
 
   CollectionReference workouts =
       FirebaseFirestore.instance.collection('workout information');
@@ -774,12 +705,14 @@ class _ChestPageState extends State<ChestPage> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // creates a list of textfields
               TextFormField(
+                controller: field1,
                 //optional textfield to enter name of workout (if user wants to keep track of such information)
                 autofocus: true,
                 decoration: const InputDecoration(hintText: 'Name*'),
                 onChanged: (value) => workoutName = value,
               ),
               TextFormField(
+                  controller: field2,
                   keyboardType:
                       TextInputType.number, //eliminates confusion of typing
                   //in letters(strings) rather integers
@@ -798,6 +731,7 @@ class _ChestPageState extends State<ChestPage> {
                     return null;
                   }),
               TextFormField(
+                  controller: field3,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -813,6 +747,7 @@ class _ChestPageState extends State<ChestPage> {
                     return null;
                   }),
               TextFormField(
+                  controller: field4,
                   //enter amount of reps
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
@@ -820,9 +755,6 @@ class _ChestPageState extends State<ChestPage> {
                   ],
                   autofocus: true,
                   decoration: const InputDecoration(hintText: 'Reps'),
-                  onChanged: (value) {
-                    workoutName = value;
-                  },
                   validator: (value) {
                     // Checks for empty value of reps
                     if (value == null || value.isEmpty) {
@@ -846,13 +778,13 @@ class _ChestPageState extends State<ChestPage> {
               child: const Text(
                   //User presses this button to submit valid information
                   'SUBMIT'),
-              onPressed: () async {
-                await workouts.add({
-                  'name': workoutName,
-                  'weight': workoutWeight,
-                  'sets': workoutSets,
-                  'reps': workoutReps
-                }).then((value) => print('User added'));
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  //if user submissions are valid, saves information to data
+                  //and allows user to move on to next input/next screen
+                  submitinfo();
+                  Navigator.of(context).pop();
+                }
               },
               //action that allows user to return to specific muscle group screen
             )
@@ -922,4 +854,42 @@ class _ChestPageState extends State<ChestPage> {
           ),
         )));
   }
+}
+
+String buttonName = 'Arms';
+
+String butt2Name = 'Legs';
+
+String butt3Name = 'Back';
+
+String butt4Name = 'Chest';
+
+int currentIndex = 1;
+
+final ButtonStyle workoutButton = ElevatedButton.styleFrom(
+    backgroundColor: Colors.purple,
+    foregroundColor: Colors.white,
+    shape: const StadiumBorder(),
+    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+
+final _formKey = GlobalKey<FormState>();
+
+//Controllers for each text field in pop up
+
+TextEditingController field1 = new TextEditingController();
+TextEditingController field2 = new TextEditingController();
+TextEditingController field3 = new TextEditingController();
+TextEditingController field4 = new TextEditingController();
+
+void submitinfo() {
+  // this is how we will save the inputted data to firebase
+  // method is referenced in openDialog code for when submit is pressed
+
+  Map<String, dynamic> data = {
+    "name": field1.text,
+    "weight": int.parse(field2.text),
+    "sets": int.parse(field3.text),
+    "reps": int.parse(field4.text)
+  };
+  FirebaseFirestore.instance.collection("workout information").add(data);
 }
