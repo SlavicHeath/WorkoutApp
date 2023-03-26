@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutpet/personal.dart';
-import 'package:workoutpet/prevWorkout.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'package:workoutpet/workout.dart';

@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,107 +33,133 @@ class WorkoutPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text('SELECT MUSCLE GROUP')),
-        backgroundColor: Colors.purple,
-      ),
-      body: Center(
-          child: Container(
-        height: double.infinity,
-        width: double.infinity,
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 100,
-              width: 200,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  style: workoutButton,
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const ArmPage();
-                        },
-                      ),
-                    );
-                  },
-                  child: Text(buttonName,
-                      style: const TextStyle(color: Colors.white)),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 100,
-              width: 200,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  style: workoutButton,
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const LegPage();
-                        },
-                      ),
-                    );
-                  },
-                  child: Text(butt2Name,
-                      style: const TextStyle(color: Colors.white)),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 100,
-              width: 200,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  style: workoutButton,
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const BackPage();
-                        },
-                      ),
-                    );
-                  },
-                  child: Text(butt3Name,
-                      style: const TextStyle(color: Colors.white)),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 100,
-              width: 200,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  style: workoutButton,
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const ChestPage();
-                        },
-                      ),
-                    );
-                  },
-                  child: Text(butt4Name,
-                      style: const TextStyle(color: Colors.white)),
-                ),
-              ),
-            ),
-          ],
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Center(child: Text('SELECT MUSCLE GROUP')),
+          backgroundColor: Colors.purple,
         ),
-      )),
+        body: Center(
+            child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return PrevWorkPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: const Center(
+                      child: Text('PAST WORKOUTS',
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const ArmPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(buttonName,
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const LegPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(butt2Name,
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const BackPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(butt3Name,
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const ChestPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(butt4Name,
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )),
+      ),
     );
   }
 }
@@ -147,108 +175,6 @@ class _ArmPageState extends State<ArmPage> {
   String armName1 = 'Biceps';
   String armName2 = 'Triceps';
   String armName3 = 'Shoulders';
-
-  String? workoutName;
-
-  Future openDialog() => showDialog(
-        //pop up dialog for when user presses one of the specific muscle buttons
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Enter workout information'),
-          content: Form(
-            //Code to display a form style which also allows user
-            //to enter information as well as an optional name for workout
-            key: _formKey,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // creates a list of textfields
-              TextFormField(
-                controller: field1,
-                //optional textfield to enter name of workout (if user wants to keep track of such information)
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Name*'),
-                onChanged: (value) => workoutName = value,
-              ),
-              TextFormField(
-                  controller: field2,
-                  keyboardType:
-                      TextInputType.number, //eliminates confusion of typing
-                  //in letters(strings) rather integers
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(
-                        r'[0-9]')), //eliminates any chance of negative numbers being inputted
-                  ],
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Weight (lbs)'),
-                  onChanged: (value) => workoutName = value,
-                  validator: (value) {
-                    // Check for weight input
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the weight';
-                    }
-                    return null;
-                  }),
-              TextFormField(
-                  controller: field3,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  //enter the weight
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Sets'),
-                  validator: (value) {
-                    // Check for empty value for sets
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the amount of sets';
-                    }
-                    return null;
-                  }),
-              TextFormField(
-                  controller: field4,
-                  //enter amount of reps
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Reps'),
-                  validator: (value) {
-                    // Checks for empty value of reps
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the number of reps';
-                    }
-                    return null;
-                  }),
-            ]),
-          ),
-          actions: [
-            //allows user to submit information or cancel if they choose to go back
-            TextButton(
-              child: const Text(
-                  'CANCEL'), //User presses this button to cancel/back out if they desire
-              onPressed: () {
-                Navigator.of(context)
-                    .pop(); //pops the form field and user can return to muscle group screen
-              },
-            ),
-            TextButton(
-              child: const Text(
-                  //User presses this button to submit valid information
-                  'SUBMIT'),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  //if user submissions are valid, saves information to data
-                  //and allows user to move on to next input/next screen
-                  submitinfo();
-                  Navigator.of(context).pop();
-                }
-              },
-              //action that allows user to return to specific muscle group screen
-            )
-          ],
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -274,7 +200,7 @@ class _ArmPageState extends State<ArmPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(armName1)),
                   ),
@@ -288,7 +214,7 @@ class _ArmPageState extends State<ArmPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(armName2)),
                   ),
@@ -302,7 +228,7 @@ class _ArmPageState extends State<ArmPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(armName3)),
                   ),
@@ -325,110 +251,6 @@ class _LegPageState extends State<LegPage> {
   String legName1 = 'Quads';
   String legName2 = 'Glutes/Hamstring';
   String legName3 = 'Calves';
-
-  String? workoutName;
-
-  final _formKey = GlobalKey<FormState>();
-
-  Future openDialog() => showDialog(
-        //pop up dialog for when user presses one of the specific muscle buttons
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Enter workout information'),
-          content: Form(
-            //Code to display a form style which also allows user
-            //to enter information as well as an optional name for workout
-            key: _formKey,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // creates a list of textfields
-              TextFormField(
-                controller: field1,
-                //optional textfield to enter name of workout (if user wants to keep track of such information)
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Name*'),
-                onChanged: (value) => workoutName = value,
-              ),
-              TextFormField(
-                  controller: field2,
-                  keyboardType:
-                      TextInputType.number, //eliminates confusion of typing
-                  //in letters(strings) rather integers
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(
-                        r'[0-9]')), //eliminates any chance of negative numbers being inputted
-                  ],
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Weight (lbs)'),
-                  onChanged: (value) => workoutName = value,
-                  validator: (value) {
-                    // Check for weight input
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the weight';
-                    }
-                    return null;
-                  }),
-              TextFormField(
-                  controller: field3,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  //enter the weight
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Sets'),
-                  validator: (value) {
-                    // Check for empty value for sets
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the amount of sets';
-                    }
-                    return null;
-                  }),
-              TextFormField(
-                  controller: field4,
-                  //enter amount of reps
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Reps'),
-                  validator: (value) {
-                    // Checks for empty value of reps
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the number of reps';
-                    }
-                    return null;
-                  }),
-            ]),
-          ),
-          actions: [
-            //allows user to submit information or cancel if they choose to go back
-            TextButton(
-              child: const Text(
-                  'CANCEL'), //User presses this button to cancel/back out if they desire
-              onPressed: () {
-                Navigator.of(context)
-                    .pop(); //pops the form field and user can return to muscle group screen
-              },
-            ),
-            TextButton(
-              child: const Text(
-                  //User presses this button to submit valid information
-                  'SUBMIT'),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  //if user submissions are valid, saves information to data
-                  //and allows user to move on to next input/next screen
-                  submitinfo();
-                  Navigator.of(context).pop();
-                }
-              },
-              //action that allows user to return to specific muscle group screen
-            )
-          ],
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -454,7 +276,7 @@ class _LegPageState extends State<LegPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(legName1)),
                   ),
@@ -468,7 +290,7 @@ class _LegPageState extends State<LegPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(legName2)),
                   ),
@@ -482,7 +304,7 @@ class _LegPageState extends State<LegPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(legName3)),
                   ),
@@ -508,106 +330,6 @@ class _BackPageState extends State<BackPage> {
 
   String? workoutName;
 
-  Future openDialog() => showDialog(
-        //pop up dialog for when user presses one of the specific muscle buttons
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Enter workout information'),
-          content: Form(
-            //Code to display a form style which also allows user
-            //to enter information as well as an optional name for workout
-            key: _formKey,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // creates a list of textfields
-              TextFormField(
-                controller: field1,
-                //optional textfield to enter name of workout (if user wants to keep track of such information)
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Name*'),
-                onChanged: (value) => workoutName = value,
-              ),
-              TextFormField(
-                  controller: field2,
-                  keyboardType:
-                      TextInputType.number, //eliminates confusion of typing
-                  //in letters(strings) rather integers
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(
-                        r'[0-9]')), //eliminates any chance of negative numbers being inputted
-                  ],
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Weight (lbs)'),
-                  onChanged: (value) => workoutName = value,
-                  validator: (value) {
-                    // Check for weight input
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the weight';
-                    }
-                    return null;
-                  }),
-              TextFormField(
-                  controller: field3,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  //enter the weight
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Sets'),
-                  validator: (value) {
-                    // Check for empty value for sets
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the amount of sets';
-                    }
-                    return null;
-                  }),
-              TextFormField(
-                  controller: field4,
-                  //enter amount of reps
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Reps'),
-                  validator: (value) {
-                    // Checks for empty value of reps
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the number of reps';
-                    }
-                    return null;
-                  }),
-            ]),
-          ),
-          actions: [
-            //allows user to submit information or cancel if they choose to go back
-            TextButton(
-              child: const Text(
-                  'CANCEL'), //User presses this button to cancel/back out if they desire
-              onPressed: () {
-                Navigator.of(context)
-                    .pop(); //pops the form field and user can return to muscle group screen
-              },
-            ),
-            TextButton(
-              child: const Text(
-                  //User presses this button to submit valid information
-                  'SUBMIT'),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  //if user submissions are valid, saves information to data
-                  //and allows user to move on to next input/next screen
-                  submitinfo();
-                  Navigator.of(context).pop();
-                }
-              },
-              //action that allows user to return to specific muscle group screen
-            )
-          ],
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -632,7 +354,7 @@ class _BackPageState extends State<BackPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(backName1)),
                   ),
@@ -646,7 +368,7 @@ class _BackPageState extends State<BackPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(backName2)),
                   ),
@@ -660,7 +382,7 @@ class _BackPageState extends State<BackPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(backName3)),
                   ),
@@ -684,113 +406,8 @@ class _ChestPageState extends State<ChestPage> {
   String chestName2 = 'Middle Chest';
   String chestName3 = 'Lower Chest';
 
-  String? workoutName;
-  int? workoutWeight;
-  int? workoutReps;
-  int? workoutSets;
-
   CollectionReference workouts =
       FirebaseFirestore.instance.collection('workout information');
-
-  Future openDialog() => showDialog(
-        //pop up dialog for when user presses one of the specific muscle buttons
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Enter workout information'),
-          content: Form(
-            //Code to display a form style which also allows user
-            //to enter information as well as an optional name for workout
-            key: _formKey,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // creates a list of textfields
-              TextFormField(
-                controller: field1,
-                //optional textfield to enter name of workout (if user wants to keep track of such information)
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Name*'),
-                onChanged: (value) => workoutName = value,
-              ),
-              TextFormField(
-                  controller: field2,
-                  keyboardType:
-                      TextInputType.number, //eliminates confusion of typing
-                  //in letters(strings) rather integers
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(
-                        r'[0-9]')), //eliminates any chance of negative numbers being inputted
-                  ],
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Weight (lbs)'),
-                  onChanged: (value) => workoutName = value,
-                  validator: (value) {
-                    // Check for weight input
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the weight';
-                    }
-                    return null;
-                  }),
-              TextFormField(
-                  controller: field3,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  //enter the weight
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Sets'),
-                  validator: (value) {
-                    // Check for empty value for sets
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the amount of sets';
-                    }
-                    return null;
-                  }),
-              TextFormField(
-                  controller: field4,
-                  //enter amount of reps
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  autofocus: true,
-                  decoration: const InputDecoration(hintText: 'Reps'),
-                  validator: (value) {
-                    // Checks for empty value of reps
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the number of reps';
-                    }
-                    return null;
-                  }),
-            ]),
-          ),
-          actions: [
-            //allows user to submit information or cancel if they choose to go back
-            TextButton(
-              child: const Text(
-                  'CANCEL'), //User presses this button to cancel/back out if they desire
-              onPressed: () {
-                Navigator.of(context)
-                    .pop(); //pops the form field and user can return to muscle group screen
-              },
-            ),
-            TextButton(
-              child: const Text(
-                  //User presses this button to submit valid information
-                  'SUBMIT'),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  //if user submissions are valid, saves information to data
-                  //and allows user to move on to next input/next screen
-                  submitinfo();
-                  Navigator.of(context).pop();
-                }
-              },
-              //action that allows user to return to specific muscle group screen
-            )
-          ],
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -816,7 +433,7 @@ class _ChestPageState extends State<ChestPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(chestName1)),
                   ),
@@ -830,7 +447,7 @@ class _ChestPageState extends State<ChestPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(chestName2)),
                   ),
@@ -844,7 +461,7 @@ class _ChestPageState extends State<ChestPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
                     child: Center(child: Text(chestName3)),
                   ),
@@ -856,6 +473,58 @@ class _ChestPageState extends State<ChestPage> {
   }
 }
 
+class PrevWorkPage extends StatefulWidget {
+  PrevWorkPage({super.key});
+
+  @override
+  _PrevWorkPageState createState() => _PrevWorkPageState();
+}
+
+class _PrevWorkPageState extends State<PrevWorkPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('PREVIOUS WORKOUTS'),
+        backgroundColor: Colors.purple,
+      ),
+      body: StreamBuilder(
+        //Calls into firebase to retrieve data from workout info document
+        stream: FirebaseFirestore.instance
+            .collection('workout information')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            // Will prompt user that there's no data therefore no previous workouts
+            return const Center(
+              child: Text('There are no previous workouts'),
+            );
+          }
+          return ListView(
+            children: snapshot.data!.docs.map((document) {
+              return Card(
+                child: ListTile(
+                  //displays previous workouts in a tile list format
+                  autofocus: true,
+                  leading: Text(document['name']),
+                  title: Text(
+                      '${document['sets']}'), // $ allows integer data to be read in
+                  subtitle: Text('${document['reps']}'),
+                  trailing: Text('${document['weight']}'),
+                ),
+              );
+            }).toList(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+//Buttons for original workout page
+
 String buttonName = 'Arms';
 
 String butt2Name = 'Legs';
@@ -866,6 +535,7 @@ String butt4Name = 'Chest';
 
 int currentIndex = 1;
 
+//Button layout for each button utilized in workout
 final ButtonStyle workoutButton = ElevatedButton.styleFrom(
     backgroundColor: Colors.purple,
     foregroundColor: Colors.white,
@@ -896,5 +566,111 @@ void submitinfo() {
       .add(data)
       .then((value) => print(" Information added"))
       .catchError((error) => print("Failed to add: $error"));
-  ;
 }
+
+String?
+    workoutName; // used to reset text field for name when entering new workout
+
+Future openDialog(context) => showDialog(
+      context: context,
+      //pop up dialog for when user presses one of the specific muscle buttons
+      builder: (context) => AlertDialog(
+        title: const Text('Enter workout information'),
+        content: Form(
+          //Code to display a form style which also allows user
+          //to enter information as well as an optional name for workout
+          key: _formKey,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // creates a list of textfields
+            TextFormField(
+              controller: field1,
+              //optional textfield to enter name of workout (if user wants to keep track of such information)
+              autofocus: true,
+              decoration: const InputDecoration(hintText: 'Name*'),
+              onChanged: (value) => workoutName = value,
+            ),
+            TextFormField(
+                controller: field2,
+                keyboardType:
+                    TextInputType.number, //eliminates confusion of typing
+                //in letters(strings) rather integers
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(
+                      r'[0-9]')), //eliminates any chance of negative numbers being inputted
+                ],
+                autofocus: true,
+                decoration: const InputDecoration(hintText: 'Weight (lbs)'),
+                validator: (value) {
+                  // Check for weight input
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the weight';
+                  }
+                  return null;
+                }),
+            TextFormField(
+                controller: field3,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                ],
+                //enter the weight
+                autofocus: true,
+                decoration: const InputDecoration(hintText: 'Sets'),
+                validator: (value) {
+                  // Check for empty value for sets
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the amount of sets';
+                  }
+                  return null;
+                }),
+            TextFormField(
+                controller: field4,
+                //enter amount of reps
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                ],
+                autofocus: true,
+                decoration: const InputDecoration(hintText: 'Reps'),
+                validator: (value) {
+                  // Checks for empty value of reps
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the number of reps';
+                  }
+                  return null;
+                }),
+          ]),
+        ),
+        actions: [
+          //allows user to submit information or cancel if they choose to go back
+          TextButton(
+            child: const Text(
+                'CANCEL'), //User presses this button to cancel/back out if they desire
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(); //pops the form field and user can return to muscle group screen
+            },
+          ),
+          TextButton(
+            child: const Text(
+                //User presses this button to submit valid information
+                'SUBMIT'),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                //if user submissions are valid, saves information to database
+                //and allows user to move on to next input/next screen
+                submitinfo();
+                Navigator.of(context).pop();
+                SnackBar mySnack = const SnackBar(
+                    content: Text(
+                        'Information Saved!'), //Displays confirmation message once user submits information on bottom of screen
+                    backgroundColor: Colors.green);
+                ScaffoldMessenger.of(context).showSnackBar(mySnack);
+              }
+            },
+            //action that allows user to return to specific muscle group screen
+          )
+        ],
+      ),
+    );
