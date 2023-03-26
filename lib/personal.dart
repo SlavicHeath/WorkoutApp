@@ -1,6 +1,20 @@
-import 'dart:html';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:workoutpet/main.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+// ignore: deprecated_member_use
+final databaseReference = FirebaseDatabase.instance.reference();
+
+// ignore: non_constant_identifier_names
+void writeUserData(Double Weight, Double Height, Double BMI) {
+  databaseReference.child('users').push().set({
+    'Weight': Weight,
+    'Height': Height,
+    'BMI': BMI,
+  });
+}
 
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
@@ -82,6 +96,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   if (_formKey.currentState!.validate()) {
                     _calculateBMI();
                   }
+                  () => writeUserData(_heightController as Double, _weightController as Double, _bmiResult as Double);
                 },
                 // ignore: prefer_const_constructors
                 child: Text('Calculate BMI'),
@@ -101,7 +116,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       ),
     );
   }
- // final PerosonalUser = <String, String>{
+}
+
+ // fi
+ //nal PerosonalUser = <String, String>{
  // "Weight": _weightController.text,
  // "Height": _heightController.text,
  // "BMI": _bmiResult
@@ -112,45 +130,4 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   //  .doc("Weight")
   //  .set(Weight)
   //  .onError((e, _) => print("Error writing document: $e"));
-// 
-@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("WorkoutPet"),
-        backgroundColor: Colors.purple,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(8),
-        // decoration: const BoxDecoration(
-        //   image: DecorationImage(
-        //       image: AssetImage(""), fit: BoxFit.cover),
-        // ),
-        child: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            // Create button
-            ElevatedButton(
-              onPressed: () {
-                // Pushes on a stack for back arrow button to form
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      //The right side is the widget you want to go to
-                      builder: (context) => HomeScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(200, 40),
-                backgroundColor: Colors.purple,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-              child: Text("HomeScreen"),
-            )
-          ])
-        )
-      )
-    );
-  }
-}
+//

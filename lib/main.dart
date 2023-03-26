@@ -4,6 +4,7 @@ import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'battle.dart';
 import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,4 +74,10 @@ class HomeScreen extends StatelessWidget {
       )
     );
   }
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+}
 }
