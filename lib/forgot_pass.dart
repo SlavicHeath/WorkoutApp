@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutpet/main.dart';
+import 'package:workoutpet/sign_in.dart';
 
 class User {
   String email;
@@ -23,7 +26,6 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPassword extends State<ForgotPassword> {
   String? email;
-  String? password;
   String? error;
   final _formKey = GlobalKey<FormState>();
 
@@ -31,7 +33,7 @@ class _ForgotPassword extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Log in Page"),
+        title: Text("Forgot Password"),
         backgroundColor: Colors.purple,
       ),
       body: Container(
@@ -64,7 +66,7 @@ class _ForgotPassword extends State<ForgotPassword> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // This calls all validators() inside the form for us.
-                      tryLogin();
+                      passwordReset();
                     }
                   }),
               if (error != null)
@@ -81,23 +83,30 @@ class _ForgotPassword extends State<ForgotPassword> {
 
 // Forgot Password
 
-  void tryLogin() async {
+  void passwordReset() async {
     try {
       final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email!, password: password!);
-
-      print("Logged in ${credential.user}");
+          .sendPasswordResetEmail(email: email.toString());
+      const snackbar = SnackBar(
+        content: Text("Email sent"),
+        backgroundColor: Colors.green,
+        elevation: 10,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(5),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      print("Email Sent to ${email}");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
 
-      // Check to use the Navigator in an async method.
+      // // Check to use the Navigator in an async method.
       if (!mounted) return;
 
       // pop the navigation stack so people cannot "go back" to the login screen after log in
       Navigator.of(context).pop();
       // Now go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
+        builder: (context) => const LoginScreen(),
       ));
     } on FirebaseAuthException catch (e) {
       // Exceptions are raised if the Firebase Auth service

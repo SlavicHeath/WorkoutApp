@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/forgot_pass.dart';
 import 'package:workoutpet/personal.dart';
 import 'main.dart';
 
@@ -99,6 +100,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       tryLogin();
                     }
                   }),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => ForgotPassword()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Forgot Password"),
+              ),
               if (error != null)
                 Text(
                   "Error: $error",
