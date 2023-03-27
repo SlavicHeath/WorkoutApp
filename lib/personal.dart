@@ -7,7 +7,7 @@ import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-=======
+
 import 'package:flutter/material.dart';
 
 
@@ -110,9 +110,15 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   //User presses this button to submit valid information
                   'SUBMIT'),
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  addPersonalData(_weightController.text.trim(), _heightController.text.trim(), bmiResult.toString());
-                }
+                FirebaseFirestore.instance
+                .collection('personal')
+                .add({'weight': _weightController.text,
+                'height': _heightController.text,
+                'bmi': bmiResult})
+                .then((value) => print("added"))
+                .catchError((error) => print("Failed to add: $error"));
+                //addPersonalData(_weightController.text.trim(), _heightController.text.trim(), bmiResult.toString());
+                
               },
               )
             ], 
@@ -123,7 +129,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 }
 
-=======
+
 
 class personal {
   double personalWeight;
@@ -133,10 +139,10 @@ class personal {
 
 
 
-CollectionReference personal = FirebaseFirestore.instance.collection('Personal information');
+CollectionReference personal1 = FirebaseFirestore.instance.collection('Personal information');
 
-// Creates the addpersonalData Method to add personal
-Future addPersonalData(String weight, String height,String bmi) async {
+ //Creates the addpersonalData Method to add personal
+addPersonalData(String weight, String height,String bmi) async {
   await FirebaseFirestore.instance.collection('users').add({
     'Weight': weight,
     'Height': height,
