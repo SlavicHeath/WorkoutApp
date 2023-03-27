@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/personal.dart';
 import 'main.dart';
 
 class User {
@@ -126,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.of(context).pop();
       // Now go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
+        builder: (context) => const PersonalInfoPage(),
       ));
     } on FirebaseAuthException catch (e) {
       // Exceptions are raised if the Firebase Auth service

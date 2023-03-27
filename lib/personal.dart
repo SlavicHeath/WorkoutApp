@@ -1,10 +1,14 @@
 
 
+
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+=======
+import 'package:flutter/material.dart';
 
 
 class PersonalInfoPage extends StatefulWidget {
@@ -118,6 +122,15 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     );
   }
 }
+
+=======
+
+class personal {
+  double personalWeight;
+  double personalHeight;
+  personal(this.personalWeight, this.personalHeight);
+}
+
 
 
 CollectionReference personal = FirebaseFirestore.instance.collection('Personal information');
