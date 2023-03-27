@@ -1,20 +1,11 @@
-import 'dart:ffi';
+
 
 import 'package:flutter/material.dart';
-import 'package:workoutpet/main.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-// ignore: deprecated_member_use
-final databaseReference = FirebaseDatabase.instance.reference();
 
-// ignore: non_constant_identifier_names
-void writeUserData(Double Weight, Double Height, Double BMI) {
-  databaseReference.child('users').push().set({
-    'Weight': Weight,
-    'Height': Height,
-    'BMI': BMI,
-  });
-}
 
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
@@ -29,7 +20,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   TextEditingController _weightController = TextEditingController();
   // ignore: prefer_final_fields
   TextEditingController _heightController = TextEditingController();
-  double _bmiResult = 0.0;
+  double bmiResult = 0.0;
+
+
 
   void _calculateBMI() {
     double weight = double.tryParse(_weightController.text) ?? 0.0;
@@ -37,17 +30,16 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
 
     if (weight <= 0 || height <= 0) {
       setState(() {
-        _bmiResult = 0.0;
+        bmiResult = 0.0;
       });
       return;
     }
 
     double bmi = (weight * 703) / (height * height);
     setState(() {
-      _bmiResult = bmi;
+      bmiResult = bmi;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +88,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   if (_formKey.currentState!.validate()) {
                     _calculateBMI();
                   }
-                  () => writeUserData(_heightController as Double, _weightController as Double, _bmiResult as Double);
                 },
                 // ignore: prefer_const_constructors
                 child: Text('Calculate BMI'),
@@ -104,13 +95,23 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
               // ignore: prefer_const_constructors
               SizedBox(height: 16.0),
               Text(
-                _bmiResult == 0.0
+                bmiResult == 0.0
                     ? 'Please enter your weight and height'
-                    : 'Your BMI is ${_bmiResult.toStringAsFixed(1)}',
+                    : 'Your BMI is ${bmiResult.toStringAsFixed(1)}',
                 // ignore: prefer_const_constructors
                 style: TextStyle(fontSize: 20.0),
               ),
-            ],
+              TextButton(
+              child: const Text(
+                  //User presses this button to submit valid information
+                  'SUBMIT'),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  addPersonalData(_weightController.text.trim(), _heightController.text.trim(), bmiResult.toString());
+                }
+              },
+              )
+            ], 
           ),
         ),
       ),
@@ -118,16 +119,15 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 }
 
- // fi
- //nal PerosonalUser = <String, String>{
- // "Weight": _weightController.text,
- // "Height": _heightController.text,
- // "BMI": _bmiResult
-//};
 
-//db
-  //  .collection("PersonalUser")
-  //  .doc("Weight")
-  //  .set(Weight)
-  //  .onError((e, _) => print("Error writing document: $e"));
-//
+CollectionReference personal = FirebaseFirestore.instance.collection('Personal information');
+
+// Creates the addpersonalData Method to add personal
+Future addPersonalData(String weight, String height,String bmi) async {
+  await FirebaseFirestore.instance.collection('users').add({
+    'Weight': weight,
+    'Height': height,
+    'BMI': bmi
+  });
+}
+

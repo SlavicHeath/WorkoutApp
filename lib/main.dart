@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'battle.dart';
 import 'firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +18,7 @@ void main() async {
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       //The right side is the widget you want to go to
-                      builder: (context) => LoginScreen()),
+                      builder: (context) => PersonalInfoPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -74,10 +77,4 @@ class HomeScreen extends StatelessWidget {
       )
     );
   }
-
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-}
 }
