@@ -1,29 +1,6 @@
 import 'package:flutter/material.dart';
-
-class Workout {
-  /// A class representing muscle groups in addition to weight,
-  /// intensity and number of times workout was done.
-  String muscleGroup;
-  num weight;
-  String intensity;
-  num sets;
-  num reps;
-  num workoutNum;
-
-  ///ID for workouts done each day
-  Workout(this.muscleGroup, this.weight, this.intensity, this.sets, this.reps,
-      this.workoutNum);
-}
-
-// A sample list of workouts.
-var SAMPLE_WORKOUTS = [
-  Workout("legs", 225, "high", 3, 5, 1),
-  Workout("arms", 35, "moderate", 4, 10, 1),
-  Workout("back", 110, "easy", 4, 10, 1),
-
-  ///Same sample but for the next day.
-  Workout("chest", 185, "moderate", 3, 5, 2),
-];
+import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(const MyApp());
 
@@ -35,16 +12,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String buttonName = 'Arms';
-
-  String butt2Name = 'Legs';
-
-  String butt3Name = 'Back';
-
-  String butt4Name = 'Chest';
-
-  int currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -62,152 +29,140 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  String buttonName = 'Arms';
-
-  String butt2Name = 'Legs';
-
-  String butt3Name = 'Back';
-
-  String butt4Name = 'Chest';
-
-  int currentIndex = 0;
-
-  final ButtonStyle workoutButton = ElevatedButton.styleFrom(
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.black,
-      shape: const StadiumBorder(),
-      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: currentIndex == 1
-            ? const Center(child: Text('SELECT MUSCLE GROUP'))
-            : const SizedBox(),
-      ),
-      body: Center(
-        child: currentIndex == 1
-            ? Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 100,
-                      width: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: workoutButton,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return const ArmPage();
-                                },
-                              ),
-                            );
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Center(child: Text('SELECT MUSCLE GROUP')),
+          backgroundColor: Colors.purple,
+        ),
+        body: Center(
+            child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return PrevWorkPage();
                           },
-                          child: Text(buttonName,
-                              style: const TextStyle(color: Colors.black)),
                         ),
-                      ),
+                      );
+                    },
+                    child: const Center(
+                      child: Text('PAST WORKOUTS',
+                          style: TextStyle(color: Colors.white)),
                     ),
-                    SizedBox(
-                      height: 100,
-                      width: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: workoutButton,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return const LegPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: Text(butt2Name,
-                              style: const TextStyle(color: Colors.black)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: workoutButton,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return const BackPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: Text(butt3Name,
-                              style: const TextStyle(color: Colors.black)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: workoutButton,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return const ChestPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: Text(butt4Name,
-                              style: const TextStyle(color: Colors.black)),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              )
-            : const SizedBox(),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            label: 'Previous',
-            icon: Icon(Icons.arrow_back_ios_new_outlined),
+              ),
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const ArmPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(buttonName,
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const LegPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(butt2Name,
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const BackPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(butt3Name,
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: workoutButton,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const ChestPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(butt4Name,
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            label: 'Workouts',
-            icon: Icon(Icons.workspaces_sharp),
-          )
-        ],
-        currentIndex: currentIndex,
-        onTap: (int index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+        )),
       ),
     );
   }
 }
 
-class ArmPage extends StatefulWidget {
+class ArmPage extends WorkoutPage {
   const ArmPage({super.key});
 
   @override
@@ -219,74 +174,61 @@ class _ArmPageState extends State<ArmPage> {
   String armName2 = 'Triceps';
   String armName3 = 'Shoulders';
 
-  Future openDialog() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-            title: const Text('Enter Information below'),
-            content: TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Enter Weight')),
-            actions: [
-              TextButton(
-                child: const Text('SUBMIT'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ]),
-      );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('ARMS')),
+          backgroundColor: Colors.purple,
         ),
         body: Center(
             child: Container(
           height: double.infinity,
           width: double.infinity,
           color: Colors.white,
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(armName1),
+                    child: Center(child: Text(armName1)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(armName2),
+                    child: Center(child: Text(armName2)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(armName3),
+                    child: Center(child: Text(armName3)),
                   ),
                 ),
               )
@@ -308,74 +250,61 @@ class _LegPageState extends State<LegPage> {
   String legName2 = 'Glutes/Hamstring';
   String legName3 = 'Calves';
 
-  Future openDialog() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-            title: const Text('Enter Information below'),
-            content: TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Enter Weight')),
-            actions: [
-              TextButton(
-                child: const Text('SUBMIT'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ]),
-      );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('LEGS')),
+          backgroundColor: Colors.purple,
         ),
         body: Center(
             child: Container(
           height: double.infinity,
           width: double.infinity,
-          color: Colors.black,
-          child: Row(
+          color: Colors.white,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(legName1),
+                    child: Center(child: Text(legName1)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(legName2),
+                    child: Center(child: Text(legName2)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(legName3),
+                    child: Center(child: Text(legName3)),
                   ),
                 ),
               )
@@ -397,74 +326,63 @@ class _BackPageState extends State<BackPage> {
   String backName2 = 'Middle Back';
   String backName3 = 'Lower Back';
 
-  Future openDialog() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-            title: const Text('Enter Information below'),
-            content: TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Enter Weight')),
-            actions: [
-              TextButton(
-                child: const Text('SUBMIT'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ]),
-      );
+  String? workoutName;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('BACK')),
+          backgroundColor: Colors.purple,
         ),
         body: Center(
             child: Container(
           height: double.infinity,
           width: double.infinity,
-          color: Colors.black,
-          child: Row(
+          color: Colors.white,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(backName1),
+                    child: Center(child: Text(backName1)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(backName2),
+                    child: Center(child: Text(backName2)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(backName3),
+                    child: Center(child: Text(backName3)),
                   ),
                 ),
               )
@@ -486,74 +404,64 @@ class _ChestPageState extends State<ChestPage> {
   String chestName2 = 'Middle Chest';
   String chestName3 = 'Lower Chest';
 
-  Future openDialog() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-            title: const Text('Enter Information below'),
-            content: TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Enter Weight')),
-            actions: [
-              TextButton(
-                child: const Text('SUBMIT'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ]),
-      );
+  CollectionReference workouts =
+      FirebaseFirestore.instance.collection('workout information');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('CHEST')),
+          backgroundColor: Colors.purple,
         ),
         body: Center(
             child: Container(
           height: double.infinity,
           width: double.infinity,
-          color: Colors.black,
-          child: Row(
+          color: Colors.white,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(chestName1),
+                    child: Center(child: Text(chestName1)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(chestName2),
+                    child: Center(child: Text(chestName2)),
                   ),
                 ),
               ),
               SizedBox(
                 height: 75,
-                width: 110,
+                width: 140,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: workoutButton,
                     onPressed: () {
-                      openDialog();
+                      openDialog(context);
                     },
-                    child: Text(chestName3),
+                    child: Center(child: Text(chestName3)),
                   ),
                 ),
               )
@@ -562,3 +470,205 @@ class _ChestPageState extends State<ChestPage> {
         )));
   }
 }
+
+class PrevWorkPage extends StatefulWidget {
+  PrevWorkPage({super.key});
+
+  @override
+  _PrevWorkPageState createState() => _PrevWorkPageState();
+}
+
+class _PrevWorkPageState extends State<PrevWorkPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('PREVIOUS WORKOUTS'),
+        backgroundColor: Colors.purple,
+      ),
+      body: StreamBuilder(
+        //Calls into firebase to retrieve data from workout info document
+        stream: FirebaseFirestore.instance
+            .collection('workout information')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            // Will prompt user that there's no data therefore no previous workouts
+            return const Center(
+              child: Text('There are no previous workouts'),
+            );
+          }
+          return ListView(
+            children: snapshot.data!.docs.map((document) {
+              return Card(
+                child: ListTile(
+                  //displays previous workouts in a tile list format
+                  autofocus: true,
+                  leading: Text(document['name']),
+                  title: Text(
+                      '${document['sets']}'), // $ allows integer data to be read in
+                  subtitle: Text('${document['reps']}'),
+                  trailing: Text('${document['weight']}'),
+                ),
+              );
+            }).toList(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+//Buttons for original workout page
+
+String buttonName = 'Arms';
+
+String butt2Name = 'Legs';
+
+String butt3Name = 'Back';
+
+String butt4Name = 'Chest';
+
+int currentIndex = 1;
+
+//Button layout for each button utilized in workout
+final ButtonStyle workoutButton = ElevatedButton.styleFrom(
+    backgroundColor: Colors.purple,
+    foregroundColor: Colors.white,
+    shape: const StadiumBorder(),
+    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+
+final _formKey = GlobalKey<FormState>();
+
+//Controllers for each text field in pop up
+
+TextEditingController field1 = TextEditingController();
+TextEditingController field2 = TextEditingController();
+TextEditingController field3 = TextEditingController();
+TextEditingController field4 = TextEditingController();
+
+void submitinfo() {
+  // this is how we will save the inputted data to firebase
+  // method is referenced in openDialog code for when submit is pressed
+
+  Map<String, dynamic> data = {
+    "name": field1.text,
+    "weight": int.parse(field2.text),
+    "sets": int.parse(field3.text),
+    "reps": int.parse(field4.text)
+  };
+  FirebaseFirestore.instance
+      .collection("workout information")
+      .add(data)
+      .then((value) => print(" Information added"))
+      .catchError((error) => print("Failed to add: $error"));
+}
+
+String?
+    workoutName; // used to reset text field for name when entering new workout
+
+Future openDialog(context) => showDialog(
+      context: context,
+      //pop up dialog for when user presses one of the specific muscle buttons
+      builder: (context) => AlertDialog(
+        title: const Text('Enter workout information'),
+        content: Form(
+          //Code to display a form style which also allows user
+          //to enter information as well as an optional name for workout
+          key: _formKey,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // creates a list of textfields
+            TextFormField(
+              controller: field1,
+              //optional textfield to enter name of workout (if user wants to keep track of such information)
+              autofocus: true,
+              decoration: const InputDecoration(hintText: 'Name*'),
+              onChanged: (value) => workoutName = value,
+            ),
+            TextFormField(
+                controller: field2,
+                keyboardType:
+                    TextInputType.number, //eliminates confusion of typing
+                //in letters(strings) rather integers
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(
+                      r'[0-9]')), //eliminates any chance of negative numbers being inputted
+                ],
+                autofocus: true,
+                decoration: const InputDecoration(hintText: 'Weight (lbs)'),
+                validator: (value) {
+                  // Check for weight input
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the weight';
+                  }
+                  return null;
+                }),
+            TextFormField(
+                controller: field3,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                ],
+                //enter the weight
+                autofocus: true,
+                decoration: const InputDecoration(hintText: 'Sets'),
+                validator: (value) {
+                  // Check for empty value for sets
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the amount of sets';
+                  }
+                  return null;
+                }),
+            TextFormField(
+                controller: field4,
+                //enter amount of reps
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                ],
+                autofocus: true,
+                decoration: const InputDecoration(hintText: 'Reps'),
+                validator: (value) {
+                  // Checks for empty value of reps
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the number of reps';
+                  }
+                  return null;
+                }),
+          ]),
+        ),
+        actions: [
+          //allows user to submit information or cancel if they choose to go back
+          TextButton(
+            child: const Text(
+                'CANCEL'), //User presses this button to cancel/back out if they desire
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(); //pops the form field and user can return to muscle group screen
+            },
+          ),
+          TextButton(
+            child: const Text(
+                //User presses this button to submit valid information
+                'SUBMIT'),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                //if user submissions are valid, saves information to database
+                //and allows user to move on to next input/next screen
+                submitinfo();
+                Navigator.of(context).pop();
+                SnackBar mySnack = const SnackBar(
+                    content: Text(
+                        'Information Saved!'), //Displays confirmation message once user submits information on bottom of screen
+                    backgroundColor: Colors.green);
+                ScaffoldMessenger.of(context).showSnackBar(mySnack);
+              }
+            },
+            //action that allows user to return to specific muscle group screen
+          )
+        ],
+      ),
+    );

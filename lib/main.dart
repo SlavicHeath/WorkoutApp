@@ -8,8 +8,6 @@ import 'battle.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
@@ -21,21 +19,19 @@ void main() async {
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      appBar: AppBar(
-        title: const Text("WorkoutPet"),
-        backgroundColor: Colors.purple,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(8),
-        // decoration: const BoxDecoration(
-        //   image: DecorationImage(
-        //       image: AssetImage(""), fit: BoxFit.cover),
-        // ),
+        appBar: AppBar(
+          title: const Text("WorkoutPet"),
+          backgroundColor: Colors.purple,
+        ),
+        body: Container(
+          padding: const EdgeInsets.all(8),
+          // decoration: const BoxDecoration(
+          //   image: DecorationImage(
+          //       image: AssetImage(""), fit: BoxFit.cover),
+          // ),
           child: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -56,7 +52,6 @@ class HomeScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-
                 ),
                 child: Text("LogIn"),
               ),
@@ -116,6 +111,23 @@ class HomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
+                        builder: (context) => PrevWorkPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text(" Previous Workout"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
                         builder: (context) => DataWrite()),
                   );
                 },
@@ -144,6 +156,23 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text("Read Data to Database"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => BattleInitScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Battle Screen"),
               ),
             ]),
           ),

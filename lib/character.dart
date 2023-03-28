@@ -1,7 +1,5 @@
 // Ryan Lehner
 // set up a character class
-import 'dart:ffi';
-
 import 'package:flutter/widgets.dart';
 import 'package:workoutpet/character.dart';
 import 'character.dart';
