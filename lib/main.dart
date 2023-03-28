@@ -8,6 +8,8 @@ import 'battle.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
@@ -19,19 +21,21 @@ void main() async {
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("WorkoutPet"),
-          backgroundColor: Colors.purple,
-        ),
-        body: Container(
-          padding: const EdgeInsets.all(8),
-          // decoration: const BoxDecoration(
-          //   image: DecorationImage(
-          //       image: AssetImage(""), fit: BoxFit.cover),
-          // ),
+
+      appBar: AppBar(
+        title: const Text("WorkoutPet"),
+        backgroundColor: Colors.purple,
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(8),
+        // decoration: const BoxDecoration(
+        //   image: DecorationImage(
+        //       image: AssetImage(""), fit: BoxFit.cover),
+        // ),
           child: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -52,6 +56,7 @@ class HomeScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
+
                 ),
                 child: Text("LogIn"),
               ),

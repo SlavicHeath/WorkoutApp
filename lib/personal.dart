@@ -1,4 +1,15 @@
+
+
+
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
+
+import 'package:flutter/material.dart';
+
 
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
@@ -13,7 +24,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   TextEditingController _weightController = TextEditingController();
   // ignore: prefer_final_fields
   TextEditingController _heightController = TextEditingController();
-  double _bmiResult = 0.0;
+  double bmiResult = 0.0;
+
+
 
   void _calculateBMI() {
     double weight = double.tryParse(_weightController.text) ?? 0.0;
@@ -21,14 +34,14 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
 
     if (weight <= 0 || height <= 0) {
       setState(() {
-        _bmiResult = 0.0;
+        bmiResult = 0.0;
       });
       return;
     }
 
     double bmi = (weight * 703) / (height * height);
     setState(() {
-      _bmiResult = bmi;
+      bmiResult = bmi;
     });
   }
 
@@ -86,13 +99,29 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
               // ignore: prefer_const_constructors
               SizedBox(height: 16.0),
               Text(
-                _bmiResult == 0.0
+                bmiResult == 0.0
                     ? 'Please enter your weight and height'
-                    : 'Your BMI is ${_bmiResult.toStringAsFixed(1)}',
+                    : 'Your BMI is ${bmiResult.toStringAsFixed(1)}',
                 // ignore: prefer_const_constructors
                 style: TextStyle(fontSize: 20.0),
               ),
-            ],
+              TextButton(
+              child: const Text(
+                  //User presses this button to submit valid information
+                  'SUBMIT'),
+              onPressed: () {
+                FirebaseFirestore.instance
+                .collection('personal')
+                .add({'weight': _weightController.text,
+                'height': _heightController.text,
+                'bmi': bmiResult})
+                .then((value) => print("added"))
+                .catchError((error) => print("Failed to add: $error"));
+                //addPersonalData(_weightController.text.trim(), _heightController.text.trim(), bmiResult.toString());
+                
+              },
+              )
+            ], 
           ),
         ),
       ),
@@ -100,24 +129,24 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 }
 
+
+
 class personal {
   double personalWeight;
   double personalHeight;
   personal(this.personalWeight, this.personalHeight);
 }
 
-var personal_sample = [
-  personal(155.5, 70), // sample of personal data that is correct
 
-  personal(130,
-      65), // sample of personal data that is incorrect by including feeet and inches
 
-  personal(0, 60), // sample of personal data that is imcomplete
+CollectionReference personal1 = FirebaseFirestore.instance.collection('Personal information');
 
-  personal(145, 0), //sample of personal data that is incomplete
+ //Creates the addpersonalData Method to add personal
+addPersonalData(String weight, String height,String bmi) async {
+  await FirebaseFirestore.instance.collection('users').add({
+    'Weight': weight,
+    'Height': height,
+    'BMI': bmi
+  });
+}
 
-  personal(0, 0), //Sample of data with both fields that are incomplete
-
-  personal(145,
-      71) //Sample of Data is that is complete and correct (should debate whether real or int )
-];
