@@ -8,6 +8,10 @@ import 'battle.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
 
+///
+/// [@var		object	async]
+/// [@global]
+///
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
@@ -16,6 +20,15 @@ void main() async {
   );
 }
 
+///
+/// [HomeScreen.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, March 28th, 2023]
+/// [@see		StatelessWidget]
+/// [@global]
+///
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -111,6 +124,23 @@ class HomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
+                        builder: (context) => PrevWorkPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text(" Previous Workout"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
                         builder: (context) => DataWrite()),
                   );
                 },
@@ -139,6 +169,23 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text("Read Data to Database"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => BattleInitScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Battle Screen"),
               ),
             ]),
           ),
