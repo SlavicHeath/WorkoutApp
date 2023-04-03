@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() => runApp(const MyApp());
 
@@ -480,6 +481,7 @@ class PrevWorkPage extends StatefulWidget {
 
 class _PrevWorkPageState extends State<PrevWorkPage> {
   final _formKey = GlobalKey<FormState>();
+  final authUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -488,11 +490,9 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
         title: const Text('PREVIOUS WORKOUTS'),
         backgroundColor: Colors.purple,
       ),
-      body: StreamBuilder(
+      body: FutureBuilder(
+        future: _retrieveinfo(),
         //Calls into firebase to retrieve data from workout info document
-        stream: FirebaseFirestore.instance
-            .collection('workout information')
-            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             // Will prompt user that there's no data therefore no previous workouts
@@ -549,21 +549,53 @@ TextEditingController field2 = TextEditingController();
 TextEditingController field3 = TextEditingController();
 TextEditingController field4 = TextEditingController();
 
-void submitinfo() {
+_retrieveinfo() async {
   // this is how we will save the inputted data to firebase
   // method is referenced in openDialog code for when submit is pressed
 
-  Map<String, dynamic> data = {
+  final authUser = await FirebaseAuth.instance.currentUser;
+
+  final workout = <String, dynamic>{
+    "user": authUser?.uid,
     "name": field1.text,
     "weight": int.parse(field2.text),
     "sets": int.parse(field3.text),
     "reps": int.parse(field4.text)
   };
-  FirebaseFirestore.instance
+
+  await FirebaseFirestore.instance
       .collection("workout information")
-      .add(data)
-      .then((value) => print(" Information added"))
-      .catchError((error) => print("Failed to add: $error"));
+      .where("user", isEqualTo: authUser?.uid)
+      .get()
+      .then(
+    (querySnapshot) {
+      print("Successfully completed");
+      for (var docSnapshot in querySnapshot.docs) {
+        print('${docSnapshot.id} => ${docSnapshot.data()}');
+      }
+    },
+    onError: (e) => print("Error completing: $e"),
+  );
+}
+
+_submitInfo() async {
+  // used to retrieve data from a specific user for previous workouts
+  final authUser = await FirebaseAuth.instance.currentUser;
+
+  final workout = <String, dynamic>{
+    "user": authUser?.uid,
+    "name": field1.text,
+    "weight": int.parse(field2.text),
+    "sets": int.parse(field3.text),
+    "reps": int.parse(field4.text)
+  };
+
+  if (authUser != null) {
+    await FirebaseFirestore.instance
+        .collection('workout information')
+        .doc(authUser.uid)
+        .set(workout);
+  }
 }
 
 String?
@@ -658,7 +690,7 @@ Future openDialog(context) => showDialog(
               if (_formKey.currentState!.validate()) {
                 //if user submissions are valid, saves information to database
                 //and allows user to move on to next input/next screen
-                submitinfo();
+                _submitInfo();
                 Navigator.of(context).pop();
                 SnackBar mySnack = const SnackBar(
                     content: Text(
