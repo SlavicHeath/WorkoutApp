@@ -6,17 +6,38 @@ import 'package:flutter/material.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/sign_in.dart';
 
+///
+/// [User.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@global]
+///
 class User {
   String email;
   User(this.email);
 }
 
+///
+/// [@var		array	USER_SAMPLE]
+/// [@global]
+///
 var USER_SAMPLE = [
   User("firstSecond@gmail.com"), //correct sample
   User(""), // No values entered
   User("daswerfwe"), //Incorrect email
 ];
 
+///
+/// [ForgotPassword.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
 
@@ -24,6 +45,15 @@ class ForgotPassword extends StatefulWidget {
   State<ForgotPassword> createState() => _ForgotPassword();
 }
 
+///
+/// [_ForgotPassword.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _ForgotPassword extends State<ForgotPassword> {
   String? email;
   String? error;
@@ -83,6 +113,9 @@ class _ForgotPassword extends State<ForgotPassword> {
 
 // Forgot Password
 
+  ///
+  /// [@var		object	async]
+  ///
   void passwordReset() async {
     try {
       final credential = await FirebaseAuth.instance

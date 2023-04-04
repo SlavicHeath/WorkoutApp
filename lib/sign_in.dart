@@ -5,6 +5,14 @@ import 'package:workoutpet/forgot_pass.dart';
 import 'package:workoutpet/personal.dart';
 import 'main.dart';
 
+///
+/// [User.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@global]
+///
 class User {
   String email;
   String password;
@@ -34,6 +42,15 @@ var USER_SAMPLE = [
   User("12345", "pass123") //Incorrect email
 ];
 
+///
+/// [LoginScreen.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -41,6 +58,15 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+///
+/// [_LoginScreenState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _LoginScreenState extends State<LoginScreen> {
   String? email;
   String? password;
