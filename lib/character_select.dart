@@ -7,7 +7,7 @@ class Character extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text("Model Viewer")),
+        appBar: AppBar(title: const Text("Model Viewer")),
         body: ModelViewer(
           src: 'assets/character/Astronaut.glb',
           alt: "A 3D model of an astronaut",

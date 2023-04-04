@@ -5,6 +5,7 @@ import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'package:workoutpet/workout.dart';
 import 'battle.dart';
+import 'character_select.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
 
@@ -128,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => DataWrite()),
+                        builder: (context) => Character()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -138,7 +139,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text("Add Data to Database"),
+                child: Text("Character Viewer"),
               ),
               ElevatedButton(
                 onPressed: () {
