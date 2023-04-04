@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -490,9 +492,12 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
         title: const Text('PREVIOUS WORKOUTS'),
         backgroundColor: Colors.purple,
       ),
-      body: FutureBuilder(
-        future: _retrieveinfo(),
+      body: StreamBuilder(
         //Calls into firebase to retrieve data from workout info document
+        stream: FirebaseFirestore.instance
+            .collection('workout information')
+            .where('user', isEqualTo: authUser!.uid)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             // Will prompt user that there's no data therefore no previous workouts
@@ -510,7 +515,7 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
                   title: Text(
                       '${document['sets']}'), // $ allows integer data to be read in
                   subtitle: Text('${document['reps']}'),
-                  trailing: Text('${document['weight']}'),
+                  trailing: Text('${document['sets']}'),
                 ),
               );
             }).toList(),
@@ -554,14 +559,6 @@ _retrieveinfo() async {
   // method is referenced in openDialog code for when submit is pressed
 
   final authUser = await FirebaseAuth.instance.currentUser;
-
-  final workout = <String, dynamic>{
-    "user": authUser?.uid,
-    "name": field1.text,
-    "weight": int.parse(field2.text),
-    "sets": int.parse(field3.text),
-    "reps": int.parse(field4.text)
-  };
 
   await FirebaseFirestore.instance
       .collection("workout information")
