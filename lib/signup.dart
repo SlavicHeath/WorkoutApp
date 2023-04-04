@@ -5,6 +5,14 @@ import 'package:workoutpet/sign_in.dart';
 
 import 'main.dart';
 
+///
+/// [User.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@global]
+///
 class User {
   String email;
   String password;
@@ -25,6 +33,15 @@ var USER_SAMPLE = [
   User("12345", "pass123", "pass123") //Incorrect email
 ];
 
+///
+/// [SignUpScreen.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -32,6 +49,15 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
+///
+/// [_SignUpScreenState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _SignUpScreenState extends State<SignUpScreen> {
   String? email;
   String? password;
