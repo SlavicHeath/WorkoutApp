@@ -129,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => Character()),
+                        builder: (context) => DsiplayTest()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
