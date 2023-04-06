@@ -51,6 +51,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              TextField(
+                  controller: field5,
+                  decoration: null,
+                  style: TextStyle(color: Colors.transparent),
+                  enabled: false),
               SizedBox(
                 height: 100,
                 width: 200,
@@ -82,6 +87,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
+                      final button = buttonName;
+                      field5.text = button;
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
@@ -103,6 +110,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
+                      final button = butt2Name;
+                      field5.text = button;
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
@@ -124,6 +133,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
+                      final button = butt3Name;
+                      field5.text = button;
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
@@ -145,6 +156,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   child: ElevatedButton(
                     style: workoutButton,
                     onPressed: () {
+                      final button = butt4Name;
+                      field5.text = button;
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
@@ -512,11 +525,12 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
                 child: ListTile(
                   //displays previous workouts in a tile list format
                   autofocus: true,
+                  leading: Text(document['name']),
                   title: Text(
                       '${document['weight']} lbs'), // $ allows integer data to be read in
                   subtitle:
                       Text('${document['reps']} reps ${document['sets']} sets'),
-                  trailing: Text(document['name']),
+                  trailing: Text(document['body part']),
                   onTap: () {},
                   tileColor: Colors.purple,
                 ),
@@ -558,27 +572,6 @@ TextEditingController field3 = TextEditingController();
 TextEditingController field4 = TextEditingController();
 TextEditingController field5 = TextEditingController();
 
-_retrieveinfo() async {
-  // this is how we will save the inputted data to firebase
-  // method is referenced in openDialog code for when submit is pressed
-
-  final authUser = await FirebaseAuth.instance.currentUser;
-
-  await FirebaseFirestore.instance
-      .collection("workout information")
-      .where("user", isEqualTo: authUser?.uid)
-      .get()
-      .then(
-    (querySnapshot) {
-      print("Successfully completed");
-      for (var docSnapshot in querySnapshot.docs) {
-        print('${docSnapshot.id} => ${docSnapshot.data()}');
-      }
-    },
-    onError: (e) => print("Error completing: $e"),
-  );
-}
-
 _submitInfo() async {
   // used to retrieve data from a specific user for previous workouts
   final authUser = await FirebaseAuth.instance.currentUser;
@@ -588,7 +581,8 @@ _submitInfo() async {
     "name": field1.text,
     "weight": int.parse(field2.text),
     "sets": int.parse(field3.text),
-    "reps": int.parse(field4.text)
+    "reps": int.parse(field4.text),
+    "body part": field5.text
   };
 
   if (authUser != null) {
