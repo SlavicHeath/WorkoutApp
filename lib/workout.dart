@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workoutpet/battle.dart';
 
 void main() => runApp(const MyApp());
 
@@ -511,11 +512,13 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
                 child: ListTile(
                   //displays previous workouts in a tile list format
                   autofocus: true,
-                  leading: Text(document['name']),
                   title: Text(
-                      '${document['sets']}'), // $ allows integer data to be read in
-                  subtitle: Text('${document['reps']}'),
-                  trailing: Text('${document['sets']}'),
+                      '${document['weight']} lbs'), // $ allows integer data to be read in
+                  subtitle:
+                      Text('${document['reps']} reps ${document['sets']} sets'),
+                  trailing: Text(document['name']),
+                  onTap: () {},
+                  tileColor: Colors.purple,
                 ),
               );
             }).toList(),
@@ -553,6 +556,7 @@ TextEditingController field1 = TextEditingController();
 TextEditingController field2 = TextEditingController();
 TextEditingController field3 = TextEditingController();
 TextEditingController field4 = TextEditingController();
+TextEditingController field5 = TextEditingController();
 
 _retrieveinfo() async {
   // this is how we will save the inputted data to firebase
@@ -590,8 +594,10 @@ _submitInfo() async {
   if (authUser != null) {
     await FirebaseFirestore.instance
         .collection('workout information')
-        .doc(authUser.uid)
-        .set(workout);
+        .add(workout)
+        .then((value) => print(" Information added"))
+        .catchError((error) => print("Failed to add: $error"));
+    ;
   }
 }
 
@@ -611,12 +617,17 @@ Future openDialog(context) => showDialog(
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             // creates a list of textfields
             TextFormField(
-              controller: field1,
-              //optional textfield to enter name of workout (if user wants to keep track of such information)
-              autofocus: true,
-              decoration: const InputDecoration(hintText: 'Name*'),
-              onChanged: (value) => workoutName = value,
-            ),
+                controller: field1,
+                //optional textfield to enter name of workout (if user wants to keep track of such information)
+                autofocus: true,
+                decoration: const InputDecoration(hintText: 'Name'),
+                validator: (value) {
+                  // Check for weight input
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter workout Name';
+                  }
+                  return null;
+                }),
             TextFormField(
                 controller: field2,
                 keyboardType:
