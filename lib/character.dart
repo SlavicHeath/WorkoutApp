@@ -4,6 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:workoutpet/character.dart';
 import 'character.dart';
 
+///
+/// [Character.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@global]
+///
 class Character {
   // each one has to be it's own image so the pet can grow individually
   Object head;
@@ -18,6 +26,15 @@ class Character {
       this.head, this.leg, this.chest, this.back, this.arm, this.accessories);
 }
 
+///
+/// [CharacterScale.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		Character]
+/// [@global]
+///
 class CharacterScale extends Character {
   // shows the base dimesensions of the character scale and location
   List<double> headSc = [0.85, 0.85, 0.85];
@@ -57,6 +74,15 @@ class CharacterScale extends Character {
       super.accessories);
 }
 
+///
+/// [CharacterMult.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		Character]
+/// [@global]
+///
 class CharacterMult extends Character {
   // lets the size of the character's body grow for examples
   double legMult = 0.0;

@@ -8,6 +8,10 @@ import 'battle.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
 
+///
+/// [@var		object	async]
+/// [@global]
+///
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
@@ -16,6 +20,15 @@ void main() async {
   );
 }
 
+///
+/// [HomeScreen.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatelessWidget]
+/// [@global]
+///
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
