@@ -1,9 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
 
@@ -28,6 +29,54 @@ class _DsiplayTestState extends State<DsiplayTest> {
       appBar: AppBar(
         title: Text("Model Test"),
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.black87),
+              child: Text("Profile"),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text("Home"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DsiplayTest(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("About"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => WorkoutPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.login),
+              title: Text("Signup/Login"),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,26 +99,31 @@ class _DsiplayTestState extends State<DsiplayTest> {
                 },
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 10),
+            // build character
             buildIndicator(),
+
+            // button to go to next page
             const SizedBox(height: 20),
             ElevatedButton(
+              //assign character to user
               onPressed: () {
-                print(dislplayFile[activeIndex]);
+                _submitCharacter(dislplayFile[activeIndex]);
+
                 Navigator.of(context).push(
                   MaterialPageRoute(
                       //The right side is the widget you want to go to
-                      builder: (context) => LoginScreen()),
+                      builder: (context) => PersonalInfoPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
-                fixedSize: const Size(200, 40),
+                fixedSize: const Size(300, 40),
                 backgroundColor: Colors.purple,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text("Battle Screen"),
+              child: Text("Select and go to the next Screen"),
             ),
           ],
         ),
@@ -80,7 +134,9 @@ class _DsiplayTestState extends State<DsiplayTest> {
   // Display the 3d Model on screen
   Widget buildImage(String displayFile, int index) {
     return Container(
-      // margin: EdgeInsets.symmetric(horizontal: 10),
+      height: 20,
+      width: 300,
+      margin: EdgeInsets.symmetric(horizontal: 10),
       color: Colors.grey,
       child: ModelViewer(
         src: displayFile,
@@ -99,5 +155,20 @@ class _DsiplayTestState extends State<DsiplayTest> {
       count: dislplayFile.length,
       effect: SlideEffect(activeDotColor: Colors.purple),
     );
+  }
+}
+
+_submitCharacter(String displayFile) async {
+  final authUser = await FirebaseAuth.instance.currentUser;
+  final character = <String, dynamic>{
+    "user": authUser?.uid,
+    "character": displayFile
+  };
+
+  if (authUser != null) {
+    await FirebaseFirestore.instance
+        .collection('character')
+        .doc(authUser.uid)
+        .set(character);
   }
 }
