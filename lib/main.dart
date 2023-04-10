@@ -5,9 +5,15 @@ import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'package:workoutpet/workout.dart';
 import 'battle.dart';
+import 'character_select.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+///
+/// [@var		object	async]
+/// [@global]
+///
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
@@ -16,6 +22,15 @@ void main() async {
   );
 }
 
+///
+/// [HomeScreen.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatelessWidget]
+/// [@global]
+///
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -128,7 +143,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => DataWrite()),
+                        builder: (context) => DsiplayTest()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -138,7 +153,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text("Add Data to Database"),
+                child: Text("Character Viewer"),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -159,11 +174,20 @@ class HomeScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => BattleInitScreen()),
-                  );
+                  final docNum = FirebaseFirestore.instance
+                      .collection('Battles')
+                      .doc()
+                      .get()
+                      .then((DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists) {
+                      print(Text("No Docs"));
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => UserStatsScreen()),
+                      );
+                    }
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   fixedSize: const Size(200, 40),

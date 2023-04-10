@@ -8,6 +8,15 @@ import 'package:workoutpet/battle.dart';
 
 void main() => runApp(const MyApp());
 
+///
+/// [MyApp.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -15,6 +24,15 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+///
+/// [_MyAppState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
@@ -25,6 +43,15 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+///
+/// [WorkoutPage.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({super.key});
 
@@ -32,6 +59,15 @@ class WorkoutPage extends StatefulWidget {
   State<WorkoutPage> createState() => _WorkoutPageState();
 }
 
+///
+/// [_WorkoutPageState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
@@ -191,6 +227,15 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 }
 
+///
+/// [ArmPage.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		WorkoutPage]
+/// [@global]
+///
 class ArmPage extends WorkoutPage {
   const ArmPage({super.key});
 
@@ -198,6 +243,15 @@ class ArmPage extends WorkoutPage {
   State<ArmPage> createState() => _ArmPageState();
 }
 
+///
+/// [_ArmPageState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _ArmPageState extends State<ArmPage> {
   String armName1 = 'Biceps';
   String armName2 = 'Triceps';
@@ -267,6 +321,15 @@ class _ArmPageState extends State<ArmPage> {
   }
 }
 
+///
+/// [LegPage.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class LegPage extends StatefulWidget {
   const LegPage({super.key});
 
@@ -274,6 +337,15 @@ class LegPage extends StatefulWidget {
   State<LegPage> createState() => _LegPageState();
 }
 
+///
+/// [_LegPageState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _LegPageState extends State<LegPage> {
   String legName1 = 'Quads';
   String legName2 = 'Glutes/Hamstring';
@@ -343,6 +415,15 @@ class _LegPageState extends State<LegPage> {
   }
 }
 
+///
+/// [BackPage.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class BackPage extends StatefulWidget {
   const BackPage({super.key});
 
@@ -350,6 +431,15 @@ class BackPage extends StatefulWidget {
   State<BackPage> createState() => _BackPageState();
 }
 
+///
+/// [_BackPageState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _BackPageState extends State<BackPage> {
   String backName1 = 'Upper Back';
   String backName2 = 'Middle Back';
@@ -421,6 +511,15 @@ class _BackPageState extends State<BackPage> {
   }
 }
 
+///
+/// [ChestPage.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class ChestPage extends StatefulWidget {
   const ChestPage({super.key});
 
@@ -428,6 +527,15 @@ class ChestPage extends StatefulWidget {
   State<ChestPage> createState() => _ChestPageState();
 }
 
+///
+/// [_ChestPageState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _ChestPageState extends State<ChestPage> {
   String chestName1 = 'Upper Chest';
   String chestName2 = 'Middle Chest';
@@ -597,11 +705,11 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
           )),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    //The right side is the widget you want to go to
-                    builder: (context) => BattleInitScreen()),
-              );
+              //Navigator.of(context).push(
+              // MaterialPageRoute(
+              //The right side is the widget you want to go to
+              // builder: (context) => BattleInitScreen()),
+              //);
             },
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(100, 50),
@@ -626,6 +734,15 @@ class PrevWorkPage extends StatefulWidget {
   _PrevWorkPageState createState() => _PrevWorkPageState();
 }
 
+///
+/// [_PrevWorkPageState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _PrevWorkPageState extends State<PrevWorkPage> {
   final _formKey = GlobalKey<FormState>();
 

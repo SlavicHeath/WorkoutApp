@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Must Sign in to account to access values
+///
+/// [DataWrite.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatelessWidget]
+/// [@global]
+///
 class DataWrite extends StatelessWidget {
   const DataWrite({super.key});
 
@@ -28,6 +36,15 @@ class DataWrite extends StatelessWidget {
   }
 }
 
+///
+/// [DataRead.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatelessWidget]
+/// [@global]
+///
 class DataRead extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
