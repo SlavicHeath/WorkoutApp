@@ -504,8 +504,8 @@ class _ChestPageState extends State<ChestPage> {
 class CurrentWorkPage extends StatefulWidget {
   CurrentWorkPage({super.key});
 
-  DocumentReference docRef =
-      FirebaseFirestore.instance.collection('workout information').doc();
+  CollectionReference docIds =
+      FirebaseFirestore.instance.collection('workout information');
 
   @override
   _CurrentWorkPageState createState() => _CurrentWorkPageState();
@@ -561,8 +561,11 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
-                                            Navigator.of(context)
-                                                .pop; //if user selects no, sends user back to current workout page
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    //The right side is the widget you want to go to
+                                                    builder: (context) =>
+                                                        WorkoutPage())); //if user selects no, sends user back to current workout page
                                           },
                                           child: const Text('no')),
                                       TextButton(
@@ -808,6 +811,11 @@ Future openDialog(context) => showDialog(
             onPressed: () {
               Navigator.of(context)
                   .pop(); //pops the form field and user can return to muscle group screen
+              field1.clear();
+              field2
+                  .clear(); //Clears the text fields so user can enter new information everytime they press button
+              field3.clear();
+              field4.clear();
             },
           ),
           TextButton(
@@ -820,6 +828,13 @@ Future openDialog(context) => showDialog(
                 //and allows user to move on to next input/next screen
                 _submitInfo();
                 Navigator.of(context).pop();
+
+                field1.clear();
+                field2
+                    .clear(); //Clears the text fields so user can enter new information everytime they press button
+                field3.clear();
+                field4.clear();
+
                 SnackBar mySnack = const SnackBar(
                     content: Text(
                         'Information Saved!'), //Displays confirmation message once user submits information on bottom of screen
