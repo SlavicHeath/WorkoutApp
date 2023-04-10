@@ -8,6 +8,7 @@ import 'battle.dart';
 import 'character_select.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 ///
 /// [@var		object	async]
@@ -173,11 +174,20 @@ class HomeScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => BattleInitScreen()),
-                  );
+                  final docNum = FirebaseFirestore.instance
+                      .collection('Battles')
+                      .doc()
+                      .get()
+                      .then((DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists) {
+                      print(Text("No Docs"));
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => UserStatsScreen()),
+                      );
+                    }
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   fixedSize: const Size(200, 40),
