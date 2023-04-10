@@ -2,16 +2,31 @@
 
 import 'character.dart';
 import 'dart:math';
-
-class BattleCharacter {
+///
+/// [battleCharacter.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@global]
+///
+class battleCharacter {
   int health = 0;
   int strength = 0;
   int speed = 0;
 
   BattleCharacter(this.health, this.strength, this.speed);
 }
-
-class Bot extends BattleCharacter {
+///
+/// [Bot.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		battleCharacter]
+/// [@global]
+///
+class Bot extends battleCharacter {
   //Health and strength are being stored here until they are incorporated
   //into the character class
 

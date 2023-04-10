@@ -5,6 +5,15 @@ import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+///
+/// [PersonalInfoPage.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Thursday, March 30th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
   @override
@@ -12,6 +21,15 @@ class PersonalInfoPage extends StatefulWidget {
   _PersonalInfoPageState createState() => _PersonalInfoPageState();
 }
 
+///
+/// [_PersonalInfoPageState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Thursday, March 30th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
   final _formKey = GlobalKey<FormState>();
   // ignore: prefer_final_fields
@@ -122,16 +140,34 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 }
 
+///
+/// [personal.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Thursday, March 30th, 2023]
+/// [@global]
+///
 class personal {
   double personalWeight;
   double personalHeight;
   personal(this.personalWeight, this.personalHeight);
 }
 
+///
+/// [@var		collectionreference	personal1]
+/// [@global]
+///
 CollectionReference personal1 =
     FirebaseFirestore.instance.collection('Personal information');
 
-//Creates the addpersonalData Method to add personal
+///
+/// [@var		string	weight]
+/// [@global]
+//////
+/// [@var		object	async]
+/// [@global]
+///
 addPersonalData(String weight, String height, String bmi) async {
   await FirebaseFirestore.instance
       .collection('users')
