@@ -500,17 +500,18 @@ class _ChestPageState extends State<ChestPage> {
   }
 }
 
+//Current workout page which the current button on navigation part points to
 class CurrentWorkPage extends StatefulWidget {
   CurrentWorkPage({super.key});
+
+  DocumentReference docRef =
+      FirebaseFirestore.instance.collection('workout information').doc();
 
   @override
   _CurrentWorkPageState createState() => _CurrentWorkPageState();
 }
 
 class _CurrentWorkPageState extends State<CurrentWorkPage> {
-  final _formKey = GlobalKey<FormState>();
-  final authUser = FirebaseAuth.instance.currentUser;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -547,7 +548,43 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                           'name']), // $ allows integer data to be read in
                       subtitle: Text(
                           '${document['weight']} lbs ${document['reps']} reps ${document['sets']} sets'),
-                      trailing: Text(document['name']),
+                      trailing: Container(
+                          child: IconButton(
+                        onPressed: () {
+                          //Pops up an alert dialog asking the user to confirm deletion of workout
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: const Text('Confirm deletion'),
+                                    content: const Text(
+                                        "Are you sure you want to delete workout?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop; //if user selects no, sends user back to current workout page
+                                          },
+                                          child: const Text('no')),
+                                      TextButton(
+                                          onPressed: () {
+                                            //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
+                                            FirebaseFirestore.instance
+                                                .collection(
+                                                    'workout information')
+                                                .doc(document.id)
+                                                .delete()
+                                                .whenComplete(() {
+                                              print('deleted successfully');
+                                            });
+                                            setState(() {});
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('yes')),
+                                    ],
+                                  ));
+                        },
+                        icon: Icon(Icons.close),
+                      )),
                       tileColor: Colors.purple,
                     ),
                   );
@@ -588,7 +625,6 @@ class PrevWorkPage extends StatefulWidget {
 
 class _PrevWorkPageState extends State<PrevWorkPage> {
   final _formKey = GlobalKey<FormState>();
-  final authUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -661,9 +697,10 @@ TextEditingController field3 = TextEditingController();
 TextEditingController field4 = TextEditingController();
 TextEditingController field5 = TextEditingController();
 
+final authUser = FirebaseAuth.instance.currentUser;
+
 _submitInfo() async {
   // used to retrieve data from a specific user for previous workouts
-  final authUser = await FirebaseAuth.instance.currentUser;
 
   final workout = <String, dynamic>{
     "user": authUser?.uid,
@@ -683,10 +720,7 @@ _submitInfo() async {
   }
 }
 
-String? workoutName;
-
 // used to reset text field for name when entering new workout
-
 Future openDialog(context) => showDialog(
       context: context,
       //pop up dialog for when user presses one of the specific muscle buttons
