@@ -4,8 +4,14 @@ import 'character.dart';
 import 'bot.dart';
 import 'package:flutter/material.dart';
 
-//Placeholder until character class is fully complete
-//(will pass in a character object and use .get()s to calculate health, strenth , etc...)
+///
+/// [Battle.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@global]
+///
 class Battle {
   //var userCharacter;
   var userCharacter;
@@ -22,6 +28,15 @@ class Battle {
   }
 }
 
+///
+/// [BattleInitScreen.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class BattleInitScreen extends StatefulWidget {
   const BattleInitScreen({super.key});
   @override
@@ -29,6 +44,15 @@ class BattleInitScreen extends StatefulWidget {
   _BattleInitScreenState createState() => _BattleInitScreenState();
 }
 
+///
+/// [_BattleInitScreenState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _BattleInitScreenState extends State<BattleInitScreen> {
   final _formKey = GlobalKey<FormState>();
 
@@ -120,6 +144,15 @@ class _BattleInitScreenState extends State<BattleInitScreen> {
   }
 }
 
+///
+/// [MainBattleScreen.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class MainBattleScreen extends StatefulWidget {
   Battle battle;
   int botHealth, botStrength;
@@ -132,6 +165,15 @@ class MainBattleScreen extends StatefulWidget {
   _MainBattleScreenState createState() => _MainBattleScreenState(battle);
 }
 
+///
+/// [_MainBattleScreenState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _MainBattleScreenState extends State<MainBattleScreen> {
   Battle battle;
   _MainBattleScreenState(this.battle);
