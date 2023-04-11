@@ -1,7 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:workoutpet/main.dart';
+import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
+import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 ///
 /// [PersonalInfoPage.]
@@ -75,6 +80,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   labelText: 'Weight (lbs)',
                 ),
                 keyboardType: TextInputType.number,
+                autofocus: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your weight';
@@ -85,6 +91,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: _heightController,
+                autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Height (inch)',
                 ),
@@ -133,7 +140,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => WorkoutPage()),
+                        builder: (context) => LoginScreen()),
                   );
                 },
               )
