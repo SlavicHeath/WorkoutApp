@@ -1,5 +1,8 @@
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:workoutpet/workout.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +56,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       bmiResult = bmi;
     });
   }
+  
+final authUser = FirebaseAuth.instance.currentUser;
+
 
   @override
   Widget build(BuildContext context) {
@@ -121,14 +127,19 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 onPressed: () {
                   FirebaseFirestore.instance
                       .collection('personal')
-                      .add({
+                      .doc(authUser?.uid)
+                      .set({
                         'weight': _weightController.text,
                         'height': _heightController.text,
                         'bmi': bmiResult
                       })
                       .then((value) => print("added"))
                       .catchError((error) => print("Failed to add: $error"));
-                  //addPersonalData(_weightController.text.trim(), _heightController.text.trim(), bmiResult.toString());
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => WorkoutPage()),
+                  );
                 },
               )
             ],
@@ -139,26 +150,14 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 }
 
-///
-/// [personal.]
-///
-/// [@author	Unknown]
-/// [ @since	v0.0.1 ]
-/// [@version	v1.0.0	Thursday, March 30th, 2023]
-/// [@global]
-///
-class personal {
-  double personalWeight;
-  double personalHeight;
-  personal(this.personalWeight, this.personalHeight);
-}
+
 
 ///
 /// [@var		collectionreference	personal1]
 /// [@global]
 ///
-CollectionReference personal1 =
-    FirebaseFirestore.instance.collection('Personal information');
+//CollectionReference personal1 =
+//    FirebaseFirestore.instance.collection('Personal information');
 
 ///
 /// [@var		string	weight]
@@ -167,8 +166,11 @@ CollectionReference personal1 =
 /// [@var		object	async]
 /// [@global]
 ///
-addPersonalData(String weight, String height, String bmi) async {
-  await FirebaseFirestore.instance
-      .collection('users')
-      .add({'Weight': weight, 'Height': height, 'BMI': bmi});
-}
+//addPersonalData(String weight, String height, String bmi) async {
+ // await FirebaseFirestore.instance
+ //     .collection('users')
+ //     .add({'Weight': weight, 'Height': height, 'BMI': bmi});
+//}
+
+
+
