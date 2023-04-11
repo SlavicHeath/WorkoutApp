@@ -1,7 +1,7 @@
 //Ben Williams
 
-import 'character.dart';
 import 'dart:math';
+
 ///
 /// [battleCharacter.]
 ///
@@ -10,13 +10,14 @@ import 'dart:math';
 /// [@version	v1.0.0	Tuesday, April 4th, 2023]
 /// [@global]
 ///
-class battleCharacter {
+class BattleCharacter {
   int health = 0;
   int strength = 0;
   int speed = 0;
 
   BattleCharacter(this.health, this.strength, this.speed);
 }
+
 ///
 /// [Bot.]
 ///
@@ -26,7 +27,7 @@ class battleCharacter {
 /// [@see		battleCharacter]
 /// [@global]
 ///
-class Bot extends battleCharacter {
+class Bot extends BattleCharacter {
   //Health and strength are being stored here until they are incorporated
   //into the character class
 
@@ -37,36 +38,13 @@ class Bot extends battleCharacter {
       : super(0, 0, 0) {
     var rand = new Random();
     double randMultiplier = rand.nextInt(21) * .01; //randMultiplier = 0 to .2
-
-    //For each stat (health & strength) each stat is either (50/50 chance) multiplied by
-    //randMultiplier + 1 or multiplied by 1 - randmultiplier so that each stat
-    //varries only by 20% of the user's respective stat
-    //Health:
-    if (rand.nextInt(2) > 0) {
-      health = ((randMultiplier + 1) * healthTemplate).round();
-    } else {
-      health = ((1 - randMultiplier) * healthTemplate).round();
-    }
-    //Strength:
-    if (rand.nextInt(2) > 0) {
-      strength = ((randMultiplier + 1) * strengthTemplate).round();
-    } else {
-      strength = ((1 - randMultiplier) * strengthTemplate).round();
-    }
-    //Speed:
-    if (rand.nextInt(2) > 0) {
-      speed = ((randMultiplier + 1) * strengthTemplate).round();
-    } else {
-      speed = ((1 - randMultiplier) * strengthTemplate).round();
-    }
-
-    //opponent will have images based on their strength once images are created
-    //and character class incorporates stats
-
-    //botCharacter = character(head, leg, body, arm, accessories);
+    health = ((0.95 + randMultiplier) * healthTemplate).round();
+    randMultiplier = rand.nextInt(21) * .01;
+    strength = ((0.95 + randMultiplier) * strengthTemplate).round();
+    randMultiplier = rand.nextInt(21) * .01;
+    speed = ((0.95 + randMultiplier) * speedTemplate).round();
   }
 }
-
 
 //For Referencing:
 /*class BattleInitScreen extends StatefulWidget {

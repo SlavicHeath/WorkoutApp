@@ -1,34 +1,40 @@
 //Ben Williams
 
+import 'package:workoutpet/main.dart';
+import 'dart:math';
+import 'dart:io';
 import 'character.dart';
 import 'bot.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-///
-/// [Battle.]
-///
-/// [@author	Unknown]
-/// [ @since	v0.0.1 ]
-/// [@version	v1.0.0	Tuesday, April 4th, 2023]
-/// [@global]
-///
 class Battle {
-  //var userCharacter;
-  var userCharacter;
-  var botCharacter;
-  int userCurHealth = 0;
-  int botCurHealth = 0;
+  int userCurHealth;
+  int userStrength;
+  int userSpeed;
+  int botCurHealth;
+  int botStrength;
+  int botSpeed;
+  int turn;
 
-  //contructor
-  Battle(this.userCharacter) {
-    userCurHealth = userCharacter.health;
-    //generates an opponent for the battle based on the user's stats
-    botCharacter =
-        Bot(userCharacter.health, userCharacter.strength, userCharacter.speed);
-    botCurHealth = botCharacter.health;
-  }
+  Battle(
+      {required this.userCurHealth,
+      required this.userStrength,
+      required this.userSpeed,
+      required this.botCurHealth,
+      required this.botStrength,
+      required this.botSpeed,
+      required this.turn});
+
+  static Battle fromJson(Map<String, dynamic> json) => Battle(
+      userCurHealth: json['userCurHealth'],
+      userStrength: json['userStrength'],
+      userSpeed: json['userSpeed'],
+      botCurHealth: json['botCurHealth'],
+      botStrength: json['botStrength'],
+      botSpeed: json['botSpeed'],
+      turn: json['turn']);
 }
 
 void initBattle(BattleCharacter userStats) {
@@ -40,7 +46,7 @@ void initBattle(BattleCharacter userStats) {
     'botCurHealth': botStats.health,
     'botStrength': botStats.strength,
     'botSpeed': botStats.speed,
-    'Turn': 0,
+    'turn': 0,
   });
 }
 
@@ -61,6 +67,36 @@ Stream<List<Workout>> readWorkouts() => FirebaseFirestore.instance
     .map((snapshot) =>
         snapshot.docs.map((doc) => Workout.fromJson(doc.data())).toList());
 
+Stream<Battle> readBattle() => FirebaseFirestore.instance
+    .collection('Battles')
+    .doc(documentId)
+    .snapshots()
+    .map((DocumentSnapshot<Map<String, dynamic>> snapshot) =>
+        Battle.fromJson(snapshot.data()!));
+
+void updateHealth(docId, userHealth, botHealth) {
+  final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
+  battleDoc.update({
+    'userCurHealth': userHealth,
+    'botCurHealth': botHealth,
+  });
+}
+
+void updateTurn(docId, turn) {
+  final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
+  battleDoc.update({
+    'turn': turn,
+  });
+}
+
+void deleteDoc(docId) {
+  final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
+  battleDoc.delete();
+}
+
+const documentId =
+    'PhjAKJ7QywZ2kQWd5vAN'; //Change this to a valid document Id in the Battles collection
+
 BattleCharacter calcStats(List<Workout> workoutList) {
   BattleCharacter temp = BattleCharacter(0, 0, 0);
   workoutList.forEach((workout) {
@@ -79,9 +115,9 @@ class UserStatsScreen extends StatefulWidget {
 }
 
 class _UserStatsScreen extends State<UserStatsScreen> {
-  final Stream<QuerySnapshot> _userStats =
+  /*final Stream<QuerySnapshot> _userStats =
       FirebaseFirestore.instance.collection('workout information').snapshots();
-  //final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();*/
 
   @override
   Widget build(BuildContext context) {
@@ -144,24 +180,24 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
                             )),
-                        /*ElevatedButton(
-                onPressed: () {
-                  initBattle(userStats);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BattlePreview()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text("Find Opponent"),
-              ),*/
+                        ElevatedButton(
+                          onPressed: () {
+                            initBattle(userStats);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BattlePreviewScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(200, 40),
+                            backgroundColor: Colors.purple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text("Find Opponent"),
+                        ),
                       ],
                     );
                   } else {
@@ -174,316 +210,494 @@ class _UserStatsScreen extends State<UserStatsScreen> {
   }
 }
 
-/*class BattleInitScreen extends StatefulWidget {
-///
-/// [BattleInitScreen.]
-///
-/// [@author	Unknown]
-/// [ @since	v0.0.1 ]
-/// [@version	v1.0.0	Tuesday, April 4th, 2023]
-/// [@see		StatefulWidget]
-/// [@global]
-///
-class BattleInitScreen extends StatefulWidget {
-  const BattleInitScreen({super.key});
+class BattlePreviewScreen extends StatefulWidget {
+  const BattlePreviewScreen({super.key});
   @override
-  // ignore: library_private_types_in_public_api
-  _BattleInitScreenState createState() => _BattleInitScreenState();
+  _BattlePreviewScreenState createState() => _BattlePreviewScreenState();
 }
 
-///
-/// [_BattleInitScreenState.]
-///
-/// [@author	Unknown]
-/// [ @since	v0.0.1 ]
-/// [@version	v1.0.0	Tuesday, April 4th, 2023]
-/// [@see		State]
-/// [@global]
-///
-class _BattleInitScreenState extends State<BattleInitScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  TextEditingController _healthController = TextEditingController();
-
-  TextEditingController _strengthController = TextEditingController();
-
-  int _botHealth = 0;
-  int _botStrength = 0;
-
-  void _initBattle() {
-    int health = int.tryParse(_healthController.text) ?? 0;
-    int strength = int.tryParse(_strengthController.text) ?? 0;
-
-    Battle newBattle = Battle(battleCharacter(health, strength));
-
-    setState(() {
-      _botHealth = newBattle.botCharacter.health;
-      _botStrength = newBattle.botCharacter.health;
-    });
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => MainBattleScreen(
-              battle: newBattle,
-              botHealth: _botHealth,
-              botStrength: _botStrength)),
-    );
-  }
-
+class _BattlePreviewScreenState extends State<BattlePreviewScreen> {
+  /*final Stream<QuerySnapshot> battleData =
+      FirebaseFirestore.instance.collection('Battles').snapshots();*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Battle Input'),
+        title: const Text('Battle Preview'),
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.purple,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _healthController,
-                decoration: const InputDecoration(
-                  labelText: 'User\'s Health',
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty || int.parse(value) < 0) {
-                    return 'Health value is invalid';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _strengthController,
-                decoration: const InputDecoration(
-                  labelText: 'User\'s Strength',
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty || int.parse(value) < 0) {
-                    return 'Strength value is invalid';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _initBattle();
-                  }
-                },
-                child: Text('Start Battle'),
-              ),
-              SizedBox(height: 16.0),
-              // ignore: prefer_const_constructors
-            ],
-          ),
-        ),
+        child: StreamBuilder<Battle>(
+            stream: readBattle(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text("Database Error: ${snapshot.error}");
+              } else if (snapshot.hasData) {
+                final curBattle = snapshot.data!;
+                int userCurHealth = curBattle.userCurHealth;
+                int userStrength = curBattle.userStrength;
+                int userSpeed = curBattle.userSpeed;
+                int botCurHealth = curBattle.botCurHealth;
+                int botStrength = curBattle.botStrength;
+                int botSpeed = curBattle.botSpeed;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text('HEALTH',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                              )),
+                        ),
+                        Expanded(
+                          child: Text('HEALTH',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                              )),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(child: SizedBox(height: 10.0)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text('$userCurHealth',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                                fontSize: 28.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              )),
+                        ),
+                        Expanded(
+                          child: Text('$botCurHealth',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                                fontSize: 28.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                              )),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(child: SizedBox(height: 20.0)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text('STRENGTH',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                              )),
+                        ),
+                        Expanded(
+                          child: Text('STRENGTH',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                              )),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(child: SizedBox(height: 10.0)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text('$userStrength',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                                fontSize: 28.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              )),
+                        ),
+                        Expanded(
+                          child: Text('$botStrength',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                                fontSize: 28.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                              )),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(child: SizedBox(height: 20.0)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text('SPEED',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                              )),
+                        ),
+                        Expanded(
+                          child: Text('SPEED',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                              )),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(child: SizedBox(height: 10.0)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text('$userSpeed',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                                fontSize: 28.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              )),
+                        ),
+                        Expanded(
+                          child: Text('$botSpeed',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+                                fontSize: 28.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                              )),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(100, 40),
+                            backgroundColor: Colors.purple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: Text("Back"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BattleScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(100, 40),
+                            backgroundColor: Colors.purple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: Text("Fight"),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              } else {
+                //if database is being loaded
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
       ),
     );
   }
-} */
-/*
 }
 
-///
-/// [MainBattleScreen.]
-///
-/// [@author	Unknown]
-/// [ @since	v0.0.1 ]
-/// [@version	v1.0.0	Tuesday, April 4th, 2023]
-/// [@see		StatefulWidget]
-/// [@global]
-///
-class MainBattleScreen extends StatefulWidget {
-  Battle battle;
-  int botHealth, botStrength;
-  MainBattleScreen(
-      {super.key,
-      required this.battle,
-      required this.botHealth,
-      required this.botStrength});
+class BattleScreen extends StatefulWidget {
+  const BattleScreen({super.key});
   @override
-  _MainBattleScreenState createState() => _MainBattleScreenState(battle);
+  _BattleScreenState createState() => _BattleScreenState();
 }
 
-///
-/// [_MainBattleScreenState.]
-///
-/// [@author	Unknown]
-/// [ @since	v0.0.1 ]
-/// [@version	v1.0.0	Tuesday, April 4th, 2023]
-/// [@see		State]
-/// [@global]
-///
-class _MainBattleScreenState extends State<MainBattleScreen> {
-  Battle battle;
-  _MainBattleScreenState(this.battle);
+class _BattleScreenState extends State<BattleScreen> {
+  /*final Stream<QuerySnapshot> battleData =
+      FirebaseFirestore.instance.collection('Battles').snapshots();*/
+  String _turnButtonText = "Next Turn";
+  String _logText = "";
+  var _logColor = Colors.green;
+  void action(Battle curBattle) {
+    var rand = new Random();
+    if (curBattle.turn % 2 == 0) {
+      if (rand.nextInt(100) < curBattle.botSpeed) {
+        setState(() {
+          _logColor = Colors.green;
+          _logText = "User misses enemy";
+        });
+      } else {
+        curBattle.botCurHealth -= curBattle.userStrength;
+        setState(() {
+          _logColor = Colors.green;
+          _logText = "User hits enemy for ${curBattle.userStrength} damage";
+        });
+      }
+    } else {
+      if (rand.nextInt(100) < curBattle.userSpeed) {
+        setState(() {
+          _logColor = Colors.red;
+          _logText = "Enemy misses user";
+        });
+      } else {
+        curBattle.userCurHealth -= curBattle.botStrength;
+        setState(() {
+          _logColor = Colors.red;
+          _logText = "Enemy hits user for ${curBattle.botStrength} damage";
+        });
+      }
+    }
+    if (curBattle.botCurHealth <= 0) {
+      setState(() {
+        _turnButtonText = "The User Has Won!!!";
+      });
+    }
+    if (curBattle.userCurHealth <= 0) {
+      setState(() {
+        _turnButtonText = "The Enemy Has Won :(";
+      });
+    }
+    updateHealth(documentId, curBattle.userCurHealth, curBattle.botCurHealth);
+    curBattle.turn++;
+    updateTurn(documentId, curBattle.turn);
+  }
 
   @override
   Widget build(BuildContext context) {
-    int userCurHealth = battle.userCurHealth;
-    int botCurHealth = battle.botCurHealth;
-    int userStrength = battle.userCharacter.strength;
-    int botStrength = battle.botCharacter.strength;
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Battle'),
+          title: const Text('Battle Preview'),
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.purple,
         ),
         body: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('HEALTH',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                        )),
-                  ),
-                  Expanded(
-                    child: Text('HEALTH',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                        )),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(child: SizedBox(height: 10.0)),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('$userCurHealth',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        )),
-                  ),
-                  Expanded(
-                    child: Text('$botCurHealth',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        )),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(child: SizedBox(height: 20.0)),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('STRENGTH',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                        )),
-                  ),
-                  Expanded(
-                    child: Text('STRENGTH',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                        )),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(child: SizedBox(height: 10.0)),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('$userStrength',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        )),
-                  ),
-                  Expanded(
-                    child: Text('$botStrength',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        )),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(child: SizedBox(height: 20.0)),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('SPEED',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                        )),
-                  ),
-                  Expanded(
-                    child: Text('SPEED',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                        )),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(child: SizedBox(height: 10.0)),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text('$userSpeed',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        )),
-                  ),
-                  Expanded(
-                    child: Text('$botSpeed',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        )),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.all(16.0),
+          child: StreamBuilder<Battle>(
+              stream: readBattle(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("Database Error: ${snapshot.error}");
+                } else if (snapshot.hasData) {
+                  final curBattle = snapshot.data!;
+                  int userCurHealth = curBattle.userCurHealth;
+                  int userStrength = curBattle.userStrength;
+                  int userSpeed = curBattle.userSpeed;
+                  int botCurHealth = curBattle.botCurHealth;
+                  int botStrength = curBattle.botStrength;
+                  int botSpeed = curBattle.botSpeed;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text('HEALTH',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                )),
+                          ),
+                          Expanded(
+                            child: Text('HEALTH',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                )),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(child: SizedBox(height: 10.0)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text('$userCurHealth',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                )),
+                          ),
+                          Expanded(
+                            child: Text('$botCurHealth',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                )),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(child: SizedBox(height: 20.0)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text('STRENGTH',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                )),
+                          ),
+                          Expanded(
+                            child: Text('STRENGTH',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                )),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(child: SizedBox(height: 10.0)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text('$userStrength',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                )),
+                          ),
+                          Expanded(
+                            child: Text('$botStrength',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                )),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(child: SizedBox(height: 20.0)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text('SPEED',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                )),
+                          ),
+                          Expanded(
+                            child: Text('SPEED',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                )),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(child: SizedBox(height: 10.0)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text('$userSpeed',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                )),
+                          ),
+                          Expanded(
+                            child: Text('$botSpeed',
+                                style: TextStyle(
+                                  letterSpacing: 2.0,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                )),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(_logText,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: _logColor,
+                              )),
+                        ),
+                      ),
+                      Expanded(
+                          child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if ((userCurHealth <= 0) |
+                                      (botCurHealth <= 0)) {
+                                    deleteDoc(documentId);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomeScreen()),
+                                    );
+                                  } else {
+                                    action(curBattle);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: const Size(200, 40),
+                                  backgroundColor: Colors.purple,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: Text(_turnButtonText),
+                              )))
+                    ],
+                  );
+                } else {
+                  //if database is being loaded
+                  return Center(child: CircularProgressIndicator());
+                }
+              }),
         ));
   }
-}*/
+}
