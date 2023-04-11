@@ -1,13 +1,11 @@
 //Ben Williams
 
 import 'package:workoutpet/main.dart';
+import 'package:workoutpet/workout.dart';
 import 'dart:math';
-import 'dart:io';
-import 'character.dart';
 import 'bot.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class Battle {
   int userCurHealth;
@@ -125,6 +123,54 @@ class _UserStatsScreen extends State<UserStatsScreen> {
         appBar: AppBar(
           title: const Text('User\'s Battle Stats'),
           backgroundColor: Colors.purple,
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(color: Colors.black87),
+                child: Text("User Info"),
+              ),
+              ListTile(
+                leading: Icon(Icons.home),
+                title: Text("Home"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => WorkoutPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text("Battle"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.login),
+                title: Text("Signout"),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

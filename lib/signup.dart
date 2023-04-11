@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/character_select.dart';
 import 'package:workoutpet/sign_in.dart';
 
 import 'main.dart';
@@ -185,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       Navigator.of(context).pop();
       // Go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
+        builder: (context) => const CharacterSelect(),
       ));
     }
     // Check data base for errors such as wrong password or email

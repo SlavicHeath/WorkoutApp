@@ -1,11 +1,7 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:workoutpet/workout.dart';
-import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 ///
 /// [PersonalInfoPage.]
@@ -56,9 +52,8 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       bmiResult = bmi;
     });
   }
-  
-final authUser = FirebaseAuth.instance.currentUser;
 
+  final authUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +130,7 @@ final authUser = FirebaseAuth.instance.currentUser;
                       })
                       .then((value) => print("added"))
                       .catchError((error) => print("Failed to add: $error"));
-                Navigator.of(context).push(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
                         builder: (context) => WorkoutPage()),

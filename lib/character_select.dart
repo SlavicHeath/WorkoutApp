@@ -8,74 +8,27 @@ import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
 
-class DsiplayTest extends StatefulWidget {
-  const DsiplayTest({super.key});
+class CharacterSelect extends StatefulWidget {
+  const CharacterSelect({super.key});
 
   @override
-  State<DsiplayTest> createState() => _DsiplayTestState();
+  State<CharacterSelect> createState() => _CharacterSelectState();
 }
 
-class _DsiplayTestState extends State<DsiplayTest> {
+class _CharacterSelectState extends State<CharacterSelect> {
   int activeIndex = 0;
   final dislplayFile = [
     'assets/character/Astronaut.glb',
-    'assets/character/Astronaut1.glb',
-    'assets/character/Astronaut2.glb',
-    'assets/character/Astronaut3.glb',
+    'assets/character/exampleDuck.glb',
+    'assets/character/exampleOctopus.glb',
+    'assets/character/examplePanda.glb',
+    'assets/character/exampleTurtle.glb',
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Model Test"),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.black87),
-              child: Text("Profile"),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Home"),
-              onTap: () {
-                Navigator.pop(
-                    context); //To close the drawer wwhen moving to the next page
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => DsiplayTest(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text("About"),
-              onTap: () {
-                Navigator.pop(
-                    context); //To close the drawer wwhen moving to the next page
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => WorkoutPage(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.login),
-              title: Text("Signup/Login"),
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
       ),
       body: Center(
         child: Column(
