@@ -138,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: const Text(" Previous Workout"),
               ),
-              /*ElevatedButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -154,7 +154,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text("Character Viewer"),
-              ),*/
+              ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
