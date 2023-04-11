@@ -200,7 +200,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             // previous button used to see previous workouts
             // current button used to show the workouts the user just inputted whilst logged in for that day/time
             backgroundColor: Colors.purple,
-            selectedItemColor: Colors.white,
+            selectedItemColor: Colors.black,
             currentIndex: currindex,
             items: const [
               BottomNavigationBarItem(
@@ -612,8 +612,15 @@ class _ChestPageState extends State<ChestPage> {
 class CurrentWorkPage extends StatefulWidget {
   CurrentWorkPage({super.key});
 
-  CollectionReference docIds =
-      FirebaseFirestore.instance.collection('workout information');
+  ///
+  /// [_CurrentWorkPageState.]
+  ///
+  /// [@author	Unknown]
+  /// [ @since	v0.0.1 ]
+  /// [@version	v1.0.0	Tuesday, April 4th, 2023]
+  /// [@see		State]
+  /// [@global]
+  ///
 
   @override
   _CurrentWorkPageState createState() => _CurrentWorkPageState();
@@ -705,11 +712,11 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
           )),
           ElevatedButton(
             onPressed: () {
-              //Navigator.of(context).push(
-              // MaterialPageRoute(
-              //The right side is the widget you want to go to
-              // builder: (context) => BattleInitScreen()),
-              //);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    //The right side is the widget you want to go to
+                    builder: (context) => UserStatsScreen()),
+              );
             },
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(100, 50),
