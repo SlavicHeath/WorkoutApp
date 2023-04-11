@@ -1,4 +1,5 @@
 
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -129,6 +130,7 @@ final authUser = FirebaseAuth.instance.currentUser;
                       .collection('personal')
                       .doc(authUser?.uid)
                       .set({
+                        'user' : authUser?.uid,
                         'weight': _weightController.text,
                         'height': _heightController.text,
                         'bmi': bmiResult
@@ -171,6 +173,4 @@ final authUser = FirebaseAuth.instance.currentUser;
  //     .collection('users')
  //     .add({'Weight': weight, 'Height': height, 'BMI': bmi});
 //}
-
-
 
