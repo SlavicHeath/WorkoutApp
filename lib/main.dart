@@ -5,8 +5,10 @@ import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'package:workoutpet/workout.dart';
 import 'battle.dart';
+import 'character_select.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 ///
 /// [@var		object	async]
@@ -136,12 +138,12 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: const Text(" Previous Workout"),
               ),
-              ElevatedButton(
+              /*ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => DataWrite()),
+                        builder: (context) => DsiplayTest()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -151,8 +153,8 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text("Add Data to Database"),
-              ),
+                child: Text("Character Viewer"),
+              ),*/
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -172,11 +174,23 @@ class HomeScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => BattleInitScreen()),
-                  );
+                  final docNum = FirebaseFirestore.instance
+                      .collection('Battles')
+                      .doc()
+                      .get()
+                      .then((DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => BattlePreviewScreen()),
+                      );
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => UserStatsScreen()),
+                      );
+                    }
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   fixedSize: const Size(200, 40),
@@ -186,6 +200,23 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text("Battle Screen"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => BattleScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Fighting Screen"),
               ),
             ]),
           ),
