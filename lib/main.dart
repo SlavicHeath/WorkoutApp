@@ -138,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: const Text(" Previous Workout"),
               ),
-              ElevatedButton(
+              /*ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -154,7 +154,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text("Character Viewer"),
-              ),
+              ),*/
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -180,7 +180,10 @@ class HomeScreen extends StatelessWidget {
                       .get()
                       .then((DocumentSnapshot documentSnapshot) {
                     if (documentSnapshot.exists) {
-                      print(Text("No Docs"));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => BattlePreviewScreen()),
+                      );
                     } else {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -197,6 +200,23 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text("Battle Screen"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => BattleScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Fighting Screen"),
               ),
             ]),
           ),
