@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutpet/character_select.dart';
 import 'package:workoutpet/sign_in.dart';
-
 import 'main.dart';
 
 ///

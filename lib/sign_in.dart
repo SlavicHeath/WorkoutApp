@@ -166,15 +166,14 @@ class _LoginScreenState extends State<LoginScreen> {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
       const snackbar = SnackBar(
-        content: Text("Email sent "),
+        content: Text("Logged In "),
         backgroundColor: Colors.green,
         elevation: 10,
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.all(5),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      print("Email Sent to ${email}");
-      print("Logged in ${credential.user}");
+      print("Logged in  as ${credential.user}");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
 
