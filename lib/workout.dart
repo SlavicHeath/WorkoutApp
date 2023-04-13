@@ -691,7 +691,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
               child: StreamBuilder(
             //Calls into firebase to retrieve data from workout info document
             stream: FirebaseFirestore.instance
-                .collection('workout information')
+                .collection('current workouts')
                 .where('user', isEqualTo: authUser!.uid)
                 .snapshots(),
             builder:
@@ -737,8 +737,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                           onPressed: () {
                                             //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
                                             FirebaseFirestore.instance
-                                                .collection(
-                                                    'workout information')
+                                                .collection('current workouts')
                                                 .doc(document.id)
                                                 .delete()
                                                 .whenComplete(() {
@@ -767,6 +766,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                     //The right side is the widget you want to go to
                     builder: (context) => UserStatsScreen()),
               );
+              deleteDoc();
             },
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(100, 50),
@@ -894,6 +894,23 @@ _submitInfo() async {
         .add(workout)
         .then((value) => print(" Information added"))
         .catchError((error) => print("Failed to add: $error"));
+  }
+  if (authUser != null) {
+    await FirebaseFirestore.instance
+        .collection('current workouts')
+        .add(workout)
+        .then((value) => print(" Information added"))
+        .catchError((error) => print("Failed to add: $error"));
+  }
+}
+
+Future<void> deleteDoc() async {
+  final CollectionReference currentWork =
+      FirebaseFirestore.instance.collection('current workouts');
+  final QuerySnapshot query = await currentWork.get();
+
+  for (DocumentSnapshot documentSnapshot in query.docs) {
+    await documentSnapshot.reference.delete();
   }
 }
 
