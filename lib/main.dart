@@ -9,6 +9,7 @@ import 'character_select.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 ///
 /// [@var		object	async]
@@ -16,7 +17,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 ///
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
+  runApp(MaterialApp(title: "WorkoutPet", home: HomeScreen()));
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -32,7 +33,8 @@ void main() async {
 /// [@global]
 ///
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+  //final authUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -162,37 +164,34 @@ class HomeScreen extends StatelessWidget {
               //   ),
               //   child: Text("Character Viewer"),
               // ),
-
-              // Fight Screen preview test
-              // ElevatedButton(
-              //   onPressed: () {
-              //     final docNum = FirebaseFirestore.instance
-              //         .collection('Battles')
-              //         .doc()
-              //         .get()
-              //         .then((DocumentSnapshot documentSnapshot) {
-              //       if (documentSnapshot.exists) {
-              //         Navigator.of(context).push(
-              //           MaterialPageRoute(
-              //               builder: (context) => BattlePreviewScreen()),
-              //         );
-              //       } else {
-              //         Navigator.of(context).push(
-              //           MaterialPageRoute(
-              //               builder: (context) => UserStatsScreen()),
-              //         );
-              //       }
-              //     });
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     fixedSize: const Size(200, 40),
-              //     backgroundColor: Colors.purple,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: Text("Battle Screen"),
-              // ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => UserStatsScreen()));
+                  /*} else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Error'),
+                        content: const Text("User is not signed in!"),
+                        actions: [
+                          TextButton(
+                              child: const Text('OK'),
+                              onPressed: () => Navigator.pop(context)),
+                        ],
+                      ),
+                    );
+                  }*/
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text("Stats"),
+              ),
 
               // ElevatedButton(
               //   onPressed: () {

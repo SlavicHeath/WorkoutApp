@@ -6,6 +6,7 @@ import 'dart:math';
 import 'bot.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Battle {
   int userCurHealth;
@@ -35,9 +36,9 @@ class Battle {
       turn: json['turn']);
 }
 
-void initBattle(BattleCharacter userStats) {
+void initBattle(BattleCharacter userStats, userId) {
   Bot botStats = Bot(userStats.health, userStats.strength, userStats.speed);
-  FirebaseFirestore.instance.collection('Battles').add({
+  FirebaseFirestore.instance.collection('Battles').doc(userId).set({
     'userCurHealth': userStats.health,
     'userStrength': userStats.strength,
     'userSpeed': userStats.speed,
@@ -59,15 +60,16 @@ class Workout {
       Workout(reps: json['reps'], sets: json['sets'], weight: json['weight']);
 }
 
-Stream<List<Workout>> readWorkouts() => FirebaseFirestore.instance
+Stream<List<Workout>> readWorkouts(userId) => FirebaseFirestore.instance
     .collection('workout information')
+    .where('user', isEqualTo: userId)
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((doc) => Workout.fromJson(doc.data())).toList());
 
-Stream<Battle> readBattle() => FirebaseFirestore.instance
+Stream<Battle> readBattle(userId) => FirebaseFirestore.instance
     .collection('Battles')
-    .doc(documentId)
+    .doc(userId)
     .snapshots()
     .map((DocumentSnapshot<Map<String, dynamic>> snapshot) =>
         Battle.fromJson(snapshot.data()!));
@@ -92,9 +94,6 @@ void deleteDoc(docId) {
   battleDoc.delete();
 }
 
-const documentId =
-    'PhjAKJ7QywZ2kQWd5vAN'; //Change this to a valid document Id in the Battles collection
-
 BattleCharacter calcStats(List<Workout> workoutList) {
   BattleCharacter temp = BattleCharacter(0, 0, 0);
   workoutList.forEach((workout) {
@@ -113,9 +112,8 @@ class UserStatsScreen extends StatefulWidget {
 }
 
 class _UserStatsScreen extends State<UserStatsScreen> {
-  /*final Stream<QuerySnapshot> _userStats =
-      FirebaseFirestore.instance.collection('workout information').snapshots();
-  //final _formKey = GlobalKey<FormState>();*/
+  final authUser = FirebaseAuth.instance
+      .currentUser; //authUser!.uid in builder (and function args) and userId for method params
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +174,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Center(
             child: StreamBuilder<List<Workout>>(
-                stream: readWorkouts(),
+                stream: readWorkouts(authUser!.uid),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text("Database Error: ${snapshot.error}");
@@ -228,12 +226,43 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                             )),
                         ElevatedButton(
                           onPressed: () {
-                            initBattle(userStats);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BattlePreviewScreen()),
-                            );
+                            if (authUser != null) {
+                              FirebaseFirestore.instance
+                                  .collection('Battles')
+                                  .doc(authUser!.uid)
+                                  .get()
+                                  .then((DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => BattleScreen()));
+                                } else if ((userHealth == 0) |
+                                    (userStrength == 0)) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Wait!'),
+                                      content: const Text(
+                                          "You must complete more workouts before you can begin a battle\n(Your Health and Strength must be above 0)"),
+                                      actions: [
+                                        TextButton(
+                                            child: const Text('OK'),
+                                            onPressed: () =>
+                                                Navigator.pop(context)),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  initBattle(userStats, authUser!.uid);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BattleScreen()));
+                                }
+                              });
+                            } else {
+                              throw ArgumentError("User is not signed in!");
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(200, 40),
@@ -243,7 +272,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                             ),
                           ),
                           child: const Text("Find Opponent"),
-                        ),
+                        )
                       ],
                     );
                   } else {
@@ -253,230 +282,6 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                 }),
           ),
         ));
-  }
-}
-
-class BattlePreviewScreen extends StatefulWidget {
-  const BattlePreviewScreen({super.key});
-  @override
-  _BattlePreviewScreenState createState() => _BattlePreviewScreenState();
-}
-
-class _BattlePreviewScreenState extends State<BattlePreviewScreen> {
-  /*final Stream<QuerySnapshot> battleData =
-      FirebaseFirestore.instance.collection('Battles').snapshots();*/
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Battle Preview'),
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.purple,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder<Battle>(
-            stream: readBattle(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text("Database Error: ${snapshot.error}");
-              } else if (snapshot.hasData) {
-                final curBattle = snapshot.data!;
-                int userCurHealth = curBattle.userCurHealth;
-                int userStrength = curBattle.userStrength;
-                int userSpeed = curBattle.userSpeed;
-                int botCurHealth = curBattle.botCurHealth;
-                int botStrength = curBattle.botStrength;
-                int botSpeed = curBattle.botSpeed;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('HEALTH',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('HEALTH',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 10.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('$userCurHealth',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('$botCurHealth',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 20.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('STRENGTH',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('STRENGTH',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 10.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('$userStrength',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('$botStrength',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 20.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('SPEED',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('SPEED',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 10.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('$userSpeed',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('$botSpeed',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(100, 40),
-                            backgroundColor: Colors.purple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          child: Text("Back"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BattleScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(100, 40),
-                            backgroundColor: Colors.purple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          child: Text("Fight"),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              } else {
-                //if database is being loaded
-                return Center(child: CircularProgressIndicator());
-              }
-            }),
-      ),
-    );
   }
 }
 
@@ -531,23 +336,23 @@ class _BattleScreenState extends State<BattleScreen> {
         _turnButtonText = "The Enemy Has Won :(";
       });
     }
-    updateHealth(documentId, curBattle.userCurHealth, curBattle.botCurHealth);
+    updateHealth(
+        authUser!.uid, curBattle.userCurHealth, curBattle.botCurHealth);
     curBattle.turn++;
-    updateTurn(documentId, curBattle.turn);
+    updateTurn(authUser!.uid, curBattle.turn);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Battle Preview'),
-          automaticallyImplyLeading: false,
+          title: const Text('Battle'),
           backgroundColor: Colors.purple,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: StreamBuilder<Battle>(
-              stream: readBattle(),
+              stream: readBattle(authUser!.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text("Database Error: ${snapshot.error}");
@@ -718,7 +523,7 @@ class _BattleScreenState extends State<BattleScreen> {
                                 onPressed: () {
                                   if ((userCurHealth <= 0) |
                                       (botCurHealth <= 0)) {
-                                    deleteDoc(documentId);
+                                    deleteDoc(authUser!.uid);
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
