@@ -1,5 +1,8 @@
 import 'dart:ffi';
 
+import 'package:model_viewer_plus/model_viewer_plus.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +10,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/sign_in.dart';
-
 import 'character_select.dart';
 
 void main() => runApp(const MyApp());
@@ -72,9 +74,31 @@ class WorkoutPage extends StatefulWidget {
 /// [@see		State]
 /// [@global]
 ///
+///
+Widget buildIndicator() {
+  int activeIndex = 0;
+  final dislplayFile = [
+    'assets/character/Astronaut.glb',
+    'assets/character/exampleDuck.glb',
+    'assets/character/exampleOctopus.glb',
+    'assets/character/examplePanda.glb',
+    'assets/character/exampleTurtle.glb',
+  ];
+
+  return AnimatedSmoothIndicator(
+    activeIndex: activeIndex,
+    count: dislplayFile.length,
+    effect: SlideEffect(activeDotColor: Colors.purple),
+  );
+}
+
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
+  int activeIndex = 0;
+  final dislplayFile = [
+    'assets/character/exampleDuck.glb',
+  ];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -144,6 +168,23 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: ListView.builder(
+                                itemCount: dislplayFile.length,
+                                itemBuilder: (context, index) {
+                                  final displayFile = dislplayFile[index];
+                                  return buildImage(displayFile, index);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                         TextField(
                             controller: field5,
                             decoration: null,
@@ -1100,3 +1141,31 @@ Future openDialog(context) => showDialog(
         ],
       ),
     );
+
+Widget buildImage(String displayFile, int index) {
+  return StreamBuilder(
+      //Calls into firebase to retrieve data from workout info document
+      stream: FirebaseFirestore.instance
+          .collection('character')
+          .where('user', isEqualTo: authUser!.uid)
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: ModelViewer(
+                src: displayFile,
+                alt: "A 3D model of an astronaut",
+                ar: true,
+                autoRotate: true,
+                cameraControls: true,
+              ),
+            ),
+          ],
+        );
+      });
+}
