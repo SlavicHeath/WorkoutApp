@@ -8,6 +8,9 @@ import 'package:workoutpet/sign_in.dart';
 
 import 'character_select.dart';
 
+List<dynamic> snapshotList =
+    []; //used to collect the amount of snapshots in firebase collection "current workouts"
+
 void main() => runApp(const MyApp());
 
 ///
@@ -79,7 +82,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('SELECT MUSCLE GROUP')),
+          title: const Center(child: Text('WORKOUT ZONE')),
           backgroundColor: Colors.purple,
         ),
         drawer: Drawer(
@@ -696,67 +699,68 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                // Will prompt user that there's no data therefore no previous workouts
+              // Will prompt user that there's no data therefore no previous workouts
+              if (snapshot.hasData) {
+                return ListView(
+                  children: snapshot.data!.docs.map((document) {
+                    return Card(
+                      child: ListTile(
+                        //displays previous workouts in a tile list format
+                        autofocus: true,
+                        leading: Text(document['body part']),
+                        title: Text(document[
+                            'name']), // $ allows integer data to be read in
+                        subtitle: Text(
+                            '${document['weight']} lbs ${document['reps']} reps ${document['sets']} sets'),
+                        trailing: Container(
+                            child: IconButton(
+                          onPressed: () {
+                            //Pops up an alert dialog asking the user to confirm deletion of workout
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                        title: const Text('Confirm deletion'),
+                                        content: const Text(
+                                            "Are you sure you want to delete workout?"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        //The right side is the widget you want to go to
+                                                        builder: (context) =>
+                                                            WorkoutPage())); //if user selects no, sends user back to current workout page
+                                              },
+                                              child: const Text('NO')),
+                                          TextButton(
+                                              onPressed: () {
+                                                //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
+                                                FirebaseFirestore.instance
+                                                    .collection(
+                                                        'workout information')
+                                                    .doc(document.id)
+                                                    .delete()
+                                                    .whenComplete(() {
+                                                  print('deleted successfully');
+                                                });
+                                                setState(() {});
+                                                Navigator.of(context).pop();
+                                              }, //if user selects no, sends user back to current workout page
+                                              child: const Text('YES'))
+                                        ]));
+                          },
+                          icon: Icon(Icons.close),
+                        )),
+                        tileColor: Colors.purple,
+                      ),
+                    );
+                  }).toList(),
+                );
+              } else {
                 return const Center(
                   child: Text('No current workouts selected'),
                 );
               }
-              return ListView(
-                children: snapshot.data!.docs.map((document) {
-                  return Card(
-                    child: ListTile(
-                      //displays previous workouts in a tile list format
-                      autofocus: true,
-                      leading: Text(document['body part']),
-                      title: Text(document[
-                          'name']), // $ allows integer data to be read in
-                      subtitle: Text(
-                          '${document['weight']} lbs ${document['reps']} reps ${document['sets']} sets'),
-                      trailing: Container(
-                          child: IconButton(
-                        onPressed: () {
-                          //Pops up an alert dialog asking the user to confirm deletion of workout
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: const Text('Confirm deletion'),
-                                    content: const Text(
-                                        "Are you sure you want to delete workout?"),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    //The right side is the widget you want to go to
-                                                    builder: (context) =>
-                                                        WorkoutPage())); //if user selects no, sends user back to current workout page
-                                          },
-                                          child: const Text('no')),
-                                      TextButton(
-                                          onPressed: () {
-                                            //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
-                                            FirebaseFirestore.instance
-                                                .collection('current workouts')
-                                                .doc(document.id)
-                                                .delete()
-                                                .whenComplete(() {
-                                              print('deleted successfully');
-                                            });
-                                            setState(() {});
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('yes')),
-                                    ],
-                                  ));
-                        },
-                        icon: Icon(Icons.close),
-                      )),
-                      tileColor: Colors.purple,
-                    ),
-                  );
-                }).toList(),
-              );
             },
           )),
           ElevatedButton(
@@ -835,7 +839,39 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
                   subtitle:
                       Text('${document['reps']} reps ${document['sets']} sets'),
                   trailing: Text(document['name']),
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                                title: const Text('Confirm deletion'),
+                                content: const Text(
+                                    "Are you sure you want to delete workout?"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                //The right side is the widget you want to go to
+                                                builder: (context) =>
+                                                    WorkoutPage())); //if user selects no, sends user back to current workout page
+                                      },
+                                      child: const Text('NO')),
+                                  TextButton(
+                                      onPressed: () {
+                                        //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
+                                        FirebaseFirestore.instance
+                                            .collection('workout information')
+                                            .doc(document.id)
+                                            .delete()
+                                            .whenComplete(() {
+                                          print('deleted successfully');
+                                        });
+                                        setState(() {});
+                                        Navigator.of(context).pop();
+                                      }, //if user selects no, sends user back to current workout page
+                                      child: const Text('YES'))
+                                ])); // used to delete any previous workouts you don't want to keep
+                  },
                   tileColor: Colors.purple,
                 ),
               );
@@ -919,80 +955,88 @@ Future openDialog(context) => showDialog(
       context: context,
       //pop up dialog for when user presses one of the specific muscle buttons
       builder: (context) => AlertDialog(
-        title: const Text('Enter workout information'),
+        title: const Text('Enter workout '),
         content: Form(
           //Code to display a form style which also allows user
           //to enter information as well as an optional name for workout
           key: _formKey,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            // creates a list of textfields
-            TextFormField(
-                controller: field1,
-                //optional textfield to enter name of workout (if user wants to keep track of such information)
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Name',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  // Check for weight input
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter workout Name';
-                  }
-                  return null;
-                }),
-            TextFormField(
-                controller: field2,
-                keyboardType:
-                    TextInputType.number, //eliminates confusion of typing
-                //in letters(strings) rather integers
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(
-                      r'[0-9]')), //eliminates any chance of negative numbers being inputted
-                ],
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Weight (lbs)'),
-                validator: (value) {
-                  // Check for weight input
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the weight';
-                  }
-                  return null;
-                }),
-            TextFormField(
-                controller: field3,
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                //enter the weight
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Sets'),
-                validator: (value) {
-                  // Check for empty value for sets
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the amount of sets';
-                  }
-                  return null;
-                }),
-            TextFormField(
-                controller: field4,
-                //enter amount of reps
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                autofocus: true,
-                decoration: const InputDecoration(hintText: 'Reps'),
-                validator: (value) {
-                  // Checks for empty value of reps
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the number of reps';
-                  }
-                  return null;
-                }),
-          ]),
+          child: SizedBox(
+            height: 180,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // creates a list of textfields
+                    TextFormField(
+                        controller: field1,
+                        //optional textfield to enter name of workout (if user wants to keep track of such information)
+                        autofocus: true,
+                        decoration: const InputDecoration(
+                          hintText: 'Name',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          // Check for weight input
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter workout Name';
+                          }
+                          return null;
+                        }),
+                    TextFormField(
+                        controller: field2,
+                        keyboardType: TextInputType
+                            .number, //eliminates confusion of typing
+                        //in letters(strings) rather integers
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(
+                              r'[0-9]')), //eliminates any chance of negative numbers being inputted
+                        ],
+                        autofocus: true,
+                        decoration:
+                            const InputDecoration(hintText: 'Weight (lbs)'),
+                        validator: (value) {
+                          // Check for weight input
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the weight';
+                          }
+                          return null;
+                        }),
+                    TextFormField(
+                        controller: field3,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
+                        //enter the weight
+                        autofocus: true,
+                        decoration: const InputDecoration(hintText: 'Sets'),
+                        validator: (value) {
+                          // Check for empty value for sets
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the amount of sets';
+                          }
+                          return null;
+                        }),
+                    TextFormField(
+                        controller: field4,
+                        //enter amount of reps
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
+                        autofocus: true,
+                        decoration: const InputDecoration(hintText: 'Reps'),
+                        validator: (value) {
+                          // Checks for empty value of reps
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the number of reps';
+                          }
+                          return null;
+                        }),
+                  ]),
+            ),
+          ),
         ),
         actions: [
           //allows user to submit information or cancel if they choose to go back
