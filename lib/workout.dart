@@ -8,9 +8,6 @@ import 'package:workoutpet/sign_in.dart';
 
 import 'character_select.dart';
 
-List<dynamic> snapshotList =
-    []; //used to collect the amount of snapshots in firebase collection "current workouts"
-
 void main() => runApp(const MyApp());
 
 ///
@@ -142,7 +139,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     width: double.infinity,
                     color: Colors.white,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextField(
@@ -941,17 +938,19 @@ _submitInfo() async {
 }
 
 Future<void> deleteDoc() async {
+  //used to remove current workouts once user hits the battle button.
+  // gives a clean slate to pull points from after each "workout session"
   final Query<Map<String, dynamic>> currentWork = FirebaseFirestore.instance
       .collection('current workouts')
       .where('user', isEqualTo: authUser!.uid);
-  final QuerySnapshot query = await currentWork.get();
+  final QuerySnapshot query = await currentWork
+      .get(); //gets all the documents from the user.uid specific collection
 
   for (DocumentSnapshot documentSnapshot in query.docs) {
     await documentSnapshot.reference.delete();
   }
 }
 
-// used to reset text field for name when entering new workout
 Future openDialog(context) => showDialog(
       context: context,
       //pop up dialog for when user presses one of the specific muscle buttons
@@ -1077,6 +1076,8 @@ Future openDialog(context) => showDialog(
                     content: Text(
                         'Information Saved!'), //Displays confirmation message once user submits information on bottom of screen
                     backgroundColor: Colors.green);
+                duration:
+                Duration(seconds: 3);
                 ScaffoldMessenger.of(context).showSnackBar(mySnack);
               }
             },
