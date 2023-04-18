@@ -941,8 +941,9 @@ _submitInfo() async {
 }
 
 Future<void> deleteDoc() async {
-  final CollectionReference currentWork =
-      FirebaseFirestore.instance.collection('current workouts');
+  final Query<Map<String, dynamic>> currentWork = FirebaseFirestore.instance
+      .collection('current workouts')
+      .where('user', isEqualTo: authUser!.uid);
   final QuerySnapshot query = await currentWork.get();
 
   for (DocumentSnapshot documentSnapshot in query.docs) {
@@ -960,81 +961,83 @@ Future openDialog(context) => showDialog(
           //Code to display a form style which also allows user
           //to enter information as well as an optional name for workout
           key: _formKey,
-          child: SizedBox(
-            height: 180,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // creates a list of textfields
-                    TextFormField(
-                        controller: field1,
-                        //optional textfield to enter name of workout (if user wants to keep track of such information)
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                          hintText: 'Name',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          // Check for weight input
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter workout Name';
-                          }
-                          return null;
-                        }),
-                    TextFormField(
-                        controller: field2,
-                        keyboardType: TextInputType
-                            .number, //eliminates confusion of typing
-                        //in letters(strings) rather integers
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(
-                              r'[0-9]')), //eliminates any chance of negative numbers being inputted
-                        ],
-                        autofocus: true,
-                        decoration:
-                            const InputDecoration(hintText: 'Weight (lbs)'),
-                        validator: (value) {
-                          // Check for weight input
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the weight';
-                          }
-                          return null;
-                        }),
-                    TextFormField(
-                        controller: field3,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
-                        //enter the weight
-                        autofocus: true,
-                        decoration: const InputDecoration(hintText: 'Sets'),
-                        validator: (value) {
-                          // Check for empty value for sets
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the amount of sets';
-                          }
-                          return null;
-                        }),
-                    TextFormField(
-                        controller: field4,
-                        //enter amount of reps
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
-                        autofocus: true,
-                        decoration: const InputDecoration(hintText: 'Reps'),
-                        validator: (value) {
-                          // Checks for empty value of reps
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the number of reps';
-                          }
-                          return null;
-                        }),
-                  ]),
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: 250,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // creates a list of textfields
+                      TextFormField(
+                          controller: field1,
+                          //optional textfield to enter name of workout (if user wants to keep track of such information)
+                          autofocus: true,
+                          decoration: const InputDecoration(
+                            hintText: 'Name',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            // Check for weight input
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter workout Name';
+                            }
+                            return null;
+                          }),
+                      TextFormField(
+                          controller: field2,
+                          keyboardType: TextInputType
+                              .number, //eliminates confusion of typing
+                          //in letters(strings) rather integers
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(
+                                r'[0-9]')), //eliminates any chance of negative numbers being inputted
+                          ],
+                          autofocus: true,
+                          decoration:
+                              const InputDecoration(hintText: 'Weight (lbs)'),
+                          validator: (value) {
+                            // Check for weight input
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the weight';
+                            }
+                            return null;
+                          }),
+                      TextFormField(
+                          controller: field3,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          //enter the weight
+                          autofocus: true,
+                          decoration: const InputDecoration(hintText: 'Sets'),
+                          validator: (value) {
+                            // Check for empty value for sets
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the amount of sets';
+                            }
+                            return null;
+                          }),
+                      TextFormField(
+                          controller: field4,
+                          //enter amount of reps
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          autofocus: true,
+                          decoration: const InputDecoration(hintText: 'Reps'),
+                          validator: (value) {
+                            // Checks for empty value of reps
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the number of reps';
+                            }
+                            return null;
+                          }),
+                    ]),
+              ),
             ),
           ),
         ),
