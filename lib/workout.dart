@@ -75,30 +75,15 @@ class WorkoutPage extends StatefulWidget {
 /// [@global]
 ///
 ///
-Widget buildIndicator() {
-  int activeIndex = 0;
-  final dislplayFile = [
-    'assets/character/Astronaut.glb',
-    'assets/character/exampleDuck.glb',
-    'assets/character/exampleOctopus.glb',
-    'assets/character/examplePanda.glb',
-    'assets/character/exampleTurtle.glb',
-  ];
-
-  return AnimatedSmoothIndicator(
-    activeIndex: activeIndex,
-    count: dislplayFile.length,
-    effect: SlideEffect(activeDotColor: Colors.purple),
-  );
-}
 
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
-  int activeIndex = 0;
+  String character = "";
   final dislplayFile = [
-    'assets/character/exampleDuck.glb',
+    FirebaseFirestore.instance.collection('character').doc('character').get()
   ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -281,10 +266,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
                           height: 200,
                           width: 200,
                           child: ListView.builder(
-                            itemCount: dislplayFile.length,
                             itemBuilder: (context, index) {
                               final displayFile = dislplayFile[index];
-                              return buildImage(displayFile, index);
+                              return buildImage(character, index);
                             },
                           ),
                         ),
