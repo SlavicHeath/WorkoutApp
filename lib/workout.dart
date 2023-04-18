@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -770,7 +772,6 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
               deleteDoc();
             },
             style: ElevatedButton.styleFrom(
-              fixedSize: const Size(100, 50),
               backgroundColor: Colors.purple,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -908,6 +909,18 @@ TextEditingController field4 = TextEditingController();
 TextEditingController field5 = TextEditingController();
 
 final authUser = FirebaseAuth.instance.currentUser;
+
+double points = 0.0;
+
+void calcPoints() {
+  // used to calculate points
+
+  double weight = double.tryParse(field2.text) ?? 0.0;
+  double sets = double.tryParse(field3.text) ?? 0.0;
+  double reps = double.tryParse(field2.text) ?? 0.0;
+
+  double points = weight * sets * reps;
+}
 
 _submitInfo() async {
   // used to retrieve data from a specific user for previous workouts
@@ -1063,6 +1076,7 @@ Future openDialog(context) => showDialog(
               if (_formKey.currentState!.validate()) {
                 //if user submissions are valid, saves information to database
                 //and allows user to move on to next input/next screen
+                calcPoints();
                 _submitInfo();
                 Navigator.of(context).pop();
 
