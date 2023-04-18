@@ -984,7 +984,7 @@ Future openDialog(context) => showDialog(
                       // creates a list of textfields
                       TextFormField(
                           controller: field1,
-                          //optional textfield to enter name of workout (if user wants to keep track of such information)
+                          //textfield to enter name of workout (if user wants to keep track of such information)
                           autofocus: true,
                           decoration: const InputDecoration(
                             hintText: 'Name',
