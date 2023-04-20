@@ -1,7 +1,10 @@
 
+import 'dart:ffi';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/workout.dart';
 import 'firebase_options.dart';
@@ -23,6 +26,9 @@ class PersonalInfoPage extends StatefulWidget {
   // ignore: library_private_types_in_public_api
   _PersonalInfoPageState createState() => _PersonalInfoPageState();
 }
+
+
+
 
 ///
 /// [_PersonalInfoPageState.]
@@ -57,12 +63,14 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       bmiResult = bmi;
     });
   }
-  
+
+
 ///
 /// [@var		final	authUser]
 /// [@global]
 ///
 final authUser = FirebaseAuth.instance.currentUser;
+
 
 
   @override
@@ -84,7 +92,11 @@ final authUser = FirebaseAuth.instance.currentUser;
                 decoration: const InputDecoration(
                   labelText: 'Weight (lbs)',
                 ),
+                //initialValue: fieldValue,
                 keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter> [
+                 FilteringTextInputFormatter.digitsOnly
+  ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your weight';
@@ -95,11 +107,14 @@ final authUser = FirebaseAuth.instance.currentUser;
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: _heightController,
-                autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Height (inch)',
                 ),
+               // initialValue: ,
                 keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter> [
+                 FilteringTextInputFormatter.digitsOnly
+  ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your height';
@@ -156,26 +171,3 @@ final authUser = FirebaseAuth.instance.currentUser;
     );
   }
 }
-
-
-
-///
-/// [@var		collectionreference	personal1]
-/// [@global]
-///
-//CollectionReference personal1 =
-//    FirebaseFirestore.instance.collection('Personal information');
-
-///
-/// [@var		string	weight]
-/// [@global]
-//////
-/// [@var		object	async]
-/// [@global]
-///
-//addPersonalData(String weight, String height, String bmi) async {
- // await FirebaseFirestore.instance
- //     .collection('users')
- //     .add({'Weight': weight, 'Height': height, 'BMI': bmi});
-//}
-
