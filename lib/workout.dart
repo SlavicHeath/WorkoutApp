@@ -79,10 +79,7 @@ class WorkoutPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
-  String character = "";
-  final dislplayFile = [
-    FirebaseFirestore.instance.collection('character').doc('character').get()
-  ];
+  final dislplayFile = 'assets/character/exampleDuck.glb';
 
   @override
   Widget build(BuildContext context) {
@@ -149,130 +146,132 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     height: double.infinity,
                     width: double.infinity,
                     color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextField(
-                                  controller: field5,
-                                  decoration: null,
-                                  style: TextStyle(color: Colors.transparent),
-                                  enabled: false),
-                              SizedBox(
-                                height: 100,
-                                width: 200,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: workoutButton,
-                                    onPressed: () {
-                                      final button = buttonName;
-                                      field5.text = button;
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const ArmPage();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text(buttonName,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
+                    child: Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextField(
+                                    controller: field5,
+                                    decoration: null,
+                                    style: TextStyle(color: Colors.transparent),
+                                    enabled: false),
+                                SizedBox(
+                                  height: 100,
+                                  width: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: workoutButton,
+                                      onPressed: () {
+                                        final button = buttonName;
+                                        field5.text = button;
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                              return const ArmPage();
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text(buttonName,
+                                          style: const TextStyle(
+                                              color: Colors.white)),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 100,
-                                width: 200,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: workoutButton,
-                                    onPressed: () {
-                                      final button = butt2Name;
-                                      field5.text = button;
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const LegPage();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text(butt2Name,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
+                                SizedBox(
+                                  height: 100,
+                                  width: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: workoutButton,
+                                      onPressed: () {
+                                        final button = butt2Name;
+                                        field5.text = button;
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                              return const LegPage();
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text(butt2Name,
+                                          style: const TextStyle(
+                                              color: Colors.white)),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 100,
-                                width: 200,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: workoutButton,
-                                    onPressed: () {
-                                      final button = butt3Name;
-                                      field5.text = button;
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const BackPage();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text(butt3Name,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
+                                SizedBox(
+                                  height: 100,
+                                  width: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: workoutButton,
+                                      onPressed: () {
+                                        final button = butt3Name;
+                                        field5.text = button;
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                              return const BackPage();
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text(butt3Name,
+                                          style: const TextStyle(
+                                              color: Colors.white)),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 100,
-                                width: 200,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: workoutButton,
-                                    onPressed: () {
-                                      final button = butt4Name;
-                                      field5.text = button;
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const ChestPage();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text(butt4Name,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
+                                SizedBox(
+                                  height: 100,
+                                  width: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: workoutButton,
+                                      onPressed: () {
+                                        final button = butt4Name;
+                                        field5.text = button;
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                              return const ChestPage();
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text(butt4Name,
+                                          style: const TextStyle(
+                                              color: Colors.white)),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 200,
-                          width: 200,
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              final displayFile = dislplayFile[index];
-                              return buildImage(character, index);
-                            },
+                          SizedBox(
+                            height: 200,
+                            width: 150,
+                            child: ListView.builder(
+                              itemBuilder: (context, index) {
+                                final displayFile = dislplayFile[index];
+                                return buildImage(dislplayFile, index);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   )
                 : currindex == 0
