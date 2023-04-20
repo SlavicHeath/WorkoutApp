@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:workoutpet/workout.dart';
@@ -35,6 +36,8 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   // ignore: prefer_final_fields
   TextEditingController _heightController = TextEditingController();
   double bmiResult = 0.0;
+  
+
 
   void _calculateBMI() {
     double weight = double.tryParse(_weightController.text) ?? 0.0;
@@ -54,6 +57,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 
   final authUser = FirebaseAuth.instance.currentUser;
+
+ 
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +98,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   labelText: 'Height (inch)',
                 ),
                 keyboardType: TextInputType.number,
+                initialValue: _GetPersonalHeight(),
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                 ],
@@ -150,7 +157,13 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     );
   }
 }
-
+ _GetPersonalHeight() async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+    .collection('personal')
+    .doc(authUser?.uid)
+    .get();
+  return(documentSnapshot.data());
+ }
 
 
 
