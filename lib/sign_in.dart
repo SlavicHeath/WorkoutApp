@@ -1,10 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutpet/forgot_pass.dart';
-import 'package:workoutpet/personal.dart';
-import 'main.dart';
+import 'package:workoutpet/workout.dart';
 
+///
+/// [User.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@global]
+///
 class User {
   String email;
   String password;
@@ -34,6 +40,15 @@ var USER_SAMPLE = [
   User("12345", "pass123") //Incorrect email
 ];
 
+///
+/// [LoginScreen.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		StatefulWidget]
+/// [@global]
+///
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -41,6 +56,15 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+///
+/// [_LoginScreenState.]
+///
+/// [@author	Unknown]
+/// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
+/// [@see		State]
+/// [@global]
+///
 class _LoginScreenState extends State<LoginScreen> {
   String? email;
   String? password;
@@ -93,13 +117,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   }),
               const SizedBox(height: 16),
               ElevatedButton(
-                  child: const Text('Login'),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // This calls all validators() inside the form for us.
-                      tryLogin();
-                    }
-                  }),
+                child: const Text('Login'),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // This calls all validators() inside the form for us.
+                    tryLogin();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -133,8 +165,15 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
-
-      print("Logged in ${credential.user}");
+      const snackbar = SnackBar(
+        content: Text("Logged In "),
+        backgroundColor: Colors.green,
+        elevation: 10,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(5),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      print("Logged in  as ${credential.user}");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
 
@@ -145,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.of(context).pop();
       // Now go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const PersonalInfoPage(),
+        builder: (context) => const WorkoutPage(),
       ));
     } on FirebaseAuthException catch (e) {
       // Exceptions are raised if the Firebase Auth service

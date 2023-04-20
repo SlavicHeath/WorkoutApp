@@ -5,8 +5,10 @@ import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
 import 'package:workoutpet/workout.dart';
 import 'battle.dart';
+import 'character_select.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 ///
 /// [@var		object	async]
@@ -25,7 +27,7 @@ void main() async {
 ///
 /// [@author	Unknown]
 /// [ @since	v0.0.1 ]
-/// [@version	v1.0.0	Tuesday, March 28th, 2023]
+/// [@version	v1.0.0	Tuesday, April 4th, 2023]
 /// [@see		StatelessWidget]
 /// [@global]
 ///
@@ -85,108 +87,130 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Text("SignUp"),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => PersonalInfoPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text("Personal"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => WorkoutPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text("Workout"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => PrevWorkPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text(" Previous Workout"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => DataWrite()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text("Add Data to Database"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => DataRead()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text("Read Data to Database"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => BattleInitScreen()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text("Battle Screen"),
-              ),
+              // Personal Tester
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //           //The right side is the widget you want to go to
+              //           builder: (context) => PersonalInfoPage()),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     fixedSize: const Size(200, 40),
+              //     backgroundColor: Colors.purple,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: Text("Personal"),
+              // ),
+
+              // Workout Test Button
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //           //The right side is the widget you want to go to
+              //           builder: (context) => WorkoutPage()),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     fixedSize: const Size(200, 40),
+              //     backgroundColor: Colors.purple,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: Text("Workout"),
+              // ),
+
+              // Previous workout Tester
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //           //The right side is the widget you want to go to
+              //           builder: (context) => PrevWorkPage()),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     fixedSize: const Size(200, 40),
+              //     backgroundColor: Colors.purple,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: const Text(" Previous Workout"),
+              // ),
+
+              // Character view tester
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //           //The right side is the widget you want to go to
+              //           builder: (context) => DsiplayTest()),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     fixedSize: const Size(200, 40),
+              //     backgroundColor: Colors.purple,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: Text("Character Viewer"),
+              // ),
+
+              // Fight Screen preview test
+              // ElevatedButton(
+              //   onPressed: () {
+              //     final docNum = FirebaseFirestore.instance
+              //         .collection('Battles')
+              //         .doc()
+              //         .get()
+              //         .then((DocumentSnapshot documentSnapshot) {
+              //       if (documentSnapshot.exists) {
+              //         Navigator.of(context).push(
+              //           MaterialPageRoute(
+              //               builder: (context) => BattlePreviewScreen()),
+              //         );
+              //       } else {
+              //         Navigator.of(context).push(
+              //           MaterialPageRoute(
+              //               builder: (context) => UserStatsScreen()),
+              //         );
+              //       }
+              //     });
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     fixedSize: const Size(200, 40),
+              //     backgroundColor: Colors.purple,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: Text("Battle Screen"),
+              // ),
+
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //           //The right side is the widget you want to go to
+              //           builder: (context) => BattleScreen()),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     fixedSize: const Size(200, 40),
+              //     backgroundColor: Colors.purple,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: Text("Fighting Screen"),
+              // ),
             ]),
           ),
         ));
