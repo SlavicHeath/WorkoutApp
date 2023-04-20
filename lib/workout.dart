@@ -117,6 +117,19 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 },
               ),
               ListTile(
+                leading: Icon(Icons.list),
+                title: Text("Change Character"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CharacterSelect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
                 leading: Icon(Icons.login),
                 title: Text("Signout"),
                 onTap: () {

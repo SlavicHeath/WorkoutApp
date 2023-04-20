@@ -18,11 +18,11 @@ class CharacterSelect extends StatefulWidget {
 class _CharacterSelectState extends State<CharacterSelect> {
   int activeIndex = 0;
   final dislplayFile = [
-    'assets/character/Astronaut.glb',
-    'assets/character/exampleDuck.glb',
-    'assets/character/exampleOctopus.glb',
-    'assets/character/examplePanda.glb',
-    'assets/character/exampleTurtle.glb',
+    'assets/character/balloon1.glb',
+    'assets/character/dolphin1.glb',
+    'assets/character/turtle1.glb',
+    'assets/character/balloon2.glb',
+    'assets/character/balloon3.glb',
   ];
   @override
   Widget build(BuildContext context) {
