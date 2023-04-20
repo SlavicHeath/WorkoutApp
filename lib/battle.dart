@@ -7,6 +7,10 @@ import 'bot.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+const documentId =
+    'tSfDrDxGjioQnaTuDOrA'; //Change this to a valid document Id in the Battles collection
+
+///[Battle] Object used to map stats from Battles documents.
 class Battle {
   int userCurHealth;
   int userStrength;
@@ -25,6 +29,7 @@ class Battle {
       required this.botSpeed,
       required this.turn});
 
+  ///[fromJson] Creates [Battle] object by maping data from a Battles document [json] to appropriate variables
   static Battle fromJson(Map<String, dynamic> json) => Battle(
       userCurHealth: json['userCurHealth'],
       userStrength: json['userStrength'],
@@ -35,6 +40,7 @@ class Battle {
       turn: json['turn']);
 }
 
+///[initBattle] Creates a battle by initializing data of a Battles documents based on the [userStats]
 void initBattle(BattleCharacter userStats) {
   Bot botStats = Bot(userStats.health, userStats.strength, userStats.speed);
   FirebaseFirestore.instance.collection('Battles').add({
@@ -48,6 +54,7 @@ void initBattle(BattleCharacter userStats) {
   });
 }
 
+///[Workout] Object used to map data from 'workout information' database
 class Workout {
   final int reps;
   final int sets;
@@ -55,16 +62,19 @@ class Workout {
 
   Workout({required this.reps, required this.sets, required this.weight});
 
+  ///[fromJson] Creates [Workout] object by maping data from a 'workout information' document [json] to appropriate variables
   static Workout fromJson(Map<String, dynamic> json) =>
       Workout(reps: json['reps'], sets: json['sets'], weight: json['weight']);
 }
 
+///[readWorkouts] Creates a Stream object by maping data from 'workout information' documents to a list of Workout objects
 Stream<List<Workout>> readWorkouts() => FirebaseFirestore.instance
     .collection('workout information')
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((doc) => Workout.fromJson(doc.data())).toList());
 
+///[readBattle] Creates a Stream object by maping data from a Battles document to a list of Workout objects
 Stream<Battle> readBattle() => FirebaseFirestore.instance
     .collection('Battles')
     .doc(documentId)
@@ -72,6 +82,7 @@ Stream<Battle> readBattle() => FirebaseFirestore.instance
     .map((DocumentSnapshot<Map<String, dynamic>> snapshot) =>
         Battle.fromJson(snapshot.data()!));
 
+///[updateHealth] Updates both the user's and bot's current health fields of a Battles document with the id matching [docId]
 void updateHealth(docId, userHealth, botHealth) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
@@ -80,6 +91,7 @@ void updateHealth(docId, userHealth, botHealth) {
   });
 }
 
+///[updateTurn] Updates the turn field of a Battles document with the id matching [docId]
 void updateTurn(docId, turn) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
@@ -87,14 +99,13 @@ void updateTurn(docId, turn) {
   });
 }
 
+///[deleteDoc] Deletes a document from the Battles collection that posses the id [docId]
 void deleteDoc(docId) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.delete();
 }
 
-const documentId =
-    'PhjAKJ7QywZ2kQWd5vAN'; //Change this to a valid document Id in the Battles collection
-
+///[calcStats] Calculates the health, strength, and speed of a user based on a list of [Workout] objects
 BattleCharacter calcStats(List<Workout> workoutList) {
   BattleCharacter temp = BattleCharacter(0, 0, 0);
   workoutList.forEach((workout) {
@@ -113,10 +124,6 @@ class UserStatsScreen extends StatefulWidget {
 }
 
 class _UserStatsScreen extends State<UserStatsScreen> {
-  /*final Stream<QuerySnapshot> _userStats =
-      FirebaseFirestore.instance.collection('workout information').snapshots();
-  //final _formKey = GlobalKey<FormState>();*/
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -263,8 +270,6 @@ class BattlePreviewScreen extends StatefulWidget {
 }
 
 class _BattlePreviewScreenState extends State<BattlePreviewScreen> {
-  /*final Stream<QuerySnapshot> battleData =
-      FirebaseFirestore.instance.collection('Battles').snapshots();*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -487,8 +492,6 @@ class BattleScreen extends StatefulWidget {
 }
 
 class _BattleScreenState extends State<BattleScreen> {
-  /*final Stream<QuerySnapshot> battleData =
-      FirebaseFirestore.instance.collection('Battles').snapshots();*/
   String _turnButtonText = "Next Turn";
   String _logText = "";
   var _logColor = Colors.green;
