@@ -50,7 +50,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   # integration testing dependency 
-  # https://docs.flutter.dev/cookbook/testing/integration/introduction
+  # https://docs.flutter.dev/cookbook/testing/widget/introduction
   integration_test:
     sdk: flutter
 

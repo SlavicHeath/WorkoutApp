@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/sign_in.dart';
+import 'package:workoutpet/personal.dart';
 
 import 'character_select.dart';
 
@@ -117,14 +118,27 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Change Character"),
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
                 onTap: () {
                   Navigator.pop(
                       context); //To close the drawer wwhen moving to the next page
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => CharacterSelect(),
+                      builder: (context) => const CharacterSelect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PersonalInfoPage(),
                     ),
                   );
                 },

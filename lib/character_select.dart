@@ -17,6 +17,8 @@ class CharacterSelect extends StatefulWidget {
 
 class _CharacterSelectState extends State<CharacterSelect> {
   int activeIndex = 0;
+  Null bmi;
+
   final dislplayFile = [
     'assets/character/balloon1.glb',
     'assets/character/dolphin1.glb',
@@ -61,13 +63,21 @@ class _CharacterSelectState extends State<CharacterSelect> {
             ElevatedButton(
               //assign character to user
               onPressed: () {
-                _submitCharacter(dislplayFile[activeIndex]);
-
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      //The right side is the widget you want to go to
-                      builder: (context) => PersonalInfoPage()),
-                );
+                if (bmi == Null) {
+                  _submitCharacter(dislplayFile[activeIndex]);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => const PersonalInfoPage()),
+                  );
+                } else {
+                  _submitCharacter(dislplayFile[activeIndex]);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => const WorkoutPage()),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(300, 40),
