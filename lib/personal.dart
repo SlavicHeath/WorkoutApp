@@ -1,8 +1,8 @@
 
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/workout.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,6 +58,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     });
   }
   
+///
+/// [@var		final	authUser]
+/// [@global]
+///
 final authUser = FirebaseAuth.instance.currentUser;
 
 
@@ -91,6 +95,7 @@ final authUser = FirebaseAuth.instance.currentUser;
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: _heightController,
+                autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Height (inch)',
                 ),
