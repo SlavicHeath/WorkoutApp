@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Battle {
   int userCurHealth;
+  int userMaxHealth;
   int userStrength;
   int userSpeed;
   int botCurHealth;
@@ -19,6 +20,7 @@ class Battle {
 
   Battle(
       {required this.userCurHealth,
+      required this.userMaxHealth,
       required this.userStrength,
       required this.userSpeed,
       required this.botCurHealth,
@@ -28,6 +30,7 @@ class Battle {
 
   static Battle fromJson(Map<String, dynamic> json) => Battle(
       userCurHealth: json['userCurHealth'],
+      userMaxHealth: json['userMaxHealth'],
       userStrength: json['userStrength'],
       userSpeed: json['userSpeed'],
       botCurHealth: json['botCurHealth'],
@@ -40,6 +43,7 @@ void initBattle(BattleCharacter userStats, userId) {
   Bot botStats = Bot(userStats.health, userStats.strength, userStats.speed);
   FirebaseFirestore.instance.collection('Battles').doc(userId).set({
     'userCurHealth': userStats.health,
+    'userMaxHealth': userStats.health,
     'userStrength': userStats.strength,
     'userSpeed': userStats.speed,
     'botCurHealth': botStats.health,
@@ -50,14 +54,22 @@ void initBattle(BattleCharacter userStats, userId) {
 }
 
 class Workout {
+  final String type;
   final int reps;
   final int sets;
   final int weight;
 
-  Workout({required this.reps, required this.sets, required this.weight});
+  Workout(
+      {required this.type,
+      required this.reps,
+      required this.sets,
+      required this.weight});
 
-  static Workout fromJson(Map<String, dynamic> json) =>
-      Workout(reps: json['reps'], sets: json['sets'], weight: json['weight']);
+  static Workout fromJson(Map<String, dynamic> json) => Workout(
+      type: json['body part'],
+      reps: json['reps'],
+      sets: json['sets'],
+      weight: json['weight']);
 }
 
 Stream<List<Workout>> readWorkouts(userId) => FirebaseFirestore.instance
@@ -74,11 +86,51 @@ Stream<Battle> readBattle(userId) => FirebaseFirestore.instance
     .map((DocumentSnapshot<Map<String, dynamic>> snapshot) =>
         Battle.fromJson(snapshot.data()!));
 
-void updateHealth(docId, userHealth, botHealth) {
+///Returns a list of workouts with A value of type 'Future<QuerySnapshot<Map<String, dynamic>>>' can't be assigned to a variable of type 'QuerySnapshot<Object?>'.user fields matching the [userId] (Used for [updateUserStats])
+Future<List<Workout>> readWorkoutsInstance(userId) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('workout information')
+      .where('user', isEqualTo: userId)
+      .get();
+  List<Workout> workoutList = [];
+  int i = 0;
+  querySnapshot.docs.forEach((doc) {
+    workoutList.add(Workout.fromJson(doc.data() as Map<String, dynamic>));
+    print(
+        '${workoutList[i].type} ${workoutList[i].weight} ${workoutList[i].reps} ${workoutList[i].sets}');
+    i += 1;
+  });
+  return workoutList;
+}
+
+/*List<Workout> readWorkoutsInstance(userId) => FirebaseFirestore.instance
+    .collection('workout information')
+    .where('user', isEqualTo: userId)
+    .snapshots()
+    .map((snapshot) =>
+        snapshot.docs.map((doc) => Workout.fromJson(doc.data())).toList());*/
+
+void updateCurHealth(docId, userHealth, botHealth) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
     'userCurHealth': userHealth,
     'botCurHealth': botHealth,
+  });
+}
+
+///Updates stats of a user while they have an ongoing battle (called when battlescreen page is loaded)
+void updateUserStats(Battle curBattle, userId) async {
+  List<Workout> workoutList = await readWorkoutsInstance(userId);
+  BattleCharacter userStats = calcStats(workoutList);
+  int healthDif = userStats.health - curBattle.userMaxHealth;
+  print('${userStats.health} ${userStats.strength} ${userStats.speed}');
+  final battleDoc =
+      FirebaseFirestore.instance.collection('Battles').doc(userId);
+  battleDoc.update({
+    'userCurHealth': curBattle.userCurHealth + healthDif,
+    'userMaxHealth': userStats.health,
+    'userStrength': userStats.strength,
+    'userSpeed': userStats.speed,
   });
 }
 
@@ -96,11 +148,50 @@ void deleteDoc(docId) {
 
 BattleCharacter calcStats(List<Workout> workoutList) {
   BattleCharacter temp = BattleCharacter(0, 0, 0);
+  int backWeight = 0;
+  int backReps = 0;
+  int backSets = 0;
+  int chestWeight = 0;
+  int chestReps = 0;
+  int chestSets = 0;
+  int armsWeight = 0;
+  int armsReps = 0;
+  int armsSets = 0;
+  int legsWeight = 0;
+  int legsReps = 0;
+  int legsSets = 0;
   workoutList.forEach((workout) {
-    temp.health += workout.weight;
-    temp.strength += workout.reps;
-    temp.speed += workout.sets;
+    if (workout.type == 'Back') {
+      backWeight += workout.weight;
+      backReps += workout.reps;
+      backSets += workout.sets;
+    }
+    if (workout.type == 'Chest') {
+      chestWeight += workout.weight;
+      chestReps += workout.reps;
+      chestSets += workout.sets;
+    }
+    if (workout.type == 'Arms') {
+      armsWeight += workout.weight;
+      armsReps += workout.reps;
+      armsSets += workout.sets;
+    }
+    if (workout.type == 'Legs') {
+      legsWeight += workout.weight;
+      legsReps += workout.reps;
+      legsSets += workout.sets;
+    }
   });
+  temp.health = ((backWeight * backReps * backSets) / 1000 +
+          (chestWeight * chestReps * chestSets) / 3000 +
+          (legsWeight * legsReps * legsSets) / 5000)
+      .round();
+  temp.strength = ((armsWeight * armsReps * armsSets) / 1000 +
+          (chestWeight * chestReps * chestSets) / 5000)
+      .round();
+  temp.speed = ((100 * (legsWeight * legsReps * legsSets)) /
+          ((legsWeight * legsReps * legsSets) + 200000))
+      .round();
   return temp;
 }
 
@@ -148,7 +239,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                 title: Text("Battle"),
                 onTap: () {
                   Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
+                      context); //To close the drawer when moving to the next page
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => UserStatsScreen(),
@@ -292,8 +383,6 @@ class BattleScreen extends StatefulWidget {
 }
 
 class _BattleScreenState extends State<BattleScreen> {
-  /*final Stream<QuerySnapshot> battleData =
-      FirebaseFirestore.instance.collection('Battles').snapshots();*/
   String _turnButtonText = "Next Turn";
   String _logText = "";
   var _logColor = Colors.green;
@@ -336,7 +425,7 @@ class _BattleScreenState extends State<BattleScreen> {
         _turnButtonText = "The Enemy Has Won :(";
       });
     }
-    updateHealth(
+    updateCurHealth(
         authUser!.uid, curBattle.userCurHealth, curBattle.botCurHealth);
     curBattle.turn++;
     updateTurn(authUser!.uid, curBattle.turn);
@@ -358,6 +447,7 @@ class _BattleScreenState extends State<BattleScreen> {
                   return Text("Database Error: ${snapshot.error}");
                 } else if (snapshot.hasData) {
                   final curBattle = snapshot.data!;
+                  updateUserStats(curBattle, authUser!.uid);
                   int userCurHealth = curBattle.userCurHealth;
                   int userStrength = curBattle.userStrength;
                   int userSpeed = curBattle.userSpeed;
@@ -524,11 +614,7 @@ class _BattleScreenState extends State<BattleScreen> {
                                   if ((userCurHealth <= 0) |
                                       (botCurHealth <= 0)) {
                                     deleteDoc(authUser!.uid);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomeScreen()),
-                                    );
+                                    Navigator.pop(context);
                                   } else {
                                     action(curBattle);
                                   }
