@@ -17,7 +17,15 @@ class CharacterSelect extends StatefulWidget {
 
 class _CharacterSelectState extends State<CharacterSelect> {
   int activeIndex = 0;
-  Null bmi;
+  // create a read from the database bmi section
+  var bmi = FirebaseFirestore.instance
+      .collection('users')
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      print(doc["bmi"]);
+    });
+  });
 
   final dislplayFile = [
     'assets/character/balloon1.glb',
@@ -67,14 +75,14 @@ class _CharacterSelectState extends State<CharacterSelect> {
                   _submitCharacter(dislplayFile[activeIndex]);
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        //The right side is the widget you want to go to
+                        //no bmi go to personal page
                         builder: (context) => const PersonalInfoPage()),
                   );
                 } else {
                   _submitCharacter(dislplayFile[activeIndex]);
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        //The right side is the widget you want to go to
+                        //bmi go to main page
                         builder: (context) => const WorkoutPage()),
                   );
                 }
