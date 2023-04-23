@@ -14,19 +14,24 @@ class Battle {
   int userStrength;
   int userSpeed;
   int botCurHealth;
+  int botMaxHealth;
   int botStrength;
   int botSpeed;
   int turn;
+  int log;
 
-  Battle(
-      {required this.userCurHealth,
-      required this.userMaxHealth,
-      required this.userStrength,
-      required this.userSpeed,
-      required this.botCurHealth,
-      required this.botStrength,
-      required this.botSpeed,
-      required this.turn});
+  Battle({
+    required this.userCurHealth,
+    required this.userMaxHealth,
+    required this.userStrength,
+    required this.userSpeed,
+    required this.botCurHealth,
+    required this.botMaxHealth,
+    required this.botStrength,
+    required this.botSpeed,
+    required this.turn,
+    required this.log,
+  });
 
   static Battle fromJson(Map<String, dynamic> json) => Battle(
       userCurHealth: json['userCurHealth'],
@@ -34,9 +39,11 @@ class Battle {
       userStrength: json['userStrength'],
       userSpeed: json['userSpeed'],
       botCurHealth: json['botCurHealth'],
+      botMaxHealth: json['botMaxHealth'],
       botStrength: json['botStrength'],
       botSpeed: json['botSpeed'],
-      turn: json['turn']);
+      turn: json['turn'],
+      log: json['log']);
 }
 
 void initBattle(BattleCharacter userStats, userId) {
@@ -47,11 +54,40 @@ void initBattle(BattleCharacter userStats, userId) {
     'userStrength': userStats.strength,
     'userSpeed': userStats.speed,
     'botCurHealth': botStats.health,
+    'botMaxHealth': botStats.health,
     'botStrength': botStats.strength,
     'botSpeed': botStats.speed,
     'turn': 0,
+    'log': "",
   });
 }
+
+///Creates a document in the BattleLogs collection based on various stats from the current battle [curBattle] of a user with a uid matching [userId]
+void initBattleLog(Battle curBattle, int win, userId) {
+  FirebaseFirestore.instance.collection('BattleLogs').add({
+    'user': userId,
+    'userMaxHealth': curBattle.userMaxHealth,
+    'userStrength': curBattle.userStrength,
+    'userSpeed': curBattle.userSpeed,
+    'botMaxHealth': curBattle.botMaxHealth,
+    'botStrength': curBattle.botStrength,
+    'botSpeed': curBattle.botSpeed,
+    'date': FieldValue.serverTimestamp(),
+    'win': win, // 1 denotes a win
+  });
+}
+
+/*void updateBattleLog(String text) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('BattleLogs')
+      .where('user', isEqualTo: authUser!.uid)
+      .orderBy('date')
+      .limitToLast(1)
+      .get();
+  querySnapshot.docs.forEach((doc) {
+    doc.reference.update({'log': text});
+  });
+}*/
 
 class Workout {
   final String type;
@@ -93,12 +129,8 @@ Future<List<Workout>> readWorkoutsInstance(userId) async {
       .where('user', isEqualTo: userId)
       .get();
   List<Workout> workoutList = [];
-  int i = 0;
   querySnapshot.docs.forEach((doc) {
     workoutList.add(Workout.fromJson(doc.data() as Map<String, dynamic>));
-    print(
-        '${workoutList[i].type} ${workoutList[i].weight} ${workoutList[i].reps} ${workoutList[i].sets}');
-    i += 1;
   });
   return workoutList;
 }
@@ -116,7 +148,6 @@ void updateUserStats(Battle curBattle, userId) async {
   List<Workout> workoutList = await readWorkoutsInstance(userId);
   BattleCharacter userStats = calcStats(workoutList);
   int healthDif = userStats.health - curBattle.userMaxHealth;
-  print('${userStats.health} ${userStats.strength} ${userStats.speed}');
   final battleDoc =
       FirebaseFirestore.instance.collection('Battles').doc(userId);
   battleDoc.update({
@@ -131,6 +162,13 @@ void updateTurn(docId, turn) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
     'turn': turn,
+  });
+}
+
+void updateLog(docId, turnMsg) {
+  final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
+  battleDoc.update({
+    'turn': turnMsg,
   });
 }
 
@@ -379,19 +417,21 @@ class _BattleScreenState extends State<BattleScreen> {
   String _turnButtonText = "Next Turn";
   String _logText = "";
   var _logColor = Colors.green;
-  void action(Battle curBattle) {
+  void action(Battle curBattle, String log) {
     var rand = new Random();
     if (curBattle.turn % 2 == 0) {
       if (rand.nextInt(100) < curBattle.botSpeed) {
         setState(() {
           _logColor = Colors.green;
           _logText = "User misses enemy";
+          log = "${log}/m${_logText}";
         });
       } else {
         curBattle.botCurHealth -= curBattle.userStrength;
         setState(() {
           _logColor = Colors.green;
           _logText = "User hits enemy for ${curBattle.userStrength} damage";
+          log = "${log}/h${curBattle.userStrength}-${_logText}";
         });
       }
     } else {
@@ -399,25 +439,30 @@ class _BattleScreenState extends State<BattleScreen> {
         setState(() {
           _logColor = Colors.red;
           _logText = "Enemy misses user";
+          log = "${log}/m${_logText}";
         });
       } else {
         curBattle.userCurHealth -= curBattle.botStrength;
         setState(() {
           _logColor = Colors.red;
           _logText = "Enemy hits user for ${curBattle.botStrength} damage";
+          log = "${log}/h${curBattle.botStrength}-${_logText}";
         });
       }
     }
     if (curBattle.botCurHealth <= 0) {
       setState(() {
         _turnButtonText = "The User Has Won!!!";
+        log = "${log}/e${_logText}";
       });
     }
     if (curBattle.userCurHealth <= 0) {
       setState(() {
         _turnButtonText = "The Enemy Has Won :(";
+        log = "${log}/e${_logText}";
       });
     }
+    updateLog(authUser!.uid, log);
     updateCurHealth(
         authUser!.uid, curBattle.userCurHealth, curBattle.botCurHealth);
     curBattle.turn++;
@@ -447,6 +492,7 @@ class _BattleScreenState extends State<BattleScreen> {
                   int botCurHealth = curBattle.botCurHealth;
                   int botStrength = curBattle.botStrength;
                   int botSpeed = curBattle.botSpeed;
+                  String log = "";
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -604,12 +650,16 @@ class _BattleScreenState extends State<BattleScreen> {
                               alignment: Alignment.bottomCenter,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if ((userCurHealth <= 0) |
-                                      (botCurHealth <= 0)) {
+                                  if (botCurHealth <= 0) {
+                                    //initBattleLog(curBattle, 1, authUser!.uid);
+                                    deleteDoc(authUser!.uid);
+                                    Navigator.pop(context);
+                                  } else if (userCurHealth <= 0) {
+                                    //initBattleLog(curBattle, 0, authUser!.uid);
                                     deleteDoc(authUser!.uid);
                                     Navigator.pop(context);
                                   } else {
-                                    action(curBattle);
+                                    action(curBattle, log);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
