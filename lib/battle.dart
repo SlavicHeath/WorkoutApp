@@ -86,7 +86,7 @@ Stream<Battle> readBattle(userId) => FirebaseFirestore.instance
     .map((DocumentSnapshot<Map<String, dynamic>> snapshot) =>
         Battle.fromJson(snapshot.data()!));
 
-///Returns a list of workouts with A value of type 'Future<QuerySnapshot<Map<String, dynamic>>>' can't be assigned to a variable of type 'QuerySnapshot<Object?>'.user fields matching the [userId] (Used for [updateUserStats])
+///Returns a list of workouts documents with user fields that match the [userId] (Used for [updateUserStats])
 Future<List<Workout>> readWorkoutsInstance(userId) async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection('workout information')
@@ -102,13 +102,6 @@ Future<List<Workout>> readWorkoutsInstance(userId) async {
   });
   return workoutList;
 }
-
-/*List<Workout> readWorkoutsInstance(userId) => FirebaseFirestore.instance
-    .collection('workout information')
-    .where('user', isEqualTo: userId)
-    .snapshots()
-    .map((snapshot) =>
-        snapshot.docs.map((doc) => Workout.fromJson(doc.data())).toList());*/
 
 void updateCurHealth(docId, userHealth, botHealth) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
@@ -189,9 +182,9 @@ BattleCharacter calcStats(List<Workout> workoutList) {
   temp.strength = ((armsWeight * armsReps * armsSets) / 1000 +
           (chestWeight * chestReps * chestSets) / 5000)
       .round();
-  temp.speed = ((100 * (legsWeight * legsReps * legsSets)) /
-          ((legsWeight * legsReps * legsSets) + 200000))
-      .round();
+  temp.speed = ((100 * ((legsWeight / 2) * legsReps * legsSets)) /
+          (((legsWeight / 2) * legsReps * legsSets) + 200000))
+      .round(); //horizontal asymptote at 100
   return temp;
 }
 
