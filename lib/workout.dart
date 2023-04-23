@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workoutpet/About.dart';
 import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
+import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 
 import 'character_select.dart';
@@ -123,6 +125,28 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => HomeScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text("Personal Information"),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text("About"),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => DescriptionPage(),
                     ),
                   );
                 },

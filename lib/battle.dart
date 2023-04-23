@@ -1,6 +1,8 @@
 //Ben Williams
 
+import 'package:workoutpet/About.dart';
 import 'package:workoutpet/main.dart';
+import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/workout.dart';
 import 'dart:math';
 import 'bot.dart';
@@ -161,6 +163,28 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text("Personal Information"),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text("About"),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => DescriptionPage(),
                     ),
                   );
                 },

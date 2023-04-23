@@ -57,7 +57,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 
   final authUser = FirebaseAuth.instance.currentUser;
-
+  final personalInfoRef = FirebaseFirestore.instance.collection('personal');
  
 
 
@@ -68,7 +68,8 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         title: const Text('Personal Information'),
         backgroundColor: Colors.purple,
       ),
-      body: Padding(
+      body: 
+      Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -98,7 +99,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   labelText: 'Height (inch)',
                 ),
                 keyboardType: TextInputType.number,
-                initialValue: _GetPersonalHeight(),
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                 ],
@@ -149,21 +149,35 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                         builder: (context) => WorkoutPage()),
                   );
                 },
+              ),
+              StreamBuilder(
+                stream: FirebaseFirestore.instance.collection('personal').doc(authUser?.uid).snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+                }
+                if (!snapshot.hasData) {
+                return Text('Document does not exist');
+                }
+                 Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Height: ${data['height']}'),
+            Text('Weight: ${data['weight']}'),
+            Text('BMI: ${data['bmi']}'),
+          ]
+                );
+              }
               )
             ],
           ),
         ),
-      ),
+      )
     );
   }
 }
- _GetPersonalHeight() async {
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-    .collection('personal')
-    .doc(authUser?.uid)
-    .get();
-  return(documentSnapshot.data());
- }
-
-
 
