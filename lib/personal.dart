@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
-import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 ///
 /// [PersonalInfoPage.]
@@ -28,6 +27,7 @@ class PersonalInfoPage extends StatefulWidget {
 ///
 /// [@author	Unknown]
 /// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Thursday, March 30th, 2023]
 /// [@see		State]
 /// [@global]
 ///
@@ -57,15 +57,14 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 
   final authUser = FirebaseAuth.instance.currentUser;
-
   final personalInfoRef = FirebaseFirestore.instance.collection('personal');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Personal Information'),
-        backgroundColor: Colors.purple,
+        appBar: AppBar(
+          title: const Text('Personal Information'),
+          backgroundColor: Colors.purple,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -90,7 +89,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     }
                     return null;
                   },
-
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
@@ -136,7 +134,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           //The right side is the widget you want to go to
-                          builder: (context) => LoginScreen()),
+                          builder: (context) => WorkoutPage()),
                     );
                   },
                 ),
@@ -172,4 +170,3 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         ));
   }
 }
-

@@ -1,8 +1,6 @@
 import 'dart:ffi';
 
 import 'package:model_viewer_plus/model_viewer_plus.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +10,7 @@ import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
+
 import 'character_select.dart';
 
 void main() => runApp(const MyApp());
@@ -81,7 +80,7 @@ class WorkoutPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
-  final dislplayFile = 'assets/character/exampleDuck.glb';
+  final dislplayFile = 'assets/character/turtle1.glb';
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +95,13 @@ class _WorkoutPageState extends State<WorkoutPage> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
+              // Drawer header telling which user is signed in
               DrawerHeader(
                 decoration: BoxDecoration(color: Colors.black87),
-                child: Text("User Info"),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
               ),
               ListTile(
                 leading: Icon(Icons.home),
@@ -127,6 +130,32 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 },
               ),
               ListTile(
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CharacterSelect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
                 leading: Icon(Icons.login),
                 title: Text("Signout"),
                 onTap: () {
@@ -141,7 +170,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 leading: Icon(Icons.list),
                 title: Text("Personal Information"),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => PersonalInfoPage(),
                     ),
@@ -152,7 +181,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 leading: Icon(Icons.list),
                 title: Text("About"),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => DescriptionPage(),
                     ),

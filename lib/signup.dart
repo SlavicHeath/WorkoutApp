@@ -173,6 +173,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email!, password: password!);
       //When loged in present user logged in
+      final snackbar = SnackBar(
+        content: Text("Logged in as ${credential.user?.email}"),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
       print("Logged in ${credential.user}");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
