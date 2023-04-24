@@ -133,6 +133,13 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     //User presses this button to submit valid information
                     'SUBMIT'),
                 onPressed: () {
+                  const snackbar = SnackBar(
+                      content: Text("Information Updated"),
+                      backgroundColor: Colors.green,
+                      elevation: 10,
+                      behavior: SnackBarBehavior.floating,
+                      margin: EdgeInsets.all(5),
+                        );
                   FirebaseFirestore.instance
                       .collection('personal')
                       .doc(authUser?.uid)
