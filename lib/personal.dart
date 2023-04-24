@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:workoutpet/sign_in.dart';
@@ -58,11 +57,28 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 
   final authUser = FirebaseAuth.instance.currentUser;
+
   final personalInfoRef = FirebaseFirestore.instance.collection('personal');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Personal Information'),
+        backgroundColor: Colors.purple,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                controller: _weightController,
+                decoration: const InputDecoration(
+                  labelText: 'Weight (lbs)',
+
         appBar: AppBar(
           title: const Text('Personal Information'),
           backgroundColor: Colors.purple,
@@ -90,6 +106,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     }
                     return null;
                   },
+
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
@@ -120,6 +137,47 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   child: Text('Calculate BMI'),
                 ),
                 // ignore: prefer_const_constructors
+
+                style: TextStyle(fontSize: 20.0),
+              ),
+              TextButton(
+                child: const Text(
+                    //User presses this button to submit valid information
+                    'SUBMIT'),
+                onPressed: () {
+                   const snackbar = SnackBar(
+                    content: Text("Information Changed"),
+                    backgroundColor: Colors.green,
+                    );
+                  FirebaseFirestore.instance
+                      .collection('personal')
+                      .doc(authUser?.uid)
+                      .set({
+                        'weight': _weightController.text,
+                        'height': _heightController.text,
+                        'bmi': bmiResult
+                      })
+                      .then((value) => print("added"))
+                      .catchError((error) => print("Failed to add: $error"));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //The right side is the widget you want to go to
+                        builder: (context) => WorkoutPage()),
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
                 SizedBox(height: 16.0),
                 Text(
                   bmiResult == 0.0
@@ -182,3 +240,4 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         ));
   }
 }
+
