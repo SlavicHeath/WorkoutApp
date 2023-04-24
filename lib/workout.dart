@@ -82,13 +82,15 @@ class _WorkoutPageState extends State<WorkoutPage> {
     String displayFile = '';
 
     Future<String> _getCharURL(displayFile) async {
+      // here is where we will get the character URL from database
       final snap = await FirebaseFirestore.instance
           .collection('character')
           .doc(authUser?.uid)
           .get();
       if (snap.exists) {
         final data = snap.data();
-        return data!['character'].toString();
+        return data!['character']
+            .toString(); // here we convert it to a string so it works in model viewer
       } else {
         return '';
       }
@@ -96,9 +98,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
     return FutureBuilder<String>(
         //Calls into firebase to retrieve data from workout info document
-        future: _getCharURL(displayFile),
+        future: _getCharURL(
+            displayFile), //setting this as the future allows the data to be
+        //loaded in without causing any errors
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            //assures the character loads in
             if (snapshot.hasData && snapshot.data != null) {
               String url = snapshot.data!;
               return Column(
@@ -108,8 +113,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      width: 150,
-                      height: 150,
+                      width: 200,
+                      height: 400,
                       child: ModelViewer(
                         src: url,
                         ar: true,
@@ -146,11 +151,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 decoration: BoxDecoration(color: Colors.black87),
                 child: Text(
                   "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
-                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.home),
+                leading: const Icon(Icons.home),
                 title: Text("Home"),
                 onTap: () {
                   Navigator.pop(
@@ -362,7 +367,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
                             ),
                           ),
                           SizedBox(
-                              height: 400, width: 150, child: buildImage()),
+                              //where we will display the character model, based on user uid
+                              height: 600,
+                              width: 150,
+                              child: buildImage()),
                         ],
                       ),
                     ),
