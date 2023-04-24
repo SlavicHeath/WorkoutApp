@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
