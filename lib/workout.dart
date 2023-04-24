@@ -96,9 +96,13 @@ class _WorkoutPageState extends State<WorkoutPage> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
+              // Drawer header telling which user is signed in
               DrawerHeader(
                 decoration: BoxDecoration(color: Colors.black87),
-                child: Text("User Info"),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
               ),
               ListTile(
                 leading: Icon(Icons.home),
