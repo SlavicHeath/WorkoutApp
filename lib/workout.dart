@@ -1,8 +1,6 @@
 import 'dart:ffi';
 
 import 'package:model_viewer_plus/model_viewer_plus.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +10,6 @@ import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
-import 'package:workoutpet/personal.dart';
 
 import 'character_select.dart';
 
@@ -83,7 +80,7 @@ class WorkoutPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
-  final dislplayFile = 'assets/character/exampleDuck.glb';
+  final dislplayFile = 'assets/character/turtle1.glb';
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +170,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 leading: Icon(Icons.list),
                 title: Text("Personal Information"),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => PersonalInfoPage(),
                     ),
@@ -184,7 +181,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 leading: Icon(Icons.list),
                 title: Text("About"),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => DescriptionPage(),
                     ),

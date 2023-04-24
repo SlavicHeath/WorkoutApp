@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => PeopleList()),
+                        builder: (context) => LoginScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

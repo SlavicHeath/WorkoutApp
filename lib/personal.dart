@@ -58,7 +58,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
 
   final authUser = FirebaseAuth.instance.currentUser;
   final personalInfoRef = FirebaseFirestore.instance.collection('personal');
-  
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +145,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           //The right side is the widget you want to go to
-                          builder: (context) => LoginScreen()),
+                          builder: (context) => WorkoutPage()),
                     );
                   },
                 ),
