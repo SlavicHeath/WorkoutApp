@@ -141,7 +141,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                         'height': _heightController.text,
                         'bmi': bmiResult
                       })
-                      .then((value) => print("added"))
+                      .then((value) => print("Updated Personal Information"))
                       .catchError((error) => print("Failed to add: $error"));
                   Navigator.of(context).push(
                     MaterialPageRoute(
