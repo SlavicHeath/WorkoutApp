@@ -108,17 +108,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _calculateBMI();
-                    }
-                  },
-                  // ignore: prefer_const_constructors
-                  child: Text('Calculate BMI'),
-                ),
-                // ignore: prefer_const_constructors
                 SizedBox(height: 16.0),
                 Text(
                   bmiResult == 0.0
@@ -181,27 +170,3 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         ));
   }
 }
-
-
-
-///
-/// [@var		collectionreference	personal1]
-/// [@global]
-///
-//CollectionReference personal1 =
-//    FirebaseFirestore.instance.collection('Personal information');
-
-///
-/// [@var		string	weight]
-/// [@global]
-//////
-/// [@var		object	async]
-/// [@global]
-///
-//addPersonalData(String weight, String height, String bmi) async {
- // await FirebaseFirestore.instance
- //     .collection('users')
- //     .add({'Weight': weight, 'Height': height, 'BMI': bmi});
-//}
-
-
