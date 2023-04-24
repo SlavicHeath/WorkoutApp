@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
-import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 ///
 /// [PersonalInfoPage.]
@@ -29,6 +27,7 @@ class PersonalInfoPage extends StatefulWidget {
 ///
 /// [@author	Unknown]
 /// [ @since	v0.0.1 ]
+/// [@version	v1.0.0	Thursday, March 30th, 2023]
 /// [@see		State]
 /// [@global]
 ///
@@ -59,6 +58,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
 
   final authUser = FirebaseAuth.instance.currentUser;
   final personalInfoRef = FirebaseFirestore.instance.collection('personal');
+  
 
   @override
   Widget build(BuildContext context) {
@@ -182,3 +182,27 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         ));
   }
 }
+
+
+
+///
+/// [@var		collectionreference	personal1]
+/// [@global]
+///
+//CollectionReference personal1 =
+//    FirebaseFirestore.instance.collection('Personal information');
+
+///
+/// [@var		string	weight]
+/// [@global]
+//////
+/// [@var		object	async]
+/// [@global]
+///
+//addPersonalData(String weight, String height, String bmi) async {
+ // await FirebaseFirestore.instance
+ //     .collection('users')
+ //     .add({'Weight': weight, 'Height': height, 'BMI': bmi});
+//}
+
+

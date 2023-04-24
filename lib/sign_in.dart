@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutpet/character_select.dart';
 import 'package:workoutpet/forgot_pass.dart';
 import 'package:workoutpet/workout.dart';
+import 'package:workoutpet/character_select.dart';
 
 ///
 /// [User.]
@@ -71,6 +73,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String? password;
   String? error;
   final _formKey = GlobalKey<FormState>();
+  var character = FirebaseFirestore.instance
+      .collection('users')
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      print(doc["character"]);
+    });
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -181,10 +191,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // pop the navigation stack so people cannot "go back" to the login screen after log in
       Navigator.of(context).pop();
-      // Now go to the HomeScreen.
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const WorkoutPage(),
-      ));
+      // set up an if statement to see if they picked a character
+
+      if (character == Null) {
+        // if player didnt select character before go to character select.
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const CharacterSelect(),
+        ));
+      } else {
+        // normally go to workout page
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const WorkoutPage(),
+        ));
+      }
     } on FirebaseAuthException catch (e) {
       // Exceptions are raised if the Firebase Auth service
       // encounters an error. We need to display these to the user.

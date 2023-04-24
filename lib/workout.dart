@@ -12,6 +12,8 @@ import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
+import 'package:workoutpet/personal.dart';
+
 import 'character_select.dart';
 
 void main() => runApp(const MyApp());
@@ -126,6 +128,32 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CharacterSelect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PersonalInfoPage(),
                     ),
                   );
                 },
