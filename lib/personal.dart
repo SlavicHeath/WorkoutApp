@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:workoutpet/workout.dart';
@@ -36,8 +35,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   // ignore: prefer_final_fields
   TextEditingController _heightController = TextEditingController();
   double bmiResult = 0.0;
-  
-
 
   void _calculateBMI() {
     double weight = double.tryParse(_weightController.text) ?? 0.0;
@@ -57,9 +54,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 
   final authUser = FirebaseAuth.instance.currentUser;
-  final personalInfoRef = FirebaseFirestore.instance.collection('personal');
- 
-
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +62,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         title: const Text('Personal Information'),
         backgroundColor: Colors.purple,
       ),
-      body: 
-      Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -133,13 +126,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     //User presses this button to submit valid information
                     'SUBMIT'),
                 onPressed: () {
-                  const snackbar = SnackBar(
-                      content: Text("Information Updated"),
-                      backgroundColor: Colors.green,
-                      elevation: 10,
-                      behavior: SnackBarBehavior.floating,
-                      margin: EdgeInsets.all(5),
-                        );
+                   const snackbar = SnackBar(
+                    content: Text("Information Changed"),
+                    backgroundColor: Colors.green,
+                    );
                   FirebaseFirestore.instance
                       .collection('personal')
                       .doc(authUser?.uid)
@@ -148,7 +138,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                         'height': _heightController.text,
                         'bmi': bmiResult
                       })
-                      .then((value) => print("Updated Personal Information"))
+                      .then((value) => print("added"))
                       .catchError((error) => print("Failed to add: $error"));
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -156,35 +146,15 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                         builder: (context) => WorkoutPage()),
                   );
                 },
-              ),
-              StreamBuilder(
-                stream: FirebaseFirestore.instance.collection('personal').doc(authUser?.uid).snapshots(),
-                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-                }
-                if (!snapshot.hasData) {
-                return Text('Document does not exist');
-                }
-                 Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-                return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Height: ${data['height']}'),
-            Text('Weight: ${data['weight']}'),
-            Text('BMI: ${data['bmi']}'),
-          ]
-                );
-              }
               )
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }
+
+
+
 
