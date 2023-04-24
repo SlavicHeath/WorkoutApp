@@ -41,7 +41,7 @@ class _CharacterSelectState extends State<CharacterSelect> {
                 return buildImage(displayFile, index);
               },
               options: CarouselOptions(
-                height: 500,
+                height: 250,
                 viewportFraction: 1,
                 onPageChanged: (index, reason) {
                   setState(

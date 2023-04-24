@@ -1,5 +1,6 @@
 //Ben Williams
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/workout.dart';
 import 'dart:math';
@@ -130,7 +131,10 @@ class _UserStatsScreen extends State<UserStatsScreen> {
             children: [
               DrawerHeader(
                 decoration: BoxDecoration(color: Colors.black87),
-                child: Text("User Info"),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
               ),
               ListTile(
                 leading: Icon(Icons.home),
