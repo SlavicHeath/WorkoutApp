@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/character_select.dart';
 import 'package:workoutpet/forgot_pass.dart';
 import 'package:workoutpet/workout.dart';
 import 'package:workoutpet/character_select.dart';
@@ -175,15 +176,13 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
-      const snackbar = SnackBar(
-        content: Text("Logged In "),
+      final snackbar = SnackBar(
+        content: Text("Logged in as ${credential.user?.email}"),
         backgroundColor: Colors.green,
-        elevation: 10,
-        behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.all(5),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      print("Logged in  as ${credential.user}");
+
+      print("Logged in as ${credential.user}");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
 
