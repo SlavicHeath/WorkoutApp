@@ -78,7 +78,55 @@ class WorkoutPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
-  final dislplayFile = 'assets/character/turtle1.glb';
+  Widget buildImage() {
+    String displayFile = '';
+
+    Future<String> _getCharURL(displayFile) async {
+      final snap = await FirebaseFirestore.instance
+          .collection('character')
+          .doc(authUser?.uid)
+          .get();
+      if (snap.exists) {
+        final data = snap.data();
+        return data!['character'].toString();
+      } else {
+        return '';
+      }
+    }
+
+    return FutureBuilder<String>(
+        //Calls into firebase to retrieve data from workout info document
+        future: _getCharURL(displayFile),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData && snapshot.data != null) {
+              String url = snapshot.data!;
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: ModelViewer(
+                        src: url,
+                        ar: true,
+                        autoRotate: true,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return const Text('no data');
+            }
+          } else {
+            return const Text('no data');
+          }
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,8 +250,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -213,7 +263,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                     style: TextStyle(color: Colors.transparent),
                                     enabled: false),
                                 SizedBox(
-                                  height: 100,
+                                  height: 60,
                                   width: 150,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -237,7 +287,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 100,
+                                  height: 60,
                                   width: 150,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -261,7 +311,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 100,
+                                  height: 60,
                                   width: 150,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -285,7 +335,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 100,
+                                  height: 60,
                                   width: 150,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -312,15 +362,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                             ),
                           ),
                           SizedBox(
-                            height: 200,
-                            width: 150,
-                            child: ListView.builder(
-                              itemBuilder: (context, index) {
-                                final displayFile = dislplayFile[index];
-                                return buildImage(dislplayFile, index);
-                              },
-                            ),
-                          ),
+                              height: 400, width: 150, child: buildImage()),
                         ],
                       ),
                     ),
@@ -1181,31 +1223,3 @@ Future openDialog(context) => showDialog(
         ],
       ),
     );
-
-Widget buildImage(String displayFile, int index) {
-  return StreamBuilder(
-      //Calls into firebase to retrieve data from workout info document
-      stream: FirebaseFirestore.instance
-          .collection('character')
-          .where('user', isEqualTo: authUser!.uid)
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            SizedBox(
-              width: 200,
-              height: 200,
-              child: ModelViewer(
-                src: displayFile,
-                alt: "A 3D model of an astronaut",
-                ar: true,
-                autoRotate: true,
-                cameraControls: true,
-              ),
-            ),
-          ],
-        );
-      });
-}
