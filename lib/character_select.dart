@@ -31,8 +31,8 @@ class _CharacterSelectState extends State<CharacterSelect> {
     'assets/character/balloon1.glb',
     'assets/character/dolphin1.glb',
     'assets/character/turtle1.glb',
-    'assets/character/balloon2.glb',
-    'assets/character/balloon3.glb',
+    'assets/character/duck1.glb',
+    'assets/character/bearbear1.glb',
   ];
   @override
   Widget build(BuildContext context) {
