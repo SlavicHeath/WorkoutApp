@@ -87,6 +87,23 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Text("SignUp"),
               ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //           //The right side is the widget you want to go to
+              //           builder: (context) => CharacterSelect()),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     fixedSize: const Size(200, 40),
+              //     backgroundColor: Colors.purple,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: Text("character"),
+              // ),
               // Personal Tester
               // ElevatedButton(
               //   onPressed: () {
