@@ -7,6 +7,7 @@ import 'bot.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workoutpet/battleLog.dart';
 
 class Battle {
   int userCurHealth;
@@ -18,7 +19,7 @@ class Battle {
   int botStrength;
   int botSpeed;
   int turn;
-  int log;
+  String log;
 
   Battle({
     required this.userCurHealth,
@@ -59,21 +60,6 @@ void initBattle(BattleCharacter userStats, userId) {
     'botSpeed': botStats.speed,
     'turn': 0,
     'log': "",
-  });
-}
-
-///Creates a document in the BattleLogs collection based on various stats from the current battle [curBattle] of a user with a uid matching [userId]
-void initBattleLog(Battle curBattle, int win, userId) {
-  FirebaseFirestore.instance.collection('BattleLogs').add({
-    'user': userId,
-    'userMaxHealth': curBattle.userMaxHealth,
-    'userStrength': curBattle.userStrength,
-    'userSpeed': curBattle.userSpeed,
-    'botMaxHealth': curBattle.botMaxHealth,
-    'botStrength': curBattle.botStrength,
-    'botSpeed': curBattle.botSpeed,
-    'date': FieldValue.serverTimestamp(),
-    'win': win, // 1 denotes a win
   });
 }
 
@@ -168,7 +154,7 @@ void updateTurn(docId, turn) {
 void updateLog(docId, turnMsg) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
-    'turn': turnMsg,
+    'log': turnMsg,
   });
 }
 
@@ -348,6 +334,20 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                             )),
                         ElevatedButton(
                           onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => BattleLogScreen()));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(200, 40),
+                            backgroundColor: Colors.purple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text("Battle Log"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
                             if (authUser != null) {
                               FirebaseFirestore.instance
                                   .collection('Battles')
@@ -393,7 +393,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: const Text("Find Opponent"),
+                          child: const Text("Battle"),
                         )
                       ],
                     );
@@ -492,7 +492,7 @@ class _BattleScreenState extends State<BattleScreen> {
                   int botCurHealth = curBattle.botCurHealth;
                   int botStrength = curBattle.botStrength;
                   int botSpeed = curBattle.botSpeed;
-                  String log = "";
+                  String log = curBattle.log;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -651,11 +651,11 @@ class _BattleScreenState extends State<BattleScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (botCurHealth <= 0) {
-                                    //initBattleLog(curBattle, 1, authUser!.uid);
+                                    initBattleLog(curBattle, 1, authUser!.uid);
                                     deleteDoc(authUser!.uid);
                                     Navigator.pop(context);
                                   } else if (userCurHealth <= 0) {
-                                    //initBattleLog(curBattle, 0, authUser!.uid);
+                                    initBattleLog(curBattle, 0, authUser!.uid);
                                     deleteDoc(authUser!.uid);
                                     Navigator.pop(context);
                                   } else {
