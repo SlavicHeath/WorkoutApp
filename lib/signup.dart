@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/character_select.dart';
 import 'package:workoutpet/sign_in.dart';
-
 import 'main.dart';
 
 ///
@@ -173,6 +173,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email!, password: password!);
       //When loged in present user logged in
+      final snackbar = SnackBar(
+        content: Text("Logged in as ${credential.user?.email}"),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
       print("Logged in ${credential.user}");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
@@ -185,7 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       Navigator.of(context).pop();
       // Go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
+        builder: (context) => const CharacterSelect(),
       ));
     }
     // Check data base for errors such as wrong password or email

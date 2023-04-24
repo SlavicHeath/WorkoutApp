@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/character_select.dart';
 import 'package:workoutpet/forgot_pass.dart';
-import 'package:workoutpet/personal.dart';
-import 'main.dart';
+import 'package:workoutpet/workout.dart';
 
 ///
 /// [User.]
@@ -119,13 +118,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   }),
               const SizedBox(height: 16),
               ElevatedButton(
-                  child: const Text('Login'),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // This calls all validators() inside the form for us.
-                      tryLogin();
-                    }
-                  }),
+                child: const Text('Login'),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // This calls all validators() inside the form for us.
+                    tryLogin();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -159,8 +166,13 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
+      final snackbar = SnackBar(
+        content: Text("Logged in as ${credential.user?.email}"),
+        backgroundColor: Colors.green,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
 
-      print("Logged in ${credential.user}");
+      print("Logged in as ${credential.user}");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
 
@@ -171,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.of(context).pop();
       // Now go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const PersonalInfoPage(),
+        builder: (context) => const WorkoutPage(),
       ));
     } on FirebaseAuthException catch (e) {
       // Exceptions are raised if the Firebase Auth service

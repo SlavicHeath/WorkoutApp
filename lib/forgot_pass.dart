@@ -1,9 +1,5 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:workoutpet/main.dart';
 import 'package:workoutpet/sign_in.dart';
 
 ///
@@ -146,8 +142,6 @@ class _ForgotPassword extends State<ForgotPassword> {
       // encounters an error. We need to display these to the user.
       if (e.code == 'user-not-found') {
         error = 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        error = 'Wrong password provided for that user.';
       } else {
         error = 'An error occurred: ${e.message}';
       }

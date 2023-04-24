@@ -1,4 +1,4 @@
-/*import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,74 +8,27 @@ import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
 
-class DsiplayTest extends StatefulWidget {
-  const DsiplayTest({super.key});
+class CharacterSelect extends StatefulWidget {
+  const CharacterSelect({super.key});
 
   @override
-  State<DsiplayTest> createState() => _DsiplayTestState();
+  State<CharacterSelect> createState() => _CharacterSelectState();
 }
 
-class _DsiplayTestState extends State<DsiplayTest> {
+class _CharacterSelectState extends State<CharacterSelect> {
   int activeIndex = 0;
   final dislplayFile = [
     'assets/character/Astronaut.glb',
-    'assets/character/Astronaut1.glb',
-    'assets/character/Astronaut2.glb',
-    'assets/character/Astronaut3.glb',
+    'assets/character/exampleDuck.glb',
+    'assets/character/exampleOctopus.glb',
+    'assets/character/examplePanda.glb',
+    'assets/character/exampleTurtle.glb',
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Model Test"),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.black87),
-              child: Text("Profile"),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Home"),
-              onTap: () {
-                Navigator.pop(
-                    context); //To close the drawer wwhen moving to the next page
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => DsiplayTest(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text("About"),
-              onTap: () {
-                Navigator.pop(
-                    context); //To close the drawer wwhen moving to the next page
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => WorkoutPage(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.login),
-              title: Text("Signup/Login"),
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
       ),
       body: Center(
         child: Column(
@@ -88,7 +41,7 @@ class _DsiplayTestState extends State<DsiplayTest> {
                 return buildImage(displayFile, index);
               },
               options: CarouselOptions(
-                height: 500,
+                height: 250,
                 viewportFraction: 1,
                 onPageChanged: (index, reason) {
                   setState(
@@ -160,10 +113,7 @@ class _DsiplayTestState extends State<DsiplayTest> {
 
 _submitCharacter(String displayFile) async {
   final authUser = await FirebaseAuth.instance.currentUser;
-  final character = <String, dynamic>{
-    "user": authUser?.uid,
-    "character": displayFile
-  };
+  final character = <String, dynamic>{"character": displayFile};
 
   if (authUser != null) {
     await FirebaseFirestore.instance
@@ -172,4 +122,3 @@ _submitCharacter(String displayFile) async {
         .set(character);
   }
 }
-*/
