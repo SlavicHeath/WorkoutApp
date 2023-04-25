@@ -808,7 +808,6 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CURRENT WORKOUTS'),
         backgroundColor: Colors.purple,
       ),
       body: Column(
@@ -934,7 +933,6 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PREVIOUS WORKOUTS'),
         backgroundColor: Colors.purple,
       ),
       body: StreamBuilder(
