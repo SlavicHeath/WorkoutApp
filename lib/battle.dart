@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/battleLog.dart';
+import 'dart:async';
 
 class Battle {
   int userCurHealth;
@@ -63,18 +64,6 @@ void initBattle(BattleCharacter userStats, userId) {
   });
 }
 
-/*void updateBattleLog(String text) async {
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-      .collection('BattleLogs')
-      .where('user', isEqualTo: authUser!.uid)
-      .orderBy('date')
-      .limitToLast(1)
-      .get();
-  querySnapshot.docs.forEach((doc) {
-    doc.reference.update({'log': text});
-  });
-}*/
-
 class Workout {
   final String type;
   final int reps;
@@ -121,7 +110,7 @@ Future<List<Workout>> readWorkoutsInstance(userId) async {
   return workoutList;
 }
 
-void updateCurHealth(docId, userHealth, botHealth) {
+void updateCurHealth(docId, userHealth, botHealth) async {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
     'userCurHealth': userHealth,
@@ -199,15 +188,15 @@ BattleCharacter calcStats(List<Workout> workoutList) {
       legsSets += workout.sets;
     }
   });
-  temp.health = ((backWeight * backReps * backSets) / 1000 +
-          (chestWeight * chestReps * chestSets) / 3000 +
-          (legsWeight * legsReps * legsSets) / 5000)
+  temp.health = (((backWeight / 2) * backReps * backSets) / 2000 +
+          ((chestWeight / 2) * chestReps * chestSets) / 5000 +
+          ((legsWeight / 2) * legsReps * legsSets) / 10000)
       .round();
-  temp.strength = ((armsWeight * armsReps * armsSets) / 1000 +
-          (chestWeight * chestReps * chestSets) / 5000)
+  temp.strength = (((armsWeight / 2) * armsReps * armsSets) / 2000 +
+          ((chestWeight / 2) * chestReps * chestSets) / 5000)
       .round();
   temp.speed = ((100 * ((legsWeight / 2) * legsReps * legsSets)) /
-          (((legsWeight / 2) * legsReps * legsSets) + 200000))
+          (((legsWeight / 2) * legsReps * legsSets) + 300000))
       .round(); //horizontal asymptote at 100
   return temp;
 }
@@ -335,7 +324,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => BattleLogScreen()));
+                                builder: (context) => BattleLogListScreen()));
                           },
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(200, 40),
@@ -414,24 +403,25 @@ class BattleScreen extends StatefulWidget {
 }
 
 class _BattleScreenState extends State<BattleScreen> {
+  bool _isButtonActive = true;
   String _turnButtonText = "Next Turn";
   String _logText = "";
   var _logColor = Colors.green;
-  void action(Battle curBattle, String log) {
+  Future<void> action(Battle curBattle, String log) async {
     var rand = new Random();
     if (curBattle.turn % 2 == 0) {
       if (rand.nextInt(100) < curBattle.botSpeed) {
         setState(() {
           _logColor = Colors.green;
           _logText = "User misses enemy";
-          log = "${log}/m${_logText}";
+          log = "${log}/m/${_logText}";
         });
       } else {
         curBattle.botCurHealth -= curBattle.userStrength;
         setState(() {
           _logColor = Colors.green;
           _logText = "User hits enemy for ${curBattle.userStrength} damage";
-          log = "${log}/h${curBattle.userStrength}-${_logText}";
+          log = "${log}/h${curBattle.userStrength}/${_logText}";
         });
       }
     } else {
@@ -439,27 +429,25 @@ class _BattleScreenState extends State<BattleScreen> {
         setState(() {
           _logColor = Colors.red;
           _logText = "Enemy misses user";
-          log = "${log}/m${_logText}";
+          log = "${log}/m/${_logText}";
         });
       } else {
         curBattle.userCurHealth -= curBattle.botStrength;
         setState(() {
           _logColor = Colors.red;
           _logText = "Enemy hits user for ${curBattle.botStrength} damage";
-          log = "${log}/h${curBattle.botStrength}-${_logText}";
+          log = "${log}/h${curBattle.botStrength}/${_logText}";
         });
       }
     }
     if (curBattle.botCurHealth <= 0) {
       setState(() {
         _turnButtonText = "The User Has Won!!!";
-        log = "${log}/e${_logText}";
       });
     }
     if (curBattle.userCurHealth <= 0) {
       setState(() {
-        _turnButtonText = "The Enemy Has Won :(";
-        log = "${log}/e${_logText}";
+        _turnButtonText = "The User Has Lost :(";
       });
     }
     updateLog(authUser!.uid, log);
@@ -650,11 +638,11 @@ class _BattleScreenState extends State<BattleScreen> {
                               alignment: Alignment.bottomCenter,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (botCurHealth <= 0) {
+                                  if (curBattle.botCurHealth <= 0) {
                                     initBattleLog(curBattle, 1, authUser!.uid);
                                     deleteDoc(authUser!.uid);
                                     Navigator.pop(context);
-                                  } else if (userCurHealth <= 0) {
+                                  } else if (curBattle.userCurHealth <= 0) {
                                     initBattleLog(curBattle, 0, authUser!.uid);
                                     deleteDoc(authUser!.uid);
                                     Navigator.pop(context);
