@@ -164,35 +164,6 @@ class HomeScreen extends StatelessWidget {
               //   ),
               //   child: Text("Character Viewer"),
               // ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => UserStatsScreen()));
-                  /*} else {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Error'),
-                        content: const Text("User is not signed in!"),
-                        actions: [
-                          TextButton(
-                              child: const Text('OK'),
-                              onPressed: () => Navigator.pop(context)),
-                        ],
-                      ),
-                    );
-                  }*/
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text("Stats"),
-              ),
-
               // ElevatedButton(
               //   onPressed: () {
               //     Navigator.of(context).push(
