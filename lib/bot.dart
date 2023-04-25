@@ -27,21 +27,16 @@ class BattleCharacter {
 /// [@see		battleCharacter]
 /// [@global]
 ///
+///Constructor passes in a user's health, strength, and speed in order to create an opponent that possesses similar stats
 class Bot extends BattleCharacter {
-  //Health and strength are being stored here until they are incorporated
-  //into the character class
-
-  //Constructor passes in a user's health, strength, speed in order to create an
-  //opponent that possesses similar stats to the user and has character
-  //images correlating to the degree of the oppoenent's stats
   Bot(int healthTemplate, int strengthTemplate, int speedTemplate)
       : super(0, 0, 0) {
     var rand = new Random();
-    double randMultiplier = rand.nextInt(21) * .01; //randMultiplier = 0 to .2
+    double randMultiplier = rand.nextInt(26) * .01; //randMultiplier = 0 to .2
     health = ((0.95 + randMultiplier) * healthTemplate).round();
-    randMultiplier = rand.nextInt(21) * .01;
+    randMultiplier = rand.nextInt(26) * .01;
     strength = ((0.95 + randMultiplier) * strengthTemplate).round();
-    randMultiplier = rand.nextInt(21) * .01;
+    randMultiplier = rand.nextInt(26) * .01;
     speed = ((0.95 + randMultiplier) * speedTemplate).round();
   }
 }
