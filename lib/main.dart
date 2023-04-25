@@ -10,6 +10,7 @@ import 'character_select.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 ///
 /// [@var		object	async]
@@ -17,7 +18,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 ///
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
+  runApp(MaterialApp(title: "WorkoutPet", home: HomeScreen()));
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -33,7 +34,8 @@ void main() async {
 /// [@global]
 ///
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+  //final authUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {

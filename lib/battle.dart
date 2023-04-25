@@ -9,88 +9,136 @@ import 'dart:math';
 import 'bot.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-const documentId =
-    'tSfDrDxGjioQnaTuDOrA'; //Change this to a valid document Id in the Battles collection
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workoutpet/battleLog.dart';
+import 'dart:async';
 
 ///[Battle] Object used to map stats from Battles documents.
 class Battle {
   int userCurHealth;
+  int userMaxHealth;
   int userStrength;
   int userSpeed;
   int botCurHealth;
+  int botMaxHealth;
   int botStrength;
   int botSpeed;
   int turn;
+  String log;
 
-  Battle(
-      {required this.userCurHealth,
-      required this.userStrength,
-      required this.userSpeed,
-      required this.botCurHealth,
-      required this.botStrength,
-      required this.botSpeed,
-      required this.turn});
+  Battle({
+    required this.userCurHealth,
+    required this.userMaxHealth,
+    required this.userStrength,
+    required this.userSpeed,
+    required this.botCurHealth,
+    required this.botMaxHealth,
+    required this.botStrength,
+    required this.botSpeed,
+    required this.turn,
+    required this.log,
+  });
 
   ///[fromJson] Creates [Battle] object by maping data from a Battles document [json] to appropriate variables
   static Battle fromJson(Map<String, dynamic> json) => Battle(
       userCurHealth: json['userCurHealth'],
+      userMaxHealth: json['userMaxHealth'],
       userStrength: json['userStrength'],
       userSpeed: json['userSpeed'],
       botCurHealth: json['botCurHealth'],
+      botMaxHealth: json['botMaxHealth'],
       botStrength: json['botStrength'],
       botSpeed: json['botSpeed'],
-      turn: json['turn']);
+      turn: json['turn'],
+      log: json['log']);
 }
 
 ///[initBattle] Creates a battle by initializing data of a Battles documents based on the [userStats]
-void initBattle(BattleCharacter userStats) {
+void initBattle(BattleCharacter userStats, userId) {
   Bot botStats = Bot(userStats.health, userStats.strength, userStats.speed);
-  FirebaseFirestore.instance.collection('Battles').add({
+  FirebaseFirestore.instance.collection('Battles').doc(userId).set({
     'userCurHealth': userStats.health,
+    'userMaxHealth': userStats.health,
     'userStrength': userStats.strength,
     'userSpeed': userStats.speed,
     'botCurHealth': botStats.health,
+    'botMaxHealth': botStats.health,
     'botStrength': botStats.strength,
     'botSpeed': botStats.speed,
     'turn': 0,
+    'log': "",
   });
 }
 
 ///[Workout] Object used to map data from 'workout information' database
 class Workout {
+  final String type;
   final int reps;
   final int sets;
   final int weight;
 
-  Workout({required this.reps, required this.sets, required this.weight});
+  Workout(
+      {required this.type,
+      required this.reps,
+      required this.sets,
+      required this.weight});
 
   ///[fromJson] Creates [Workout] object by maping data from a 'workout information' document [json] to appropriate variables
-  static Workout fromJson(Map<String, dynamic> json) =>
-      Workout(reps: json['reps'], sets: json['sets'], weight: json['weight']);
+  static Workout fromJson(Map<String, dynamic> json) => Workout(
+      type: json['body part'],
+      reps: json['reps'],
+      sets: json['sets'],
+      weight: json['weight']);
 }
 
-///[readWorkouts] Creates a Stream object by maping data from 'workout information' documents to a list of Workout objects
-Stream<List<Workout>> readWorkouts() => FirebaseFirestore.instance
+Stream<List<Workout>> readWorkouts(userId) => FirebaseFirestore.instance
     .collection('workout information')
+    .where('user', isEqualTo: userId)
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((doc) => Workout.fromJson(doc.data())).toList());
 
 ///[readBattle] Creates a Stream object by maping data from a Battles document to a list of Workout objects
-Stream<Battle> readBattle() => FirebaseFirestore.instance
+Stream<Battle> readBattle(userId) => FirebaseFirestore.instance
     .collection('Battles')
-    .doc(documentId)
+    .doc(userId)
     .snapshots()
     .map((DocumentSnapshot<Map<String, dynamic>> snapshot) =>
         Battle.fromJson(snapshot.data()!));
 
-///[updateHealth] Updates both the user's and bot's current health fields of a Battles document with the id matching [docId]
-void updateHealth(docId, userHealth, botHealth) {
+///Returns a list of workouts documents with user fields that match the [userId] (Used for [updateUserStats])
+Future<List<Workout>> readWorkoutsInstance(userId) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('workout information')
+      .where('user', isEqualTo: userId)
+      .get();
+  List<Workout> workoutList = [];
+  querySnapshot.docs.forEach((doc) {
+    workoutList.add(Workout.fromJson(doc.data() as Map<String, dynamic>));
+  });
+  return workoutList;
+}
+
+void updateCurHealth(docId, userHealth, botHealth) async {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
     'userCurHealth': userHealth,
     'botCurHealth': botHealth,
+  });
+}
+
+///Updates stats of a user while they have an ongoing battle (called when battlescreen page is loaded)
+void updateUserStats(Battle curBattle, userId) async {
+  List<Workout> workoutList = await readWorkoutsInstance(userId);
+  BattleCharacter userStats = calcStats(workoutList);
+  int healthDif = userStats.health - curBattle.userMaxHealth;
+  final battleDoc =
+      FirebaseFirestore.instance.collection('Battles').doc(userId);
+  battleDoc.update({
+    'userCurHealth': curBattle.userCurHealth + healthDif,
+    'userMaxHealth': userStats.health,
+    'userStrength': userStats.strength,
+    'userSpeed': userStats.speed,
   });
 }
 
@@ -99,6 +147,13 @@ void updateTurn(docId, turn) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
     'turn': turn,
+  });
+}
+
+void updateLog(docId, turnMsg) {
+  final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
+  battleDoc.update({
+    'log': turnMsg,
   });
 }
 
@@ -111,11 +166,50 @@ void deleteDoc(docId) {
 ///[calcStats] Calculates the health, strength, and speed of a user based on a list of [Workout] objects
 BattleCharacter calcStats(List<Workout> workoutList) {
   BattleCharacter temp = BattleCharacter(0, 0, 0);
+  int backWeight = 0;
+  int backReps = 0;
+  int backSets = 0;
+  int chestWeight = 0;
+  int chestReps = 0;
+  int chestSets = 0;
+  int armsWeight = 0;
+  int armsReps = 0;
+  int armsSets = 0;
+  int legsWeight = 0;
+  int legsReps = 0;
+  int legsSets = 0;
   workoutList.forEach((workout) {
-    temp.health += workout.weight;
-    temp.strength += workout.reps;
-    temp.speed += workout.sets;
+    if (workout.type == 'Back') {
+      backWeight += workout.weight;
+      backReps += workout.reps;
+      backSets += workout.sets;
+    }
+    if (workout.type == 'Chest') {
+      chestWeight += workout.weight;
+      chestReps += workout.reps;
+      chestSets += workout.sets;
+    }
+    if (workout.type == 'Arms') {
+      armsWeight += workout.weight;
+      armsReps += workout.reps;
+      armsSets += workout.sets;
+    }
+    if (workout.type == 'Legs') {
+      legsWeight += workout.weight;
+      legsReps += workout.reps;
+      legsSets += workout.sets;
+    }
   });
+  temp.health = (((backWeight / 2) * backReps * backSets) / 2000 +
+          ((chestWeight / 2) * chestReps * chestSets) / 5000 +
+          ((legsWeight / 2) * legsReps * legsSets) / 10000)
+      .round();
+  temp.strength = (((armsWeight / 2) * armsReps * armsSets) / 2000 +
+          ((chestWeight / 2) * chestReps * chestSets) / 5000)
+      .round();
+  temp.speed = ((100 * ((legsWeight / 2) * legsReps * legsSets)) /
+          (((legsWeight / 2) * legsReps * legsSets) + 300000))
+      .round(); //horizontal asymptote at 100
   return temp;
 }
 
@@ -127,6 +221,9 @@ class UserStatsScreen extends StatefulWidget {
 }
 
 class _UserStatsScreen extends State<UserStatsScreen> {
+  final authUser = FirebaseAuth.instance
+      .currentUser; //authUser!.uid in builder (and function args) and userId for method params
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,10 +237,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
             children: [
               DrawerHeader(
                 decoration: BoxDecoration(color: Colors.black87),
-                child: Text(
-                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                ),
+                child: Text("User Info"),
               ),
               ListTile(
                 leading: Icon(Icons.home),
@@ -163,7 +257,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                 title: Text("Battle"),
                 onTap: () {
                   Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
+                      context); //To close the drawer when moving to the next page
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => UserStatsScreen(),
@@ -211,7 +305,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Center(
             child: StreamBuilder<List<Workout>>(
-                stream: readWorkouts(),
+                stream: readWorkouts(authUser!.uid),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text("Database Error: ${snapshot.error}");
@@ -263,12 +357,8 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                             )),
                         ElevatedButton(
                           onPressed: () {
-                            initBattle(userStats);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BattlePreviewScreen()),
-                            );
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => BattleLogListScreen()));
                           },
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(200, 40),
@@ -277,8 +367,57 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: const Text("Find Opponent"),
+                          child: const Text("Battle Log"),
                         ),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (authUser != null) {
+                              FirebaseFirestore.instance
+                                  .collection('Battles')
+                                  .doc(authUser!.uid)
+                                  .get()
+                                  .then((DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => BattleScreen()));
+                                } else if ((userHealth == 0) |
+                                    (userStrength == 0)) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Wait!'),
+                                      content: const Text(
+                                          "You must complete more workouts before you can begin a battle\n(Your Health and Strength must be above 0)"),
+                                      actions: [
+                                        TextButton(
+                                            child: const Text('OK'),
+                                            onPressed: () =>
+                                                Navigator.pop(context)),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  initBattle(userStats, authUser!.uid);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BattleScreen()));
+                                }
+                              });
+                            } else {
+                              throw ArgumentError("User is not signed in!");
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(200, 40),
+                            backgroundColor: Colors.purple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text("Battle"),
+                        )
                       ],
                     );
                   } else {
@@ -291,228 +430,6 @@ class _UserStatsScreen extends State<UserStatsScreen> {
   }
 }
 
-class BattlePreviewScreen extends StatefulWidget {
-  const BattlePreviewScreen({super.key});
-  @override
-  _BattlePreviewScreenState createState() => _BattlePreviewScreenState();
-}
-
-class _BattlePreviewScreenState extends State<BattlePreviewScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Battle Preview'),
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.purple,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder<Battle>(
-            stream: readBattle(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text("Database Error: ${snapshot.error}");
-              } else if (snapshot.hasData) {
-                final curBattle = snapshot.data!;
-                int userCurHealth = curBattle.userCurHealth;
-                int userStrength = curBattle.userStrength;
-                int userSpeed = curBattle.userSpeed;
-                int botCurHealth = curBattle.botCurHealth;
-                int botStrength = curBattle.botStrength;
-                int botSpeed = curBattle.botSpeed;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('HEALTH',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('HEALTH',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 10.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('$userCurHealth',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('$botCurHealth',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 20.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('STRENGTH',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('STRENGTH',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 10.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('$userStrength',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('$botStrength',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 20.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('SPEED',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('SPEED',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 10.0)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('$userSpeed',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              )),
-                        ),
-                        Expanded(
-                          child: Text('$botSpeed',
-                              style: TextStyle(
-                                letterSpacing: 2.0,
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(100, 40),
-                            backgroundColor: Colors.purple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          child: Text("Back"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BattleScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(100, 40),
-                            backgroundColor: Colors.purple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          child: Text("Fight"),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              } else {
-                //if database is being loaded
-                return Center(child: CircularProgressIndicator());
-              }
-            }),
-      ),
-    );
-  }
-}
-
 class BattleScreen extends StatefulWidget {
   const BattleScreen({super.key});
   @override
@@ -520,22 +437,25 @@ class BattleScreen extends StatefulWidget {
 }
 
 class _BattleScreenState extends State<BattleScreen> {
+  bool _isButtonActive = true;
   String _turnButtonText = "Next Turn";
   String _logText = "";
   var _logColor = Colors.green;
-  void action(Battle curBattle) {
+  Future<void> action(Battle curBattle, String log) async {
     var rand = new Random();
     if (curBattle.turn % 2 == 0) {
       if (rand.nextInt(100) < curBattle.botSpeed) {
         setState(() {
           _logColor = Colors.green;
           _logText = "User misses enemy";
+          log = "${log}/m/${_logText}";
         });
       } else {
         curBattle.botCurHealth -= curBattle.userStrength;
         setState(() {
           _logColor = Colors.green;
           _logText = "User hits enemy for ${curBattle.userStrength} damage";
+          log = "${log}/h${curBattle.userStrength}/${_logText}";
         });
       }
     } else {
@@ -543,12 +463,14 @@ class _BattleScreenState extends State<BattleScreen> {
         setState(() {
           _logColor = Colors.red;
           _logText = "Enemy misses user";
+          log = "${log}/m/${_logText}";
         });
       } else {
         curBattle.userCurHealth -= curBattle.botStrength;
         setState(() {
           _logColor = Colors.red;
           _logText = "Enemy hits user for ${curBattle.botStrength} damage";
+          log = "${log}/h${curBattle.botStrength}/${_logText}";
         });
       }
     }
@@ -559,37 +481,40 @@ class _BattleScreenState extends State<BattleScreen> {
     }
     if (curBattle.userCurHealth <= 0) {
       setState(() {
-        _turnButtonText = "The Enemy Has Won :(";
+        _turnButtonText = "The User Has Lost :(";
       });
     }
-    updateHealth(documentId, curBattle.userCurHealth, curBattle.botCurHealth);
+    updateLog(authUser!.uid, log);
+    updateCurHealth(
+        authUser!.uid, curBattle.userCurHealth, curBattle.botCurHealth);
     curBattle.turn++;
-    updateTurn(documentId, curBattle.turn);
+    updateTurn(authUser!.uid, curBattle.turn);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Battle Preview'),
-          automaticallyImplyLeading: false,
+          title: const Text('Battle'),
           backgroundColor: Colors.purple,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: StreamBuilder<Battle>(
-              stream: readBattle(),
+              stream: readBattle(authUser!.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text("Database Error: ${snapshot.error}");
                 } else if (snapshot.hasData) {
                   final curBattle = snapshot.data!;
+                  updateUserStats(curBattle, authUser!.uid);
                   int userCurHealth = curBattle.userCurHealth;
                   int userStrength = curBattle.userStrength;
                   int userSpeed = curBattle.userSpeed;
                   int botCurHealth = curBattle.botCurHealth;
                   int botStrength = curBattle.botStrength;
                   int botSpeed = curBattle.botSpeed;
+                  String log = curBattle.log;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -747,16 +672,16 @@ class _BattleScreenState extends State<BattleScreen> {
                               alignment: Alignment.bottomCenter,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if ((userCurHealth <= 0) |
-                                      (botCurHealth <= 0)) {
-                                    deleteDoc(documentId);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomeScreen()),
-                                    );
+                                  if (curBattle.botCurHealth <= 0) {
+                                    initBattleLog(curBattle, 1, authUser!.uid);
+                                    deleteDoc(authUser!.uid);
+                                    Navigator.pop(context);
+                                  } else if (curBattle.userCurHealth <= 0) {
+                                    initBattleLog(curBattle, 0, authUser!.uid);
+                                    deleteDoc(authUser!.uid);
+                                    Navigator.pop(context);
                                   } else {
-                                    action(curBattle);
+                                    action(curBattle, log);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
