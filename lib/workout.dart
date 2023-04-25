@@ -80,7 +80,8 @@ class WorkoutPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
-  final dislplayFile = 'assets/character/turtle1.glb';
+ 
+
 
   @override
   Widget build(BuildContext context) {
@@ -162,17 +163,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => HomeScreen(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Personal Information"),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PersonalInfoPage(),
                     ),
                   );
                 },
@@ -318,8 +308,16 @@ class _WorkoutPageState extends State<WorkoutPage> {
                             width: 150,
                             child: ListView.builder(
                               itemBuilder: (context, index) {
-                                final displayFile = dislplayFile[index];
-                                return buildImage(dislplayFile, index);
+                                Future<String> dislplayFile() async{ 
+                                 String dislplayFile = FirebaseFirestore.instance
+                                          .collection("character")
+                                          .doc(authUser?.uid)
+                                          .get()
+                                          .toString();
+                                          return dislplayFile.toString();
+                                }
+                                return buildImage(dislplayFile().toString(), index);
+                                
                               },
                             ),
                           ),
