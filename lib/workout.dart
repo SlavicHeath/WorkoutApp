@@ -41,10 +41,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: WorkoutPage(),
-    );
+    return WorkoutPage();
   }
 }
 
@@ -135,277 +132,274 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Center(child: Text('WORKOUT ZONE')),
-          backgroundColor: Colors.purple,
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              // Drawer header telling which user is signed in
-              DrawerHeader(
-                decoration: BoxDecoration(color: Colors.black87),
-                child: Text(
-                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
-                  style: const TextStyle(color: Colors.white, fontSize: 25),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: Text("Home"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => WorkoutPage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Battle"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => UserStatsScreen(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.swap_horizontal_circle),
-                title: const Text("Change Character"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const CharacterSelect(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings_accessibility),
-                title: const Text("Change BMI"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PersonalInfoPage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.login),
-                title: Text("Signout"),
-                onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Personal Information"),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PersonalInfoPage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.list),
-                title: Text("About"),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => DescriptionPage(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-        body: Center(
-            child: currindex ==
-                    1 // dont want user to click workout page and immediately go to previous
-                // put on 1 so that it's on the body part screen
-                ? Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    color: Colors.white,
-                    child: Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextField(
-                                    controller: field5,
-                                    decoration: null,
-                                    style: TextStyle(color: Colors.transparent),
-                                    enabled: false),
-                                SizedBox(
-                                  height: 60,
-                                  width: 150,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                      style: workoutButton,
-                                      onPressed: () {
-                                        final button = buttonName;
-                                        field5.text = button;
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                              return const ArmPage();
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      child: Text(buttonName,
-                                          style: const TextStyle(
-                                              color: Colors.white)),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 60,
-                                  width: 150,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                      style: workoutButton,
-                                      onPressed: () {
-                                        final button = butt2Name;
-                                        field5.text = button;
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                              return const LegPage();
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      child: Text(butt2Name,
-                                          style: const TextStyle(
-                                              color: Colors.white)),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 60,
-                                  width: 150,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                      style: workoutButton,
-                                      onPressed: () {
-                                        final button = butt3Name;
-                                        field5.text = button;
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                              return const BackPage();
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      child: Text(butt3Name,
-                                          style: const TextStyle(
-                                              color: Colors.white)),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 60,
-                                  width: 150,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                      style: workoutButton,
-                                      onPressed: () {
-                                        final button = butt4Name;
-                                        field5.text = button;
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                              return const ChestPage();
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      child: Text(butt4Name,
-                                          style: const TextStyle(
-                                              color: Colors.white)),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                              //where we will display the character model, based on user uid
-                              height: 600,
-                              width: 150,
-                              child: buildImage()),
-                        ],
-                      ),
-                    ),
-                  )
-                : currindex == 0
-                    ? PrevWorkPage()
-                    : CurrentWorkPage()),
-        bottomNavigationBar: BottomNavigationBar(
-            //used to navigate within workout page
-            // previous button used to see previous workouts
-            // current button used to show the workouts the user just inputted whilst logged in for that day/time
-            backgroundColor: Colors.purple,
-            selectedItemColor: Colors.black,
-            currentIndex: currindex,
-            items: const [
-              BottomNavigationBarItem(
-                label: 'Previous',
-                icon: Icon(Icons.arrow_back_outlined),
-              ),
-              BottomNavigationBarItem(
-                label: 'Information',
-                icon: Icon(Icons.home),
-              ),
-              BottomNavigationBarItem(
-                label: 'current',
-                icon: Icon(Icons.accessibility_new_rounded),
-              )
-            ],
-            onTap: (int index) {
-              //changes the index so that way the screen changes and user is able to see each container
-              setState(() {
-                currindex = index;
-              });
-            }),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(child: Text('WORKOUT ZONE')),
+        backgroundColor: Colors.purple,
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // Drawer header telling which user is signed in
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.black87),
+              child: Text(
+                "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                style: const TextStyle(color: Colors.white, fontSize: 25),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: Text("Home"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => WorkoutPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("Battle"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserStatsScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.swap_horizontal_circle),
+              title: const Text("Change Character"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CharacterSelect(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings_accessibility),
+              title: const Text("Change BMI"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PersonalInfoPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.login),
+              title: Text("Signout"),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("Personal Information"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PersonalInfoPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("About"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DescriptionPage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Center(
+          child: currindex ==
+                  1 // dont want user to click workout page and immediately go to previous
+              // put on 1 so that it's on the body part screen
+              ? Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextField(
+                                  controller: field5,
+                                  decoration: null,
+                                  style: TextStyle(color: Colors.transparent),
+                                  enabled: false),
+                              SizedBox(
+                                height: 60,
+                                width: 150,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    style: workoutButton,
+                                    onPressed: () {
+                                      final button = buttonName;
+                                      field5.text = button;
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                            return const ArmPage();
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: Text(buttonName,
+                                        style: const TextStyle(
+                                            color: Colors.white)),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 60,
+                                width: 150,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    style: workoutButton,
+                                    onPressed: () {
+                                      final button = butt2Name;
+                                      field5.text = button;
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                            return const LegPage();
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: Text(butt2Name,
+                                        style: const TextStyle(
+                                            color: Colors.white)),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 60,
+                                width: 150,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    style: workoutButton,
+                                    onPressed: () {
+                                      final button = butt3Name;
+                                      field5.text = button;
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                            return const BackPage();
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: Text(butt3Name,
+                                        style: const TextStyle(
+                                            color: Colors.white)),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 60,
+                                width: 150,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    style: workoutButton,
+                                    onPressed: () {
+                                      final button = butt4Name;
+                                      field5.text = button;
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                            return const ChestPage();
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: Text(butt4Name,
+                                        style: const TextStyle(
+                                            color: Colors.white)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                            //where we will display the character model, based on user uid
+                            height: 600,
+                            width: 150,
+                            child: buildImage()),
+                      ],
+                    ),
+                  ),
+                )
+              : currindex == 0
+                  ? PrevWorkPage()
+                  : CurrentWorkPage()),
+      bottomNavigationBar: BottomNavigationBar(
+          //used to navigate within workout page
+          // previous button used to see previous workouts
+          // current button used to show the workouts the user just inputted whilst logged in for that day/time
+          backgroundColor: Colors.purple,
+          selectedItemColor: Colors.black,
+          currentIndex: currindex,
+          items: const [
+            BottomNavigationBarItem(
+              label: 'Previous',
+              icon: Icon(Icons.arrow_back_outlined),
+            ),
+            BottomNavigationBarItem(
+              label: 'Information',
+              icon: Icon(Icons.home),
+            ),
+            BottomNavigationBarItem(
+              label: 'current',
+              icon: Icon(Icons.accessibility_new_rounded),
+            )
+          ],
+          onTap: (int index) {
+            //changes the index so that way the screen changes and user is able to see each container
+            setState(() {
+              currindex = index;
+            });
+          }),
     );
   }
 }
@@ -1041,18 +1035,6 @@ TextEditingController field5 = TextEditingController();
 
 final authUser = FirebaseAuth.instance.currentUser;
 
-double points = 0.0;
-
-void calcPoints() {
-  // used to calculate points
-
-  double weight = double.tryParse(field2.text) ?? 0.0;
-  double sets = double.tryParse(field3.text) ?? 0.0;
-  double reps = double.tryParse(field2.text) ?? 0.0;
-
-  double points = weight * sets * reps;
-}
-
 _submitInfo() async {
   // used to retrieve data from a specific user for previous workouts
 
@@ -1206,8 +1188,7 @@ Future openDialog(context) => showDialog(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 //if user submissions are valid, saves information to database
-                //and allows user to move on to next input/next screen
-                calcPoints();
+                //and allows user to move on to next input/next screeng
                 _submitInfo();
                 Navigator.of(context).pop();
 
