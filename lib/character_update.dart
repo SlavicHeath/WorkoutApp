@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/workout.dart';
@@ -55,6 +52,15 @@ class PeopleList extends StatelessWidget {
       .where(documentId, isEqualTo: authUser!.uid)
       .snapshots();
 
+  var name;
+  Future getName() async {
+    DocumentSnapshot ds = await FirebaseFirestore.instance
+        .collection('character')
+        .doc(authUser!.uid)
+        .get();
+    name = ds.data();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -64,6 +70,7 @@ class PeopleList extends StatelessWidget {
         // There may be no data while the network connection is initializing.
         // And sometimes the data is empty, like and empty street.
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          print(name);
           return const Text("No data to show!");
         }
 
@@ -71,6 +78,7 @@ class PeopleList extends StatelessWidget {
         var modeldoc = snapshot.data!.docs.map((e) => null);
         // Use a ListView.builder to generate a ListView
         // to display the People collection
+
         return ListView.builder(
           itemCount: modeldoc.length,
           itemBuilder: ((context, index) {
