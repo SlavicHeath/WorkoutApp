@@ -807,9 +807,6 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.purple,
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -932,9 +929,6 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.purple,
-      ),
       body: StreamBuilder(
         //Calls into firebase to retrieve data from workout info document
         stream: FirebaseFirestore.instance
