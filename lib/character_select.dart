@@ -17,12 +17,22 @@ class CharacterSelect extends StatefulWidget {
 
 class _CharacterSelectState extends State<CharacterSelect> {
   int activeIndex = 0;
+  // create a read from the database bmi section
+  var bmi = FirebaseFirestore.instance
+      .collection('users')
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      print(doc["bmi"]);
+    });
+  });
+
   final dislplayFile = [
-    'assets/character/Astronaut.glb',
-    'assets/character/exampleDuck.glb',
-    'assets/character/exampleOctopus.glb',
-    'assets/character/examplePanda.glb',
-    'assets/character/exampleTurtle.glb',
+    'assets/character/balloon1.glb',
+    'assets/character/dolphin1.glb',
+    'assets/character/turtle1.glb',
+    'assets/character/duck1.glb',
+    'assets/character/bearbear1.glb',
   ];
   @override
   Widget build(BuildContext context) {
@@ -41,7 +51,7 @@ class _CharacterSelectState extends State<CharacterSelect> {
                 return buildImage(displayFile, index);
               },
               options: CarouselOptions(
-                height: 500,
+                height: 250,
                 viewportFraction: 1,
                 onPageChanged: (index, reason) {
                   setState(
@@ -61,13 +71,21 @@ class _CharacterSelectState extends State<CharacterSelect> {
             ElevatedButton(
               //assign character to user
               onPressed: () {
-                _submitCharacter(dislplayFile[activeIndex]);
-
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      //The right side is the widget you want to go to
-                      builder: (context) => PersonalInfoPage()),
-                );
+                if (bmi == Null) {
+                  _submitCharacter(dislplayFile[activeIndex]);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //no bmi go to personal page
+                        builder: (context) => const PersonalInfoPage()),
+                  );
+                } else {
+                  _submitCharacter(dislplayFile[activeIndex]);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        //bmi go to main page
+                        builder: (context) => const WorkoutPage()),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(300, 40),

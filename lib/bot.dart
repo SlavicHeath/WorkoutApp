@@ -3,7 +3,7 @@
 import 'dart:math';
 
 ///
-/// [battleCharacter.]
+/// [BattleCharacter] Object that holds the stats of a user
 ///
 /// [@author	Unknown]
 /// [ @since	v0.0.1 ]
@@ -19,7 +19,7 @@ class BattleCharacter {
 }
 
 ///
-/// [Bot.]
+/// [Bot] Object that extends [BattleCharacter] and is used to generated random stats for a bot opponent
 ///
 /// [@author	Unknown]
 /// [ @since	v0.0.1 ]
@@ -32,11 +32,11 @@ class Bot extends BattleCharacter {
   Bot(int healthTemplate, int strengthTemplate, int speedTemplate)
       : super(0, 0, 0) {
     var rand = new Random();
-    double randMultiplier = rand.nextInt(21) * .01; //randMultiplier = 0 to .2
+    double randMultiplier = rand.nextInt(26) * .01; //randMultiplier = 0 to .2
     health = ((0.95 + randMultiplier) * healthTemplate).round();
-    randMultiplier = rand.nextInt(21) * .01;
+    randMultiplier = rand.nextInt(26) * .01;
     strength = ((0.95 + randMultiplier) * strengthTemplate).round();
-    randMultiplier = rand.nextInt(21) * .01;
+    randMultiplier = rand.nextInt(26) * .01;
     speed = ((0.95 + randMultiplier) * speedTemplate).round();
   }
 }

@@ -1,6 +1,9 @@
 //Ben Williams
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workoutpet/About.dart';
 import 'package:workoutpet/main.dart';
+import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/workout.dart';
 import 'dart:math';
 import 'bot.dart';
@@ -10,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/battleLog.dart';
 import 'dart:async';
 
+///[Battle] Object used to map stats from Battles documents.
 class Battle {
   int userCurHealth;
   int userMaxHealth;
@@ -35,6 +39,7 @@ class Battle {
     required this.log,
   });
 
+  ///[fromJson] Creates [Battle] object by maping data from a Battles document [json] to appropriate variables
   static Battle fromJson(Map<String, dynamic> json) => Battle(
       userCurHealth: json['userCurHealth'],
       userMaxHealth: json['userMaxHealth'],
@@ -48,6 +53,7 @@ class Battle {
       log: json['log']);
 }
 
+///[initBattle] Creates a battle by initializing data of a Battles documents based on the [userStats]
 void initBattle(BattleCharacter userStats, userId) {
   Bot botStats = Bot(userStats.health, userStats.strength, userStats.speed);
   FirebaseFirestore.instance.collection('Battles').doc(userId).set({
@@ -64,6 +70,7 @@ void initBattle(BattleCharacter userStats, userId) {
   });
 }
 
+///[Workout] Object used to map data from 'workout information' database
 class Workout {
   final String type;
   final int reps;
@@ -76,6 +83,7 @@ class Workout {
       required this.sets,
       required this.weight});
 
+  ///[fromJson] Creates [Workout] object by maping data from a 'workout information' document [json] to appropriate variables
   static Workout fromJson(Map<String, dynamic> json) => Workout(
       type: json['body part'],
       reps: json['reps'],
@@ -90,6 +98,7 @@ Stream<List<Workout>> readWorkouts(userId) => FirebaseFirestore.instance
     .map((snapshot) =>
         snapshot.docs.map((doc) => Workout.fromJson(doc.data())).toList());
 
+///[readBattle] Creates a Stream object by maping data from a Battles document to a list of Workout objects
 Stream<Battle> readBattle(userId) => FirebaseFirestore.instance
     .collection('Battles')
     .doc(userId)
@@ -133,6 +142,7 @@ void updateUserStats(Battle curBattle, userId) async {
   });
 }
 
+///[updateTurn] Updates the turn field of a Battles document with the id matching [docId]
 void updateTurn(docId, turn) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
@@ -147,11 +157,13 @@ void updateLog(docId, turnMsg) {
   });
 }
 
+///[deleteDoc] Deletes a document from the Battles collection that posses the id [docId]
 void deleteDoc(docId) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.delete();
 }
 
+///[calcStats] Calculates the health, strength, and speed of a user based on a list of [Workout] objects
 BattleCharacter calcStats(List<Workout> workoutList) {
   BattleCharacter temp = BattleCharacter(0, 0, 0);
   int backWeight = 0;
@@ -249,6 +261,28 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text("Personal Information"),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text("About"),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => DescriptionPage(),
                     ),
                   );
                 },

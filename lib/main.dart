@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/character_update.dart';
 import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
@@ -89,6 +90,23 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Text("SignUp"),
               ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //           //The right side is the widget you want to go to
+              //           builder: (context) => CharacterSelect()),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     fixedSize: const Size(200, 40),
+              //     backgroundColor: Colors.purple,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: Text("character"),
+              // ),
               // Personal Tester
               // ElevatedButton(
               //   onPressed: () {
