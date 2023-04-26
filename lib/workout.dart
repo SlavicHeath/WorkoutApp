@@ -882,46 +882,22 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
               }
             },
           )),
-          ElevatedButton(
-            onPressed: () {
-              if (authUser != null) {
-                FirebaseFirestore.instance
-                    .collection('Battles')
-                    .doc(authUser!.uid)
-                    .get()
-                    .then((DocumentSnapshot documentSnapshot) {
-                  if (documentSnapshot.exists) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => BattleScreen()));
-                  } else {
-                    showDialog(
-                      // dialog will pop up saying you can't battle if you haven't completed a workout
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Wait!'),
-                        content: const Text(
-                            "You must complete a workout before you can begin a battle"),
-                        actions: [
-                          TextButton(
-                              child: const Text('OK'),
-                              onPressed: () => Navigator.pop(context)),
-                        ],
-                      ),
-                    );
-                    deleteDoc();
-                  }
-                });
-              } else {
-                throw ArgumentError("User is not signed in!");
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.purple,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+          SizedBox(
+            height: 55,
+            width: 120,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => UserStatsScreen()));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
+              child: const Text("Current Stats"),
             ),
-            child: const Text("Battle!"),
           ),
         ],
       ),
@@ -1075,20 +1051,6 @@ _submitInfo() async {
         .add(workout)
         .then((value) => print(" Information added"))
         .catchError((error) => print("Failed to add: $error"));
-  }
-}
-
-Future<void> deleteDoc() async {
-  //used to remove current workouts once user hits the battle button.
-  // gives a clean slate to pull points from after each "workout session"
-  final Query<Map<String, dynamic>> currentWork = FirebaseFirestore.instance
-      .collection('current workouts')
-      .where('user', isEqualTo: authUser!.uid);
-  final QuerySnapshot query = await currentWork
-      .get(); //gets all the documents from the user.uid specific collection
-
-  for (DocumentSnapshot documentSnapshot in query.docs) {
-    await documentSnapshot.reference.delete();
   }
 }
 

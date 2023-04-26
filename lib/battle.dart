@@ -163,6 +163,21 @@ void deleteDoc(docId) {
   battleDoc.delete();
 }
 
+Future<void> deleteCurrentDoc() async {
+  //does same thing as deleteDoc but for current workouts
+  //used to remove current workouts once user hits the battle button.
+  // gives a clean slate to pull points from after each "workout session"
+  final Query<Map<String, dynamic>> currentWork = FirebaseFirestore.instance
+      .collection('current workouts')
+      .where('user', isEqualTo: authUser!.uid);
+  final QuerySnapshot query = await currentWork
+      .get(); //gets all the documents from the user.uid specific collection
+
+  for (DocumentSnapshot documentSnapshot in query.docs) {
+    await documentSnapshot.reference.delete();
+  }
+}
+
 ///[calcStats] Calculates the health, strength, and speed of a user based on a list of [Workout] objects
 BattleCharacter calcStats(List<Workout> workoutList) {
   BattleCharacter temp = BattleCharacter(0, 0, 0);
@@ -403,6 +418,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               BattleScreen()));
+                                  deleteCurrentDoc();
                                 }
                               });
                             } else {
@@ -417,7 +433,21 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                             ),
                           ),
                           child: const Text("Battle"),
-                        )
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => WorkoutPage()));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(200, 40),
+                            backgroundColor: Colors.purple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text("Home page"),
+                        ),
                       ],
                     );
                   } else {
