@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:workoutpet/character_update.dart';
 import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
@@ -31,8 +32,26 @@ class _CharacterSelectState extends State<CharacterSelect> {
     'assets/character/balloon1.glb',
     'assets/character/dolphin1.glb',
     'assets/character/turtle1.glb',
-    'assets/character/duck1.glb',
-    'assets/character/bearbear1.glb',
+  ];
+  final dislplayFile2 = [
+    'assets/character/balloon2.glb',
+    'assets/character/dolphin2.glb',
+    'assets/character/turtle2.glb',
+  ];
+  final dislplayFile3 = [
+    'assets/character/balloon3.glb',
+    'assets/character/dolphin3.glb',
+    'assets/character/turtle3.glb',
+  ];
+  final dislplayFile4 = [
+    'assets/character/balloon4.glb',
+    'assets/character/dolphin4.glb',
+    'assets/character/turtle4.glb',
+  ];
+  final dislplayFile5 = [
+    'assets/character/balloon5.glb',
+    'assets/character/dolphin5.glb',
+    'assets/character/turtle5.glb',
   ];
   @override
   Widget build(BuildContext context) {
@@ -72,14 +91,25 @@ class _CharacterSelectState extends State<CharacterSelect> {
               //assign character to user
               onPressed: () {
                 if (bmi == Null) {
-                  _submitCharacter(dislplayFile[activeIndex]);
+                  _submitCharacter(
+                      dislplayFile[activeIndex],
+                      displayFile2[activeIndex],
+                      dislplayFile3[activeIndex],
+                      dislplayFile4[activeIndex],
+                      dislplayFile5[activeIndex]);
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //no bmi go to personal page
                         builder: (context) => const PersonalInfoPage()),
                   );
                 } else {
-                  _submitCharacter(dislplayFile[activeIndex]);
+                  _submitCharacter(
+                      dislplayFile[activeIndex],
+                      displayFile2[activeIndex],
+                      dislplayFile3[activeIndex],
+                      dislplayFile4[activeIndex],
+                      dislplayFile5[activeIndex]);
+                  ;
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //bmi go to main page
@@ -129,9 +159,16 @@ class _CharacterSelectState extends State<CharacterSelect> {
   }
 }
 
-_submitCharacter(String displayFile) async {
+_submitCharacter(String displayFile, String displayFile2, String displayFile3,
+    String displayFile4, String displayFile5) async {
   final authUser = await FirebaseAuth.instance.currentUser;
-  final character = <String, dynamic>{"character": displayFile};
+  final character = <String, dynamic>{
+    "character": displayFile,
+    "character2": displayFile2,
+    "character3": displayFile3,
+    "character4": displayFile4,
+    "character5": displayFile5
+  };
 
   if (authUser != null) {
     await FirebaseFirestore.instance
