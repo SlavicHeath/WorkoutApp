@@ -7,7 +7,6 @@ import 'package:workoutpet/About.dart';
 import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
-import 'package:workoutpet/sign_in.dart';
 
 import 'character_select.dart';
 
@@ -857,7 +856,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                                 //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
                                                 FirebaseFirestore.instance
                                                     .collection(
-                                                        'workout information')
+                                                        'current workouts')
                                                     .doc(document.id)
                                                     .delete()
                                                     .whenComplete(() {
@@ -885,12 +884,36 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
           )),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    //The right side is the widget you want to go to
-                    builder: (context) => UserStatsScreen()),
-              );
-              deleteDoc();
+              if (authUser != null) {
+                FirebaseFirestore.instance
+                    .collection('Battles')
+                    .doc(authUser!.uid)
+                    .get()
+                    .then((DocumentSnapshot documentSnapshot) {
+                  if (documentSnapshot.exists) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => BattleScreen()));
+                  } else {
+                    showDialog(
+                      // dialog will pop up saying you can't battle if you haven't completed a workout
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Wait!'),
+                        content: const Text(
+                            "You must complete a workout before you can begin a battle"),
+                        actions: [
+                          TextButton(
+                              child: const Text('OK'),
+                              onPressed: () => Navigator.pop(context)),
+                        ],
+                      ),
+                    );
+                    deleteDoc();
+                  }
+                });
+              } else {
+                throw ArgumentError("User is not signed in!");
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.purple,
