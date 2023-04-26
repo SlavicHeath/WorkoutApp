@@ -76,6 +76,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   Widget buildImage() {
     String displayFile = '';
+    int xp = 0;
 
     Future<String> _getCharURL(displayFile) async {
       // here is where we will get the character URL from database
@@ -83,10 +84,22 @@ class _WorkoutPageState extends State<WorkoutPage> {
           .collection('character')
           .doc(authUser?.uid)
           .get();
-      if (snap.exists) {
+      if (snap.exists && xp < 200) {
         final data = snap.data();
         return data!['character']
             .toString(); // here we convert it to a string so it works in model viewer
+      } else if (snap.exists && xp >= 200 && xp <= 700) {
+        final data = snap.data();
+        return data!['character2'].toString();
+      } else if (snap.exists && xp >= 700 && xp <= 1200) {
+        final data = snap.data();
+        return data!['character3'].toString();
+      } else if (snap.exists && xp >= 1200 && xp <= 1700) {
+        final data = snap.data();
+        return data!['character4'].toString();
+      } else if (snap.exists && xp >= 1700 && xp <= 2500) {
+        final data = snap.data();
+        return data!['character5'].toString();
       } else {
         return '';
       }
