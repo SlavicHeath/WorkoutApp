@@ -225,6 +225,7 @@ BattleCharacter calcStats(List<Workout> workoutList) {
   temp.speed = ((100 * ((legsWeight / 2) * legsReps * legsSets)) /
           (((legsWeight / 2) * legsReps * legsSets) + 300000))
       .round(); //horizontal asymptote at 100
+
   return temp;
 }
 

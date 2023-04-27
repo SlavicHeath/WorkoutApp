@@ -33,26 +33,27 @@ class _CharacterSelectState extends State<CharacterSelect> {
     'assets/character/dolphin1.glb',
     'assets/character/turtle1.glb',
   ];
-  final dislplayFile2 = [
+  final displayFile2 = [
     'assets/character/balloon2.glb',
     'assets/character/dolphin2.glb',
     'assets/character/turtle2.glb',
   ];
-  final dislplayFile3 = [
+  final displayFile3 = [
     'assets/character/balloon3.glb',
     'assets/character/dolphin3.glb',
     'assets/character/turtle3.glb',
   ];
-  final dislplayFile4 = [
+  final displayFile4 = [
     'assets/character/balloon4.glb',
     'assets/character/dolphin4.glb',
     'assets/character/turtle4.glb',
   ];
-  final dislplayFile5 = [
+  final displayFile5 = [
     'assets/character/balloon5.glb',
     'assets/character/dolphin5.glb',
     'assets/character/turtle5.glb',
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,9 +95,9 @@ class _CharacterSelectState extends State<CharacterSelect> {
                   _submitCharacter(
                       dislplayFile[activeIndex],
                       displayFile2[activeIndex],
-                      dislplayFile3[activeIndex],
-                      dislplayFile4[activeIndex],
-                      dislplayFile5[activeIndex]);
+                      displayFile3[activeIndex],
+                      displayFile4[activeIndex],
+                      displayFile5[activeIndex]);
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //no bmi go to personal page
@@ -106,9 +107,9 @@ class _CharacterSelectState extends State<CharacterSelect> {
                   _submitCharacter(
                       dislplayFile[activeIndex],
                       displayFile2[activeIndex],
-                      dislplayFile3[activeIndex],
-                      dislplayFile4[activeIndex],
-                      dislplayFile5[activeIndex]);
+                      displayFile3[activeIndex],
+                      displayFile4[activeIndex],
+                      displayFile5[activeIndex]);
                   ;
                   Navigator.of(context).push(
                     MaterialPageRoute(
