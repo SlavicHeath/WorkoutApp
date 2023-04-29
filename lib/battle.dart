@@ -91,6 +91,24 @@ class Workout {
       weight: json['weight']);
 }
 
+///For reading in a user's xp points from the 'points' collection
+class Points {
+  final int pointsNum;
+  final DocumentReference docReference;
+
+  Points({
+    required this.pointsNum,
+    required this.docReference,
+  });
+
+  static Points fromJson(Map<String, dynamic> json, DocumentReference docRef) =>
+      Points(
+        pointsNum: json['points'],
+        docReference: docRef,
+      );
+}
+
+///[readWorkouts] Creates a Stream object by maping data from documents of the 'workout information' collection to a list of Workout objects
 Stream<List<Workout>> readWorkouts(userId) => FirebaseFirestore.instance
     .collection('workout information')
     .where('user', isEqualTo: userId)
@@ -98,7 +116,7 @@ Stream<List<Workout>> readWorkouts(userId) => FirebaseFirestore.instance
     .map((snapshot) =>
         snapshot.docs.map((doc) => Workout.fromJson(doc.data())).toList());
 
-///[readBattle] Creates a Stream object by maping data from a Battles document to a list of Workout objects
+///[readBattle] Creates a Stream object by maping data from a Battles document to a Battle Object
 Stream<Battle> readBattle(userId) => FirebaseFirestore.instance
     .collection('Battles')
     .doc(userId)
@@ -119,7 +137,46 @@ Future<List<Workout>> readWorkoutsInstance(userId) async {
   return workoutList;
 }
 
-void updateCurHealth(docId, userHealth, botHealth) async {
+///Returns a list of Points documents (a list of length 1 which contains the doc with the user field that match the [userId]) (Used for [updatePoints])
+Future<Points> readPointsInstance(userId) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('points')
+      .where('user', isEqualTo: userId)
+      .get();
+  List<Points> pointsDoc = [];
+  querySnapshot.docs.forEach((doc) {
+    DocumentReference docRef = doc.reference;
+    pointsDoc.add(Points.fromJson(doc.data() as Map<String, dynamic>, docRef));
+  });
+  if (pointsDoc.isEmpty) {
+    await FirebaseFirestore.instance.collection('points').add({
+      'user': userId,
+      'points': 0,
+    });
+    querySnapshot = await FirebaseFirestore.instance
+        .collection('points')
+        .where('user', isEqualTo: userId)
+        .get();
+    querySnapshot.docs.forEach((doc) {
+      DocumentReference docRef = doc.reference;
+      pointsDoc
+          .add(Points.fromJson(doc.data() as Map<String, dynamic>, docRef));
+    });
+  }
+  return pointsDoc[0]; //list will always have 1 element
+}
+
+///Increases the points of a user (points doc recieved from [readPointsInstance]) based on the stats of the bot
+void updatePoints(userId, botHealth, botStrength, botSpeed) async {
+  Points points = await readPointsInstance(userId);
+  int xpGain = (botHealth * 0.02 + botStrength * 0.05 + botSpeed * 0.1).round();
+  final pointsDoc = FirebaseFirestore.instance
+      .collection('points')
+      .doc(points.docReference.id);
+  pointsDoc.update({'points': points.pointsNum + xpGain});
+}
+
+void updateCurHealth(docId, userHealth, botHealth) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
   battleDoc.update({
     'userCurHealth': userHealth,
@@ -134,7 +191,7 @@ void updateUserStats(Battle curBattle, userId) async {
   int healthDif = userStats.health - curBattle.userMaxHealth;
   final battleDoc =
       FirebaseFirestore.instance.collection('Battles').doc(userId);
-  battleDoc.update({
+  await battleDoc.update({
     'userCurHealth': curBattle.userCurHealth + healthDif,
     'userMaxHealth': userStats.health,
     'userStrength': userStats.strength,
@@ -222,9 +279,9 @@ BattleCharacter calcStats(List<Workout> workoutList) {
   temp.strength = (((armsWeight / 2) * armsReps * armsSets) / 2000 +
           ((chestWeight / 2) * chestReps * chestSets) / 5000)
       .round();
-  temp.speed = ((100 * ((legsWeight / 2) * legsReps * legsSets)) /
+  temp.speed = ((90 * ((legsWeight / 2) * legsReps * legsSets)) /
           (((legsWeight / 2) * legsReps * legsSets) + 300000))
-      .round(); //horizontal asymptote at 100
+      .round(); //horizontal asymptote at 90
 
   return temp;
 }
@@ -394,6 +451,10 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                                   .get()
                                   .then((DocumentSnapshot documentSnapshot) {
                                 if (documentSnapshot.exists) {
+                                  Battle curBattle = Battle.fromJson(
+                                      documentSnapshot.data()
+                                          as Map<String, dynamic>);
+                                  updateUserStats(curBattle, authUser!.uid);
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => BattleScreen()));
                                 } else if ((userHealth == 0) |
@@ -468,12 +529,34 @@ class BattleScreen extends StatefulWidget {
 }
 
 class _BattleScreenState extends State<BattleScreen> {
-  bool _isButtonActive = true;
   String _turnButtonText = "Next Turn";
   String _logText = "";
   var _logColor = Colors.green;
-  Future<void> action(Battle curBattle, String log) async {
+  int _counter = 15; //milliseconds
+  Timer? _timer;
+  bool _isButtonActive = true;
+
+//
+  void _startTimer() {
+    setState(() => _isButtonActive = false);
+    _counter = 15;
+    _timer = Timer.periodic(Duration(milliseconds: 50), (_) {
+      if (_counter > 0) {
+        //setState(() {
+        _counter--;
+        //});
+      } else {
+        setState(() {
+          _isButtonActive = true;
+          _timer!.cancel();
+        });
+      }
+    });
+  }
+
+  void action(Battle curBattle, String log) {
     var rand = new Random();
+    if ((curBattle.userCurHealth <= 0) || curBattle.userCurHealth <= 0) {}
     if (curBattle.turn % 2 == 0) {
       if (rand.nextInt(100) < curBattle.botSpeed) {
         setState(() {
@@ -509,8 +592,7 @@ class _BattleScreenState extends State<BattleScreen> {
       setState(() {
         _turnButtonText = "The User Has Won!!!";
       });
-    }
-    if (curBattle.userCurHealth <= 0) {
+    } else if (curBattle.userCurHealth <= 0) {
       setState(() {
         _turnButtonText = "The User Has Lost :(";
       });
@@ -520,6 +602,12 @@ class _BattleScreenState extends State<BattleScreen> {
         authUser!.uid, curBattle.userCurHealth, curBattle.botCurHealth);
     curBattle.turn++;
     updateTurn(authUser!.uid, curBattle.turn);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -538,7 +626,6 @@ class _BattleScreenState extends State<BattleScreen> {
                   return Text("Database Error: ${snapshot.error}");
                 } else if (snapshot.hasData) {
                   final curBattle = snapshot.data!;
-                  updateUserStats(curBattle, authUser!.uid);
                   int userCurHealth = curBattle.userCurHealth;
                   int userStrength = curBattle.userStrength;
                   int userSpeed = curBattle.userSpeed;
@@ -702,19 +789,30 @@ class _BattleScreenState extends State<BattleScreen> {
                           child: Align(
                               alignment: Alignment.bottomCenter,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  if (curBattle.botCurHealth <= 0) {
-                                    initBattleLog(curBattle, 1, authUser!.uid);
-                                    deleteDoc(authUser!.uid);
-                                    Navigator.pop(context);
-                                  } else if (curBattle.userCurHealth <= 0) {
-                                    initBattleLog(curBattle, 0, authUser!.uid);
-                                    deleteDoc(authUser!.uid);
-                                    Navigator.pop(context);
-                                  } else {
-                                    action(curBattle, log);
-                                  }
-                                },
+                                onPressed: _isButtonActive
+                                    ? () {
+                                        _startTimer();
+                                        if (curBattle.botCurHealth <= 0) {
+                                          initBattleLog(
+                                              curBattle, 1, authUser!.uid);
+                                          updatePoints(
+                                              authUser!.uid,
+                                              curBattle.botMaxHealth,
+                                              curBattle.botStrength,
+                                              curBattle.botSpeed);
+                                          Navigator.pop(context);
+                                          deleteDoc(authUser!.uid);
+                                        } else if (curBattle.userCurHealth <=
+                                            0) {
+                                          initBattleLog(
+                                              curBattle, 0, authUser!.uid);
+                                          Navigator.pop(context);
+                                          deleteDoc(authUser!.uid);
+                                        } else {
+                                          action(curBattle, log);
+                                        }
+                                      }
+                                    : null,
                                 style: ElevatedButton.styleFrom(
                                   fixedSize: const Size(200, 40),
                                   backgroundColor: Colors.purple,
