@@ -91,12 +91,21 @@ class Workout {
       weight: json['weight']);
 }
 
+///For reading in a user's xp points from the 'points' collection
 class Points {
-  final int pointNum;
+  final int pointsNum;
+  final DocumentReference docReference;
 
   Points({
-    required this.pointNum,
+    required this.pointsNum,
+    required this.docReference,
   });
+
+  static Points fromJson(Map<String, dynamic> json, DocumentReference docRef) =>
+      Points(
+        pointsNum: json['points'],
+        docReference: docRef,
+      );
 }
 
 ///[readWorkouts] Creates a Stream object by maping data from documents of the 'workout information' collection to a list of Workout objects
@@ -128,7 +137,44 @@ Future<List<Workout>> readWorkoutsInstance(userId) async {
   return workoutList;
 }
 
-/*Future<Points> readPointsInstance(userId) async {}*/
+///Returns a list of Points documents (a list of length 1 which contains the doc with the user field that match the [userId]) (Used for [updatePoints])
+Future<Points> readPointsInstance(userId) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('points')
+      .where('user', isEqualTo: userId)
+      .get();
+  List<Points> pointsDoc = [];
+  querySnapshot.docs.forEach((doc) {
+    DocumentReference docRef = doc.reference;
+    pointsDoc.add(Points.fromJson(doc.data() as Map<String, dynamic>, docRef));
+  });
+  if (pointsDoc.isEmpty) {
+    await FirebaseFirestore.instance.collection('points').add({
+      'user': userId,
+      'points': 0,
+    });
+    querySnapshot = await FirebaseFirestore.instance
+        .collection('points')
+        .where('user', isEqualTo: userId)
+        .get();
+    querySnapshot.docs.forEach((doc) {
+      DocumentReference docRef = doc.reference;
+      pointsDoc
+          .add(Points.fromJson(doc.data() as Map<String, dynamic>, docRef));
+    });
+  }
+  return pointsDoc[0]; //list will always have 1 element
+}
+
+///Increases the points of a user (points doc recieved from [readPointsInstance]) based on the stats of the bot
+void updatePoints(userId, botHealth, botStrength, botSpeed) async {
+  Points points = await readPointsInstance(userId);
+  int xpGain = (botHealth * 0.02 + botStrength * 0.05 + botSpeed * 0.1).round();
+  final pointsDoc = FirebaseFirestore.instance
+      .collection('points')
+      .doc(points.docReference.id);
+  pointsDoc.update({'points': points.pointsNum + xpGain});
+}
 
 void updateCurHealth(docId, userHealth, botHealth) {
   final battleDoc = FirebaseFirestore.instance.collection('Battles').doc(docId);
@@ -145,7 +191,6 @@ void updateUserStats(Battle curBattle, userId) async {
   int healthDif = userStats.health - curBattle.userMaxHealth;
   final battleDoc =
       FirebaseFirestore.instance.collection('Battles').doc(userId);
-  print("piss2");
   await battleDoc.update({
     'userCurHealth': curBattle.userCurHealth + healthDif,
     'userMaxHealth': userStats.health,
@@ -499,7 +544,6 @@ class _BattleScreenState extends State<BattleScreen> {
       if (_counter > 0) {
         //setState(() {
         _counter--;
-        print('$_counter');
         //});
       } else {
         setState(() {
@@ -582,7 +626,6 @@ class _BattleScreenState extends State<BattleScreen> {
                   return Text("Database Error: ${snapshot.error}");
                 } else if (snapshot.hasData) {
                   final curBattle = snapshot.data!;
-                  print("piss");
                   int userCurHealth = curBattle.userCurHealth;
                   int userStrength = curBattle.userStrength;
                   int userSpeed = curBattle.userSpeed;
@@ -752,6 +795,11 @@ class _BattleScreenState extends State<BattleScreen> {
                                         if (curBattle.botCurHealth <= 0) {
                                           initBattleLog(
                                               curBattle, 1, authUser!.uid);
+                                          updatePoints(
+                                              authUser!.uid,
+                                              curBattle.botMaxHealth,
+                                              curBattle.botStrength,
+                                              curBattle.botSpeed);
                                           Navigator.pop(context);
                                           deleteDoc(authUser!.uid);
                                         } else if (curBattle.userCurHealth <=
