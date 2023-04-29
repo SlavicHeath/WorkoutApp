@@ -155,7 +155,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           children: [
             // Drawer header telling which user is signed in
             DrawerHeader(
-              decoration: BoxDecoration(color: Colors.black87),
+              decoration: BoxDecoration(color: Colors.purple),
               child: Text(
                 "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
                 style: const TextStyle(color: Colors.white, fontSize: 25),
@@ -214,34 +214,24 @@ class _WorkoutPageState extends State<WorkoutPage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.login),
-              title: Text("Signout"),
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text("Personal Information"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PersonalInfoPage(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.list),
               title: Text("About"),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => DescriptionPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.login),
+              title: Text("Signout"),
+              onTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
                   ),
                 );
               },

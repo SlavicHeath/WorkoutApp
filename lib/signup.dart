@@ -136,22 +136,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }),
                 // Button to submit enterd data
                 ElevatedButton(
-                    child: const Text('Sign Up'),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // This calls all validators() inside the form for us.
-                        trySignUp();
-                      }
-                    }),
+                  child: const Text('Sign Up'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // This calls all validators() inside the form for us.
+                      trySignUp();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(200, 40),
+                    backgroundColor: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
                 // Return to Home Screen if account already exist
                 ElevatedButton(
-                    child: const Text('Already have account - LogIn'),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
-                    }),
+                  child: const Text('Already have account - LogIn'),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(250, 40),
+                    backgroundColor: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
                 // Check all errors
                 if (error != null)
                   Text(
@@ -175,6 +191,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       //When loged in present user logged in
       final snackbar = SnackBar(
         content: Text("Logged in as ${credential.user?.email}"),
+        backgroundColor: Colors.green,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
       print("Logged in ${credential.user}");
