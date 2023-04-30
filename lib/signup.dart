@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -139,6 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: const Text('Sign Up'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                        submitinfo();
                         // This calls all validators() inside the form for us.
                         trySignUp();
                       }
@@ -208,5 +210,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // the updated error text.
       setState(() {});
     }
+  }
+}
+
+final authUser = FirebaseAuth.instance.currentUser;
+submitinfo() async {
+  // used to retrieve data from a specific user for previous workouts
+
+  if (authUser != null) {
+    await FirebaseFirestore.instance
+        .collection('points')
+        .doc(authUser?.uid)
+        .set({'points': 1});
   }
 }

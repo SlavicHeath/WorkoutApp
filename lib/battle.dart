@@ -152,7 +152,7 @@ Future<Points> readPointsInstance(userId) async {
     await FirebaseFirestore.instance
         .collection('points')
         .doc(userId)
-        .set({'points': 0, 'user': userId});
+        .set({'points': 0});
     querySnapshot = await FirebaseFirestore.instance
         .collection('points')
         .where('user', isEqualTo: userId)
