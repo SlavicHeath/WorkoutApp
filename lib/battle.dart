@@ -149,10 +149,10 @@ Future<Points> readPointsInstance(userId) async {
     pointsDoc.add(Points.fromJson(doc.data() as Map<String, dynamic>, docRef));
   });
   if (pointsDoc.isEmpty) {
-    await FirebaseFirestore.instance.collection('points').add({
-      'user': userId,
-      'points': 0,
-    });
+    await FirebaseFirestore.instance
+        .collection('points')
+        .doc(userId)
+        .set({'points': 0, 'user': userId});
     querySnapshot = await FirebaseFirestore.instance
         .collection('points')
         .where('user', isEqualTo: userId)
@@ -170,9 +170,8 @@ Future<Points> readPointsInstance(userId) async {
 void updatePoints(userId, botHealth, botStrength, botSpeed) async {
   Points points = await readPointsInstance(userId);
   int xpGain = (botHealth * 0.02 + botStrength * 0.05 + botSpeed * 0.1).round();
-  final pointsDoc = FirebaseFirestore.instance
-      .collection('points')
-      .doc(points.docReference.id);
+  final pointsDoc =
+      FirebaseFirestore.instance.collection('points').doc(authUser?.uid);
   pointsDoc.update({'points': points.pointsNum + xpGain});
 }
 

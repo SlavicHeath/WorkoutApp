@@ -40,7 +40,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return WorkoutPage();
+    return const WorkoutPage();
   }
 }
 
@@ -70,36 +70,50 @@ class WorkoutPage extends StatefulWidget {
 /// [@global]
 ///
 ///
-
 class _WorkoutPageState extends State<WorkoutPage> {
   int currindex = 1;
 
   Widget buildImage() {
     String displayFile = '';
-    int xp = 0;
 
-    Future<String> _getCharURL(displayFile) async {
+    final pointsDoc = FirebaseFirestore.instance
+        .collection('points')
+        .where("user", isEqualTo: authUser?.uid)
+        .get();
+
+    Future<String> getCharURL(displayFile) async {
       // here is where we will get the character URL from database
       final snap = await FirebaseFirestore.instance
           .collection('character')
           .doc(authUser?.uid)
           .get();
-      if (snap.exists && xp < 200) {
+
+      final snap2 = await FirebaseFirestore.instance
+          .collection('points')
+          .doc(authUser?.uid)
+          .get();
+
+      if (snap.exists) {
         final data = snap.data();
-        return data!['character']
-            .toString(); // here we convert it to a string so it works in model viewer
-      } else if (snap.exists && xp >= 200 && xp <= 700) {
-        final data = snap.data();
-        return data!['character2'].toString();
-      } else if (snap.exists && xp >= 700 && xp <= 1200) {
-        final data = snap.data();
-        return data!['character3'].toString();
-      } else if (snap.exists && xp >= 1200 && xp <= 1700) {
-        final data = snap.data();
-        return data!['character4'].toString();
-      } else if (snap.exists && xp >= 1700 && xp <= 2500) {
-        final data = snap.data();
-        return data!['character5'].toString();
+        final data2 = snap2.data();
+        int xp = data2!['points'] as int;
+
+        if (xp <= 20) {
+          // convert second snapshot to integer so we can determine which
+          //character model level needs to be shown
+          return data!['character'].toString();
+        } else if (xp >= 20 && xp <= 80) {
+          return data!['character2']
+              .toString(); // here we convert it to a string so it works in model viewer
+        } else if (xp >= 80 && xp <= 160) {
+          return data!['character3'].toString();
+        } else if (xp >= 160 && xp <= 240) {
+          return data!['character4'].toString();
+        } else if (xp >= 240 && xp <= 300) {
+          return data!['character5'].toString();
+        } else {
+          return '';
+        }
       } else {
         return '';
       }
@@ -107,7 +121,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
     return FutureBuilder<String>(
         //Calls into firebase to retrieve data from workout info document
-        future: _getCharURL(
+        future: getCharURL(
             displayFile), //setting this as the future allows the data to be
         //loaded in without causing any errors
         builder: (context, snapshot) {
@@ -126,8 +140,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       height: 400,
                       child: ModelViewer(
                         src: url,
-                        ar: true,
-                        autoRotate: true,
                       ),
                     ),
                   ),
@@ -386,11 +398,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   ? PrevWorkPage()
                   : CurrentWorkPage()),
       bottomNavigationBar: BottomNavigationBar(
+
           //used to navigate within workout page
           // previous button used to see previous workouts
           // current button used to show the workouts the user just inputted whilst logged in for that day/time
           backgroundColor: Colors.purple,
-          selectedItemColor: Colors.black,
+          selectedItemColor: Colors.white,
           currentIndex: currindex,
           items: const [
             BottomNavigationBarItem(
@@ -398,7 +411,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               icon: Icon(Icons.arrow_back_outlined),
             ),
             BottomNavigationBarItem(
-              label: 'Information',
+              label: 'home',
               icon: Icon(Icons.home),
             ),
             BottomNavigationBarItem(
@@ -810,7 +823,6 @@ class CurrentWorkPage extends StatefulWidget {
   /// [@see		State]
   /// [@global]
   ///
-
   @override
   _CurrentWorkPageState createState() => _CurrentWorkPageState();
 }
@@ -836,16 +848,33 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                 return ListView(
                   children: snapshot.data!.docs.map((document) {
                     return Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24.0)),
                       child: ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24.0)),
                         //displays previous workouts in a tile list format
                         autofocus: true,
-                        leading: Text(document['body part']),
-                        title: Text(document[
-                            'name']), // $ allows integer data to be read in
+                        leading: Text(document['body part'],
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold)),
+                        title: Text(document['name'],
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight
+                                    .bold)), // $ allows integer data to be read in
                         subtitle: Text(
-                            '${document['weight']} lbs ${document['reps']} reps ${document['sets']} sets'),
+                            '${document['weight']} lbs ${document['reps']} reps ${document['sets']} sets',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold)),
                         trailing: Container(
                             child: IconButton(
+                          color: Colors.white,
                           onPressed: () {
                             //Pops up an alert dialog asking the user to confirm deletion of workout
                             showDialog(
@@ -857,11 +886,8 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                         actions: [
                                           TextButton(
                                               onPressed: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        //The right side is the widget you want to go to
-                                                        builder: (context) =>
-                                                            WorkoutPage())); //if user selects no, sends user back to current workout page
+                                                Navigator.of(context)
+                                                    .pop(); //if user selects no, sends user back to current workout page
                                               },
                                               child: const Text('NO')),
                                           TextButton(
@@ -896,20 +922,23 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
             },
           )),
           SizedBox(
-            height: 55,
-            width: 120,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => UserStatsScreen()));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            height: 100,
+            width: 170,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => UserStatsScreen()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
+                child: const Text("Current Stats"),
               ),
-              child: const Text("Current Stats"),
             ),
           ),
         ],
@@ -936,8 +965,6 @@ class PrevWorkPage extends StatefulWidget {
 /// [@global]
 ///
 class _PrevWorkPageState extends State<PrevWorkPage> {
-  final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -957,48 +984,60 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
           return ListView(
             children: snapshot.data!.docs.map((document) {
               return Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0)),
                 child: ListTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.0)),
                   //displays previous workouts in a tile list format
                   autofocus: true,
-                  leading: Text(document['body part']),
-                  title: Text(
-                      '${document['weight']} lbs'), // $ allows integer data to be read in
-                  subtitle:
-                      Text('${document['reps']} reps ${document['sets']} sets'),
-                  trailing: Text(document['name']),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                                title: const Text('Confirm deletion'),
-                                content: const Text(
-                                    "Are you sure you want to delete workout?"),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                //The right side is the widget you want to go to
-                                                builder: (context) =>
-                                                    WorkoutPage())); //if user selects no, sends user back to current workout page
-                                      },
-                                      child: const Text('NO')),
-                                  TextButton(
-                                      onPressed: () {
-                                        //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
-                                        FirebaseFirestore.instance
-                                            .collection('workout information')
-                                            .doc(document.id)
-                                            .delete()
-                                            .whenComplete(() {
-                                          print('deleted successfully');
-                                        });
-                                        setState(() {});
-                                        Navigator.of(context).pop();
-                                      }, //if user selects no, sends user back to current workout page
-                                      child: const Text('YES'))
-                                ])); // used to delete any previous workouts you don't want to keep
-                  },
+                  leading: Text(document['body part'],
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                  title: Text(document['name'],
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight
+                              .bold)), // $ allows integer data to be read in
+                  subtitle: Text(
+                      '${document['weight']} lbs ${document['reps']} reps ${document['sets']} sets',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold)),
+                  trailing: Container(
+                    child: IconButton(
+                      color: Colors.white,
+                      onPressed: () {
+                        //Pops up an alert dialog asking the user to confirm deletion of workout
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                    title: const Text('Confirm deletion'),
+                                    content: const Text(
+                                        "Are you sure you want to delete workout?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); //if user selects no, sends user back to current workout page
+                                          },
+                                          child: const Text('NO')),
+                                      TextButton(
+                                          onPressed: () {
+                                            //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
+                                            _submitCurrentInfo();
+                                            Navigator.of(context).pop();
+                                          }, //if user selects no, sends user back to current workout page
+                                          child: const Text('YES'))
+                                    ]));
+                      },
+                      icon: Icon(Icons.close),
+                    ),
+                  ),
                   tileColor: Colors.purple,
                 ),
               );
@@ -1039,17 +1078,16 @@ TextEditingController field5 = TextEditingController();
 
 final authUser = FirebaseAuth.instance.currentUser;
 
+final workout = <String, dynamic>{
+  "user": authUser?.uid,
+  "name": field1.text,
+  "weight": int.parse(field2.text),
+  "sets": int.parse(field3.text),
+  "reps": int.parse(field4.text),
+  "body part": field5.text
+};
 _submitInfo() async {
   // used to retrieve data from a specific user for previous workouts
-
-  final workout = <String, dynamic>{
-    "user": authUser?.uid,
-    "name": field1.text,
-    "weight": int.parse(field2.text),
-    "sets": int.parse(field3.text),
-    "reps": int.parse(field4.text),
-    "body part": field5.text
-  };
 
   if (authUser != null) {
     await FirebaseFirestore.instance
@@ -1058,6 +1096,9 @@ _submitInfo() async {
         .then((value) => print(" Information added"))
         .catchError((error) => print("Failed to add: $error"));
   }
+}
+
+_submitCurrentInfo() async {
   if (authUser != null) {
     await FirebaseFirestore.instance
         .collection('current workouts')
@@ -1180,6 +1221,7 @@ Future openDialog(context) => showDialog(
                 //if user submissions are valid, saves information to database
                 //and allows user to move on to next input/next screeng
                 _submitInfo();
+                _submitCurrentInfo();
                 Navigator.of(context).pop();
 
                 field1.clear();
@@ -1192,8 +1234,6 @@ Future openDialog(context) => showDialog(
                     content: Text(
                         'Information Saved!'), //Displays confirmation message once user submits information on bottom of screen
                     backgroundColor: Colors.green);
-                duration:
-                Duration(seconds: 3);
                 ScaffoldMessenger.of(context).showSnackBar(mySnack);
               }
             },
