@@ -2,18 +2,18 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:workoutpet/personal.dart';
+import 'package:workoutpet/workout.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CharacterSelect extends StatefulWidget {
-  const CharacterSelect({super.key});
+class CharacterReselect extends StatefulWidget {
+  const CharacterReselect({super.key});
 
   @override
-  State<CharacterSelect> createState() => _CharacterSelectState();
+  State<CharacterReselect> createState() => _CharacterReselectState();
 }
 
-class _CharacterSelectState extends State<CharacterSelect> {
+class _CharacterReselectState extends State<CharacterReselect> {
   int activeIndex = 0;
   // create a read from the database bmi section
 
@@ -64,8 +64,8 @@ class _CharacterSelectState extends State<CharacterSelect> {
                 _submitCharacter(dislplayFile[activeIndex]);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      //no bmi go to personal page
-                      builder: (context) => const PersonalInfoPage()),
+                      //bmi go to main page
+                      builder: (context) => const WorkoutPage()),
                 );
               },
               style: ElevatedButton.styleFrom(

@@ -109,17 +109,17 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                 ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _calculateBMI();
-                  }
-                },
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _calculateBMI();
+                    }
+                  },
+                  // ignore: prefer_const_constructors
+                  child: Text('Calculate BMI'),
+                ),
                 // ignore: prefer_const_constructors
-                child: Text('Calculate BMI'),
-              ),
-              // ignore: prefer_const_constructors
-              SizedBox(height: 16.0),
+                SizedBox(height: 16.0),
                 Text(
                   bmiResult == 0.0
                       ? 'Please enter your weight and height'
