@@ -192,18 +192,10 @@ class _LoginScreenState extends State<LoginScreen> {
       // pop the navigation stack so people cannot "go back" to the login screen after log in
       Navigator.of(context).pop();
       // set up an if statement to see if they picked a character
-
-      if (character == Null) {
-        // if player didnt select character before go to character select.
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const CharacterSelect(),
-        ));
-      } else {
-        // normally go to workout page
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const WorkoutPage(),
-        ));
-      }
+      // normally go to workout page
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const WorkoutPage(),
+      ));
     } on FirebaseAuthException catch (e) {
       // Exceptions are raised if the Firebase Auth service
       // encounters an error. We need to display these to the user.

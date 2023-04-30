@@ -1,13 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:workoutpet/character_update.dart';
 import 'package:workoutpet/personal.dart';
-import 'package:workoutpet/sign_in.dart';
-import 'package:workoutpet/workout.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CharacterSelect extends StatefulWidget {
   const CharacterSelect({super.key});
@@ -19,41 +16,14 @@ class CharacterSelect extends StatefulWidget {
 class _CharacterSelectState extends State<CharacterSelect> {
   int activeIndex = 0;
   // create a read from the database bmi section
-  var bmi = FirebaseFirestore.instance
-      .collection('users')
-      .get()
-      .then((QuerySnapshot querySnapshot) {
-    querySnapshot.docs.forEach((doc) {
-      print(doc["bmi"]);
-    });
-  });
 
   final dislplayFile = [
     'assets/character/balloon1.glb',
     'assets/character/dolphin1.glb',
     'assets/character/turtle1.glb',
+    'assets/character/duck1.glb',
+    'assets/character/bearbear1.glb',
   ];
-  final displayFile2 = [
-    'assets/character/balloon2.glb',
-    'assets/character/dolphin2.glb',
-    'assets/character/turtle2.glb',
-  ];
-  final displayFile3 = [
-    'assets/character/balloon3.glb',
-    'assets/character/dolphin3.glb',
-    'assets/character/turtle3.glb',
-  ];
-  final displayFile4 = [
-    'assets/character/balloon4.glb',
-    'assets/character/dolphin4.glb',
-    'assets/character/turtle4.glb',
-  ];
-  final displayFile5 = [
-    'assets/character/balloon5.glb',
-    'assets/character/dolphin5.glb',
-    'assets/character/turtle5.glb',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,32 +61,12 @@ class _CharacterSelectState extends State<CharacterSelect> {
             ElevatedButton(
               //assign character to user
               onPressed: () {
-                if (bmi == Null) {
-                  _submitCharacter(
-                      dislplayFile[activeIndex],
-                      displayFile2[activeIndex],
-                      displayFile3[activeIndex],
-                      displayFile4[activeIndex],
-                      displayFile5[activeIndex]);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //no bmi go to personal page
-                        builder: (context) => const PersonalInfoPage()),
-                  );
-                } else {
-                  _submitCharacter(
-                      dislplayFile[activeIndex],
-                      displayFile2[activeIndex],
-                      displayFile3[activeIndex],
-                      displayFile4[activeIndex],
-                      displayFile5[activeIndex]);
-                  ;
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //bmi go to main page
-                        builder: (context) => const WorkoutPage()),
-                  );
-                }
+                _submitCharacter(dislplayFile[activeIndex]);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      //no bmi go to personal page
+                      builder: (context) => const PersonalInfoPage()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(300, 40),
@@ -160,16 +110,9 @@ class _CharacterSelectState extends State<CharacterSelect> {
   }
 }
 
-_submitCharacter(String displayFile, String displayFile2, String displayFile3,
-    String displayFile4, String displayFile5) async {
+_submitCharacter(String displayFile) async {
   final authUser = await FirebaseAuth.instance.currentUser;
-  final character = <String, dynamic>{
-    "character": displayFile,
-    "character2": displayFile2,
-    "character3": displayFile3,
-    "character4": displayFile4,
-    "character5": displayFile5
-  };
+  final character = <String, dynamic>{"character": displayFile};
 
   if (authUser != null) {
     await FirebaseFirestore.instance
