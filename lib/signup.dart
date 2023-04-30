@@ -139,8 +139,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ElevatedButton(
                     child: const Text('Sign Up'),
                     onPressed: () {
+                      submitinfo();
                       if (_formKey.currentState!.validate()) {
-                        submitinfo();
                         // This calls all validators() inside the form for us.
                         trySignUp();
                       }
@@ -221,6 +221,6 @@ submitinfo() async {
     await FirebaseFirestore.instance
         .collection('points')
         .doc(authUser?.uid)
-        .set({'points': 1});
+        .set({'points': 0});
   }
 }

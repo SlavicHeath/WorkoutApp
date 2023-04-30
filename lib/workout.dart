@@ -109,7 +109,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           return data!['character3'].toString();
         } else if (xp >= 160 && xp <= 240) {
           return data!['character4'].toString();
-        } else if (xp >= 240 && xp <= 300) {
+        } else if (xp >= 240) {
           return data!['character5'].toString();
         } else {
           return '';
