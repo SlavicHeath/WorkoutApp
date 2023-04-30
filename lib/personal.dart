@@ -165,6 +165,15 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       if (!snapshot.hasData) {
                         return Text('Document does not exist');
                       }
+                      if (snapshot.data == null) {
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: const [
+                              Text('Height: 0'),
+                              Text('Weight: 0'),
+                              Text('BMI: 0'),
+                            ]);
+                      }
                       Map<String, dynamic> data =
                           snapshot.data!.data() as Map<String, dynamic>;
                       return Column(
