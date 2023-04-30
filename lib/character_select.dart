@@ -58,8 +58,7 @@ class _CharacterSelectState extends State<CharacterSelect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Model Test"),
-      ),
+          title: Text("CHOOSE CHARACTER"), backgroundColor: Colors.purple),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -139,13 +138,10 @@ class _CharacterSelectState extends State<CharacterSelect> {
       height: 20,
       width: 300,
       margin: EdgeInsets.symmetric(horizontal: 10),
-      color: Colors.grey,
       child: ModelViewer(
         src: displayFile,
-        alt: "A 3D model of an astronaut",
         ar: true,
         autoRotate: true,
-        cameraControls: true,
       ),
     );
   }

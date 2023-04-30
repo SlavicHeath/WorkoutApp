@@ -93,29 +93,23 @@ class _WorkoutPageState extends State<WorkoutPage> {
           .doc(authUser?.uid)
           .get();
 
-      if (snap.exists & snap2.exists) {
-        final data = snap.data();
-        //final data2 = snap2.data();
-        int xp = snap2['points'] as int;
-
-        if (xp <= 20) {
-          // convert second snapshot to integer so we can determine which
-          //character model level needs to be shown
-          return data!['character'].toString();
-        } else if (xp >= 20 && xp <= 80) {
-          return data!['character2']
-              .toString(); // here we convert it to a string so it works in model viewer
-        } else if (xp >= 80 && xp <= 160) {
-          return data!['character3'].toString();
-        } else if (xp >= 160 && xp <= 240) {
-          return data!['character4'].toString();
-        } else if (xp >= 240) {
-          return data!['character5'].toString();
-        } else {
-          return '';
-        }
+      //final data2 = snap2.data();
+      int xp = snap2['points'] as int;
+      final data = snap.data();
+      String char = data!['character'].toString();
+      if (snap.exists) {
+        return char;
+      } else if (xp >= 20 && xp <= 80) {
+        return data!['character2']
+            .toString(); // here we convert it to a string so it works in model viewer
+      } else if (xp >= 80 && xp <= 160) {
+        return data['character3'].toString();
+      } else if (xp >= 160 && xp <= 240) {
+        return data['character4'].toString();
+      } else if (xp >= 240) {
+        return data['character5'].toString();
       } else {
-        return '';
+        return data['character'].toString();
       }
     }
 
@@ -1029,7 +1023,15 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
                                       TextButton(
                                           onPressed: () {
                                             //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
-                                            _submitCurrentInfo();
+                                            FirebaseFirestore.instance
+                                                .collection(
+                                                    'workout information')
+                                                .doc(document.id)
+                                                .delete()
+                                                .whenComplete(() {
+                                              print('deleted successfully');
+                                            });
+                                            setState(() {});
                                             Navigator.of(context).pop();
                                           }, //if user selects no, sends user back to current workout page
                                           child: const Text('YES'))

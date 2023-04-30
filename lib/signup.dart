@@ -68,6 +68,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
 
+  void _addNewDocument() async {
+    // Get the current user
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        // Generate a new document ID using the user's UID
+        final String documentId = user.uid;
+
+        // Create the document reference
+        final DocumentReference documentReference =
+            FirebaseFirestore.instance.collection('points').doc(documentId);
+
+        // Create the data to be added to the document
+        final Map<String, dynamic> data = {
+          // Add your desired fields and values
+          'points': int.parse('0')
+        };
+
+        // Add the document to Firestore
+        await documentReference.set(data);
+
+        // Document added successfully
+        print('New document added to Firestore');
+      } catch (e) {
+        // Error occurred while adding the document
+        print('Error adding document to Firestore: $e');
+      }
+    } else {
+      // User is not authenticated
+      print('User is not authenticated');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,8 +173,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ElevatedButton(
                     child: const Text('Sign Up'),
                     onPressed: () {
-                      submitinfo();
                       if (_formKey.currentState!.validate()) {
+                        _addNewDocument();
                         // This calls all validators() inside the form for us.
                         trySignUp();
                       }
@@ -210,17 +244,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // the updated error text.
       setState(() {});
     }
-  }
-}
-
-final authUser = FirebaseAuth.instance.currentUser;
-submitinfo() async {
-  // used to retrieve data from a specific user for previous workouts
-
-  if (authUser != null) {
-    await FirebaseFirestore.instance
-        .collection('points')
-        .doc(authUser?.uid)
-        .set({'points': 0});
   }
 }
