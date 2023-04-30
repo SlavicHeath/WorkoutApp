@@ -163,17 +163,16 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       }
-                      if (!snapshot.hasData) {
-                        return Text('Document does not exist');
+                      Map<String, dynamic> data = {};
+                      if (snapshot.data?.data() != null) {
+                        data = snapshot.data!.data() as Map<String, dynamic>;
                       }
-                      Map<String, dynamic> data =
-                          snapshot.data!.data() as Map<String, dynamic>;
                       return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text('Height: ${data['height']}'),
-                            Text('Weight: ${data['weight']}'),
-                            Text('BMI: ${data['bmi']}'),
+                            Text('Height: ${data['height'] ?? 'N/A'}'),
+                            Text('Weight: ${data['weight'] ?? 'N/A'}'),
+                            Text('BMI: ${data['bmi'] ?? 'N/A'}'),
                           ]);
                     })
               ],
