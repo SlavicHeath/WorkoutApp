@@ -88,15 +88,15 @@ class _WorkoutPageState extends State<WorkoutPage> {
           .doc(authUser?.uid)
           .get();
 
-      final snap2 = await FirebaseFirestore.instance
+      final DocumentSnapshot snap2 = await FirebaseFirestore.instance
           .collection('points')
           .doc(authUser?.uid)
           .get();
 
-      if (snap.exists) {
+      if (snap.exists & snap2.exists) {
         final data = snap.data();
-        final data2 = snap2.data();
-        int xp = data2!['points'] as int;
+        //final data2 = snap2.data();
+        int xp = snap2['points'] as int;
 
         if (xp <= 20) {
           // convert second snapshot to integer so we can determine which

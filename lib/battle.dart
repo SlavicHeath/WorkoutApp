@@ -93,18 +93,14 @@ class Workout {
 
 ///For reading in a user's xp points from the 'points' collection
 class Points {
-  final int pointsNum;
-  final DocumentReference docReference;
+  final int points;
 
   Points({
-    required this.pointsNum,
-    required this.docReference,
+    required this.points,
   });
 
-  static Points fromJson(Map<String, dynamic> json, DocumentReference docRef) =>
-      Points(
-        pointsNum: json['points'],
-        docReference: docRef,
+  static Points fromJson(Map<String, dynamic> json) => Points(
+        points: json['points'],
       );
 }
 
@@ -137,42 +133,51 @@ Future<List<Workout>> readWorkoutsInstance(userId) async {
   return workoutList;
 }
 
-///Returns a list of Points documents (a list of length 1 which contains the doc with the user field that match the [userId]) (Used for [updatePoints])
-Future<Points> readPointsInstance(userId) async {
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+///Returns an int that represents the number of xp points stored in the 'points' docment with its id matching [userId])
+///(Used for [updatePointsInc] & [updatePointsDec])
+///Handles case of if user does not have an points doc
+Future<int> readPointsInstance(userId) async {
+  int pointsNum = 0;
+  await FirebaseFirestore.instance
       .collection('points')
-      .where('user', isEqualTo: userId)
-      .get();
-  List<Points> pointsDoc = [];
-  querySnapshot.docs.forEach((doc) {
-    DocumentReference docRef = doc.reference;
-    pointsDoc.add(Points.fromJson(doc.data() as Map<String, dynamic>, docRef));
+      .doc(authUser!.uid)
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      pointsNum = documentSnapshot['points'];
+    } else {
+      FirebaseFirestore.instance.collection('points').doc(userId).set({
+        'points': 0,
+      });
+    }
   });
-  if (pointsDoc.isEmpty) {
-    await FirebaseFirestore.instance
-        .collection('points')
-        .doc(userId)
-        .set({'points': 0});
-    querySnapshot = await FirebaseFirestore.instance
-        .collection('points')
-        .where('user', isEqualTo: userId)
-        .get();
-    querySnapshot.docs.forEach((doc) {
-      DocumentReference docRef = doc.reference;
-      pointsDoc
-          .add(Points.fromJson(doc.data() as Map<String, dynamic>, docRef));
-    });
-  }
-  return pointsDoc[0]; //list will always have 1 element
+  return pointsNum;
 }
 
 ///Increases the points of a user (points doc recieved from [readPointsInstance]) based on the stats of the bot
-void updatePoints(userId, botHealth, botStrength, botSpeed) async {
-  Points points = await readPointsInstance(userId);
+void updatePointsInc(userId, botHealth, botStrength, botSpeed) async {
+  int points = await readPointsInstance(userId);
   int xpGain = (botHealth * 0.02 + botStrength * 0.05 + botSpeed * 0.1).round();
-  final pointsDoc =
-      FirebaseFirestore.instance.collection('points').doc(authUser?.uid);
-  pointsDoc.update({'points': points.pointsNum + xpGain});
+  final pointsDoc = FirebaseFirestore.instance.collection('points').doc(userId);
+  pointsDoc.update({'points': points + xpGain});
+}
+
+///Decreases the points of a user (points doc recieved from [readPointsInstance]) based on the stats of the bot
+///(user will lose half of the xp that the user would have gained in [updatePointsInc])
+void updatePointsDec(userId, botHealth, botStrength, botSpeed) async {
+  int points = await readPointsInstance(userId);
+  int xpLose =
+      ((botHealth * 0.02 + botStrength * 0.05 + botSpeed * 0.1) * 0.5).round();
+  if (points - xpLose < 0) {
+    await FirebaseFirestore.instance.collection('points').doc(userId).set({
+      'points': 0,
+    });
+  } else {
+    FirebaseFirestore.instance
+        .collection('points')
+        .doc(userId)
+        .update({'points': points - xpLose});
+  }
 }
 
 void updateCurHealth(docId, userHealth, botHealth) {
@@ -272,11 +277,11 @@ BattleCharacter calcStats(List<Workout> workoutList) {
     }
   });
   temp.health = (((backWeight / 2) * backReps * backSets) / 2000 +
-          ((chestWeight / 2) * chestReps * chestSets) / 5000 +
+          ((chestWeight / 2) * chestReps * chestSets) / 6000 +
           ((legsWeight / 2) * legsReps * legsSets) / 10000)
       .round();
   temp.strength = (((armsWeight / 2) * armsReps * armsSets) / 2000 +
-          ((chestWeight / 2) * chestReps * chestSets) / 5000)
+          ((chestWeight / 2) * chestReps * chestSets) / 6000)
       .round();
   temp.speed = ((90 * ((legsWeight / 2) * legsReps * legsSets)) /
           (((legsWeight / 2) * legsReps * legsSets) + 300000))
@@ -794,7 +799,7 @@ class _BattleScreenState extends State<BattleScreen> {
                                         if (curBattle.botCurHealth <= 0) {
                                           initBattleLog(
                                               curBattle, 1, authUser!.uid);
-                                          updatePoints(
+                                          updatePointsInc(
                                               authUser!.uid,
                                               curBattle.botMaxHealth,
                                               curBattle.botStrength,
@@ -805,6 +810,11 @@ class _BattleScreenState extends State<BattleScreen> {
                                             0) {
                                           initBattleLog(
                                               curBattle, 0, authUser!.uid);
+                                          updatePointsDec(
+                                              authUser!.uid,
+                                              curBattle.botMaxHealth,
+                                              curBattle.botStrength,
+                                              curBattle.botSpeed);
                                           Navigator.pop(context);
                                           deleteDoc(authUser!.uid);
                                         } else {
