@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/About.dart';
 import 'package:workoutpet/battle.dart';
+import 'package:workoutpet/character_reselect.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 
@@ -202,7 +203,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     context); //To close the drawer wwhen moving to the next page
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const CharacterSelect(),
+                    builder: (context) => const CharacterReselect(),
                   ),
                 );
               },
