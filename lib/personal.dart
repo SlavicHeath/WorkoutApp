@@ -67,126 +67,120 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
           backgroundColor: Colors.purple,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextFormField(
-                  controller: _weightController,
-                  decoration: const InputDecoration(
-                    labelText: 'Weight (lbs)',
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  autofocus: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your weight';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _heightController,
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Height (inch)',
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your height';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _calculateBMI();
-                    }
-                  },
-                  // ignore: prefer_const_constructors
-                  child: Text('Calculate BMI'),
-                ),
-                // ignore: prefer_const_constructors
-                SizedBox(height: 16.0),
-                Text(
-                  bmiResult == 0.0
-                      ? 'Please enter your weight and height'
-                      : 'Your BMI is ${bmiResult.toStringAsFixed(1)}',
-                  // ignore: prefer_const_constructors
-                  style: TextStyle(fontSize: 20.0),
-                ),
-                TextButton(
-                  child: const Text(
-                      //User presses this button to submit valid information
-                      'SUBMIT'),
-                  onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection('personal')
-                        .doc(authUser?.uid)
-                        .set({
-                          'weight': _weightController.text,
-                          'height': _heightController.text,
-                          'bmi': bmiResult
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TextFormField(
+                      controller: _weightController,
+                      decoration: const InputDecoration(
+                        labelText: 'Weight (lbs)',
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
+                      autofocus: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your weight';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _heightController,
+                      autofocus: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Height (inch)',
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your height';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _calculateBMI();
+                        }
+                      },
+                      // ignore: prefer_const_constructors
+                      child: Text('Calculate BMI'),
+                    ),
+                    // ignore: prefer_const_constructors
+                    SizedBox(height: 16.0),
+                    Text(
+                      bmiResult == 0.0
+                          ? 'Please enter your weight and height'
+                          : 'Your BMI is ${bmiResult.toStringAsFixed(1)}',
+                      // ignore: prefer_const_constructors
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                    TextButton(
+                      child: const Text(
+                          //User presses this button to submit valid information
+                          'SUBMIT'),
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('personal')
+                            .doc(authUser?.uid)
+                            .set({
+                              'weight': _weightController.text,
+                              'height': _heightController.text,
+                              'bmi': bmiResult
+                            })
+                            .then((value) => print("added"))
+                            .catchError(
+                                (error) => print("Failed to add: $error"));
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              //The right side is the widget you want to go to
+                              builder: (context) => WorkoutPage()),
+                        );
+                      },
+                    ),
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('personal')
+                            .doc(authUser?.uid)
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+                          Map<String, dynamic> data = {};
+                          if (snapshot.data?.data() != null) {
+                            data =
+                                snapshot.data!.data() as Map<String, dynamic>;
+                          }
+                          return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('Height: ${data['height'] ?? 'N/A'}'),
+                                Text('Weight: ${data['weight'] ?? 'N/A'}'),
+                                Text('BMI: ${data['bmi'] ?? 'N/A'}'),
+                              ]);
                         })
-                        .then((value) => print("added"))
-                        .catchError((error) => print("Failed to add: $error"));
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          //The right side is the widget you want to go to
-                          builder: (context) => WorkoutPage()),
-                    );
-                  },
+                  ],
                 ),
-                StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('personal')
-                        .doc(authUser?.uid)
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      }
-                      if (!snapshot.hasData) {
-                        return Text('Document does not exist');
-                      }
-                      if (snapshot.data == null) {
-                        return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              Text('Height: 0'),
-                              Text('Weight: 0'),
-                              Text('BMI: 0'),
-                            ]);
-                      }
-                      Map<String, dynamic> data =
-                          snapshot.data!.data() as Map<String, dynamic>;
-                      return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('Height: ${data['height']}'),
-                            Text('Weight: ${data['weight']}'),
-                            Text('BMI: ${data['bmi']}'),
-                          ]);
-                    })
-              ],
-            ),
-          ),
-        ));
+              ),
+            )));
   }
 }

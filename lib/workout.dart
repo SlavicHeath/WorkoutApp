@@ -94,18 +94,18 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
       final data = snap.data();
       if (snap.exists) {
-        if (xp <= 20) {
+        if (xp <= 50) {
           // convert second snapshot to integer so we can determine which
           //character model level needs to be shown
           return data!['character'].toString();
-        } else if (xp >= 20 && xp <= 80) {
+        } else if (xp >= 50 && xp <= 100) {
           return data!['character2']
               .toString(); // here we convert it to a string so it works in model viewer
-        } else if (xp >= 80 && xp <= 160) {
+        } else if (xp >= 100 && xp <= 250) {
           return data!['character3'].toString();
-        } else if (xp >= 160 && xp <= 240) {
+        } else if (xp >= 250 && xp <= 420) {
           return data!['character4'].toString();
-        } else if (xp >= 240) {
+        } else if (xp >= 420) {
           return data!['character5'].toString();
         } else {
           return data!['character'].toString();
@@ -130,6 +130,35 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('points')
+                          .doc(authUser?.uid)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (!snapshot.hasData) {
+                          return const Text('Document does not exist');
+                        }
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Points: ${data['points']}',
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ]);
+                      }),
                   Expanded(
                     child: SizedBox(
                       width: 200,
@@ -1228,3 +1257,24 @@ Future openDialog(context) => showDialog(
         ],
       ),
     );
+
+final GlobalKey<State> _key = GlobalKey<State>();
+
+void congratsdialog() {
+  showDialog(
+    context: _key.currentContext!,
+    builder: (BuildContext context) {
+      return AlertDialog(
+          title: const Text('CONGRATULAIONS!'),
+          content: const Text("You have leveled up, keep up the progress!"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(); //if user selects no, sends user back to current workout page
+                },
+                child: const Text('OK')),
+          ]);
+    },
+  );
+}

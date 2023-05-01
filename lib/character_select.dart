@@ -178,7 +178,13 @@ class _CharacterSelectState extends State<CharacterSelect> {
 _submitCharacter(String displayFile, String displayFile2, String displayFile3,
     String displayFile4, String displayFile5) async {
   final authUser = await FirebaseAuth.instance.currentUser;
-  final character = <String, dynamic>{"character": displayFile};
+  final character = <String, dynamic>{
+    "character": displayFile,
+    "character2": displayFile2,
+    "character3": displayFile3,
+    "character4": displayFile4,
+    "character5": displayFile5
+  };
 
   if (authUser != null) {
     await FirebaseFirestore.instance
