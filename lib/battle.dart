@@ -1,7 +1,9 @@
 //Ben Williams
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:workoutpet/About.dart';
+import 'package:workoutpet/character_reselect.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/workout.dart';
@@ -9,7 +11,6 @@ import 'dart:math';
 import 'bot.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/battleLog.dart';
 import 'dart:async';
 
@@ -312,62 +313,82 @@ class _UserStatsScreen extends State<UserStatsScreen> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
+              // Drawer header telling which user is signed in
               DrawerHeader(
-                decoration: BoxDecoration(color: Colors.black87),
-                child: Text("User Info"),
+                decoration: BoxDecoration(color: Colors.purple),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                ),
               ),
               ListTile(
-                leading: Icon(Icons.home),
-                title: Text("Home"),
+                leading: const Icon(Icons.home),
+                title: const Text("Home"),
                 onTap: () {
                   Navigator.pop(
                       context); //To close the drawer wwhen moving to the next page
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => WorkoutPage(),
+                      builder: (context) => const WorkoutPage(),
                     ),
                   );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Battle"),
+                leading: const Icon(Icons.workspace_premium),
+                title: const Text("Battle"),
                 onTap: () {
                   Navigator.pop(
-                      context); //To close the drawer when moving to the next page
+                      context); //To close the drawer wwhen moving to the next page
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => UserStatsScreen(),
+                      builder: (context) => const UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CharacterReselect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PersonalInfoPage(),
                     ),
                   );
                 },
               ),
               ListTile(
                 leading: Icon(Icons.list),
-                title: Text("Personal Information"),
+                title: const Text("About"),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PersonalInfoPage(),
+                      builder: (context) => const DescriptionPage(),
                     ),
                   );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text("About"),
+                leading: const Icon(Icons.login),
+                title: const Text("Signout"),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => DescriptionPage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.login),
-                title: Text("Signout"),
-                onTap: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => HomeScreen(),
@@ -667,7 +688,7 @@ class _BattleScreenState extends State<BattleScreen> {
                             child: Text('$userCurHealth',
                                 style: TextStyle(
                                   letterSpacing: 2.0,
-                                  fontSize: 28.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green,
                                 )),
@@ -676,7 +697,7 @@ class _BattleScreenState extends State<BattleScreen> {
                             child: Text('$botCurHealth',
                                 style: TextStyle(
                                   letterSpacing: 2.0,
-                                  fontSize: 28.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red,
                                 )),
@@ -715,7 +736,7 @@ class _BattleScreenState extends State<BattleScreen> {
                             child: Text('$userStrength',
                                 style: TextStyle(
                                   letterSpacing: 2.0,
-                                  fontSize: 28.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green,
                                 )),
@@ -724,7 +745,7 @@ class _BattleScreenState extends State<BattleScreen> {
                             child: Text('$botStrength',
                                 style: TextStyle(
                                   letterSpacing: 2.0,
-                                  fontSize: 28.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red,
                                 )),
@@ -763,7 +784,7 @@ class _BattleScreenState extends State<BattleScreen> {
                             child: Text('$userSpeed',
                                 style: TextStyle(
                                   letterSpacing: 2.0,
-                                  fontSize: 28.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green,
                                 )),
@@ -772,7 +793,7 @@ class _BattleScreenState extends State<BattleScreen> {
                             child: Text('$botSpeed',
                                 style: TextStyle(
                                   letterSpacing: 2.0,
-                                  fontSize: 28.0,
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red,
                                 )),
@@ -788,6 +809,22 @@ class _BattleScreenState extends State<BattleScreen> {
                                 color: _logColor,
                               )),
                         ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              //where we will display the character model, based on user uid
+                              height: 150,
+                              width: 150,
+                              child: buildImage()),
+                          SizedBox(
+                              //where we will display the character model, based on user uid
+                              height: 150,
+                              width: 150,
+                              child: buildImage2()),
+                        ],
                       ),
                       Expanded(
                           child: Align(
@@ -840,4 +877,135 @@ class _BattleScreenState extends State<BattleScreen> {
               }),
         ));
   }
+}
+
+Widget buildImage() {
+  String displayFile = '';
+
+  Future<String> getCharURL(displayFile) async {
+    // here is where we will get the character URL from database
+    final snap = await FirebaseFirestore.instance
+        .collection('character')
+        .doc(authUser?.uid)
+        .get();
+
+    final DocumentSnapshot snap2 = await FirebaseFirestore.instance
+        .collection('points')
+        .doc(authUser?.uid)
+        .get();
+
+    //final data2 = snap2.data();
+    int xp = snap2['points'] as int;
+
+    final data = snap.data();
+    if (snap.exists) {
+      if (xp <= 50) {
+        // convert second snapshot to integer so we can determine which
+        //character model level needs to be shown
+        return data!['character'].toString();
+      } else if (xp >= 50 && xp <= 100) {
+        return data!['character2']
+            .toString(); // here we convert it to a string so it works in model viewer
+      } else if (xp >= 100 && xp <= 250) {
+        return data!['character3'].toString();
+      } else if (xp >= 250 && xp <= 420) {
+        return data!['character4'].toString();
+      } else if (xp >= 420) {
+        return data!['character5'].toString();
+      } else {
+        return data!['character'].toString();
+      }
+    } else {
+      return 'No data found';
+    }
+  }
+
+  return FutureBuilder<String>(
+      //Calls into firebase to retrieve data from workout info document
+      future: getCharURL(
+          displayFile), //setting this as the future allows the data to be
+      //loaded in without causing any errors
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          //assures the character loads in
+          if (snapshot.hasData && snapshot.data != null) {
+            String url = snapshot.data!;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    width: 200,
+                    height: 300,
+                    child: ModelViewer(
+                      src: url,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const Text('');
+          }
+        } else {
+          return const Text('');
+        }
+      });
+}
+
+Widget buildImage2() {
+  String displayFile = '';
+
+  Future<String> getCharURL(displayFile) async {
+    // here is where we will get the character URL from database
+    final snap = await FirebaseFirestore.instance
+        .collection('enemy bot')
+        .doc('PX7HHUssMUwaosD5LC4l')
+        .get();
+
+    final data = snap.data();
+    if (snap.exists) {
+      // convert second snapshot to integer so we can determine which
+      //character model level needs to be shown
+      return data!['character'].toString();
+    } else {
+      return 'No data found';
+    }
+  }
+
+  return FutureBuilder<String>(
+      //Calls into firebase to retrieve data from workout info document
+      future: getCharURL(
+          displayFile), //setting this as the future allows the data to be
+      //loaded in without causing any errors
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          //assures the character loads in
+          if (snapshot.hasData && snapshot.data != null) {
+            String url = snapshot.data!;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    width: 600,
+                    height: 300,
+                    child: ModelViewer(
+                      src: url,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const Text('');
+          }
+        } else {
+          return const Text('');
+        }
+      });
 }
