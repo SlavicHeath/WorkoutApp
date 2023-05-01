@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+// ignore: unused_import
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore: unused_import
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -110,15 +112,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       },
                     ),
                     const SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _calculateBMI();
-                        }
-                      },
-                      // ignore: prefer_const_constructors
-                      child: Text('Calculate BMI'),
-                    ),
                     // ignore: prefer_const_constructors
                     SizedBox(height: 16.0),
                     Text(
@@ -128,7 +121,24 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       // ignore: prefer_const_constructors
                       style: TextStyle(fontSize: 20.0),
                     ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _calculateBMI();
+                        }
+                      },
+                      // ignore: prefer_const_constructors
+                      child: Text('Calculate BMI'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple,
+                      ),
+
+                    ),
                     TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purple,
+                      ),
                       child: const Text(
                           //User presses this button to submit valid information
                           'SUBMIT'),
@@ -141,13 +151,15 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                               'height': _heightController.text,
                               'bmi': bmiResult
                             })
+                            // ignore: avoid_print
                             .then((value) => print("added"))
                             .catchError(
+                                // ignore: avoid_print
                                 (error) => print("Failed to add: $error"));
                         Navigator.of(context).push(
                           MaterialPageRoute(
                               //The right side is the widget you want to go to
-                              builder: (context) => WorkoutPage()),
+                              builder: (context) => const WorkoutPage()),
                         );
                       },
                     ),
@@ -163,7 +175,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                           }
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return CircularProgressIndicator();
+                            return const CircularProgressIndicator();
                           }
                           Map<String, dynamic> data = {};
                           if (snapshot.data?.data() != null) {
