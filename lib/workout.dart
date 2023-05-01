@@ -125,6 +125,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
             //assures the character loads in
             if (snapshot.hasData && snapshot.data != null) {
               String url = snapshot.data!;
+
+              // Preload 3D model
+
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
