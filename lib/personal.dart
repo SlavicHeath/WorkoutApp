@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore: unused_import
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,96 +72,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         appBar: AppBar(
           title: const Text('Personal Information'),
           backgroundColor: Colors.purple,
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              // Drawer header telling which user is signed in
-              DrawerHeader(
-                decoration: BoxDecoration(color: Colors.purple),
-                child: Text(
-                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
-                  style: const TextStyle(color: Colors.white, fontSize: 25),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text("Home"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const WorkoutPage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.workspace_premium),
-                title: const Text("Battle"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const UserStatsScreen(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.swap_horizontal_circle),
-                title: const Text("Change Character"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const CharacterReselect(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings_accessibility),
-                title: const Text("Change BMI"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const PersonalInfoPage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.list),
-                title: const Text("About"),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const DescriptionPage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.login),
-                title: const Text("Signout"),
-                onTap: () {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
         ),
         body: Padding(
             padding: const EdgeInsets.all(16.0),

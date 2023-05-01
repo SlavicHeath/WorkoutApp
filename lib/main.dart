@@ -1,8 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutpet/character_update.dart';
+import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
+import 'package:workoutpet/workout.dart';
+import 'battle.dart';
+import 'character_select.dart';
+import 'database_test.dart';
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_driver/driver_extension.dart';
 
 ///
 /// [@var		object	async]
