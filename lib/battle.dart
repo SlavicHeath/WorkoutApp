@@ -947,10 +947,10 @@ Widget buildImage() {
               ],
             );
           } else {
-            return const Text('no data');
+            return const Text('');
           }
         } else {
-          return const Text('no data');
+          return const Text('');
         }
       });
 }
@@ -992,7 +992,7 @@ Widget buildImage2() {
               children: [
                 Expanded(
                   child: SizedBox(
-                    width: 200,
+                    width: 600,
                     height: 300,
                     child: ModelViewer(
                       src: url,
@@ -1002,10 +1002,10 @@ Widget buildImage2() {
               ],
             );
           } else {
-            return const Text('no data');
+            return const Text('');
           }
         } else {
-          return const Text('no data');
+          return const Text('');
         }
       });
 }
