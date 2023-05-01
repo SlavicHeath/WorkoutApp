@@ -152,17 +152,28 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'Points: ${data['points']}',
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      'Points: ${data['points']}',
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.purple),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ]);
                       }),
                   Expanded(
                     child: SizedBox(
                       width: 200,
-                      height: 400,
+                      height: 500,
                       child: ModelViewer(
                         src: url,
                       ),
@@ -1127,7 +1138,7 @@ Future openDialog(context) => showDialog(
       context: context,
       //pop up dialog for when user presses one of the specific muscle buttons
       builder: (context) => AlertDialog(
-        title: const Text('Enter workout '),
+        title: const Text('Enter workout'),
         content: Form(
           //Code to display a form style which also allows user
           //to enter information as well as an optional name for workout

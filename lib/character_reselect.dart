@@ -75,7 +75,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text("Select and go to the next Screen"),
+              child: const Text("Select and go to the next Screen"),
             ),
           ],
         ),
@@ -92,7 +92,6 @@ class _CharacterReselectState extends State<CharacterReselect> {
       color: Colors.grey,
       child: ModelViewer(
         src: displayFile,
-        alt: "A 3D model of an astronaut",
         ar: true,
         autoRotate: true,
         cameraControls: true,
@@ -105,7 +104,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
     return AnimatedSmoothIndicator(
       activeIndex: activeIndex,
       count: dislplayFile.length,
-      effect: SlideEffect(activeDotColor: Colors.purple),
+      effect: const SlideEffect(activeDotColor: Colors.purple),
     );
   }
 }
