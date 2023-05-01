@@ -18,8 +18,6 @@ import 'package:flutter_driver/driver_extension.dart';
 /// [@global]
 ///
 void main() async {
-  enableFlutterDriverExtension();
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(title: "WorkoutPet", home: HomeScreen()));
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
