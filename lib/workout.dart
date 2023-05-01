@@ -163,7 +163,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           children: [
             // Drawer header telling which user is signed in
             DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.black87),
+              decoration: BoxDecoration(color: Colors.purple),
               child: Text(
                 "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
                 style: const TextStyle(color: Colors.white, fontSize: 25),
@@ -222,23 +222,24 @@ class _WorkoutPageState extends State<WorkoutPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.login),
-              title: const Text("Signout"),
+              leading: Icon(Icons.list),
+              title: Text("About"),
               onTap: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
+                    builder: (context) => DescriptionPage(),
                   ),
                 );
               },
             ),
             ListTile(
-              leading: const Icon(Icons.list),
-              title: const Text("About"),
+              leading: Icon(Icons.login),
+              title: Text("Signout"),
               onTap: () {
-                Navigator.of(context).push(
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => const DescriptionPage(),
+                    builder: (context) => HomeScreen(),
                   ),
                 );
               },

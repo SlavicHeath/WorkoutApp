@@ -11,12 +11,14 @@ import 'database_test.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_driver/driver_extension.dart';
 
 ///
 /// [@var		object	async]
 /// [@global]
 ///
 void main() async {
+  enableFlutterDriverExtension();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(title: "WorkoutPet", home: HomeScreen()));
   await Firebase.initializeApp(
@@ -46,10 +48,11 @@ class HomeScreen extends StatelessWidget {
         ),
         body: Container(
           padding: const EdgeInsets.all(8),
-          // decoration: const BoxDecoration(
-          //   image: DecorationImage(
-          //       image: AssetImage(""), fit: BoxFit.cover),
-          // ),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/character/background.png"),
+                fit: BoxFit.cover),
+          ),
           child: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
