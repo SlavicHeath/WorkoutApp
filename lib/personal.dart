@@ -3,9 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:workoutpet/character_reselect.dart';
+import 'package:workoutpet/main.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'About.dart';
+import 'battle.dart';
 
 ///
 /// [PersonalInfoPage.]
@@ -221,7 +226,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,
                       ),
-
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
