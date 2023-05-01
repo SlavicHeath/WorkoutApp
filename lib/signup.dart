@@ -174,7 +174,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: const Text('Sign Up'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        _addNewDocument();
                         // This calls all validators() inside the form for us.
                         trySignUp();
                       }
@@ -222,6 +221,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       // pop the navigation stack so people cannot "go back" to the login screen
       // after logging in.
+      _addNewDocument();
       Navigator.of(context).pop();
       // Go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(

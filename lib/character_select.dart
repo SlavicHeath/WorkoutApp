@@ -110,6 +110,7 @@ class _CharacterSelectState extends State<CharacterSelect> {
                       displayFile4[activeIndex],
                       displayFile5[activeIndex]);
                   ;
+
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //bmi go to main page
