@@ -130,6 +130,35 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('points')
+                          .doc(authUser?.uid)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (!snapshot.hasData) {
+                          return const Text('Document does not exist');
+                        }
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Points: ${data['points']}',
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ]);
+                      }),
                   Expanded(
                     child: SizedBox(
                       width: 200,
