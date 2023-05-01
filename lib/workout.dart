@@ -128,8 +128,17 @@ class _WorkoutPageState extends State<WorkoutPage> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: 300,
+                      height: 200,
+                      child: ModelViewer(
+                        src: url,
+                      ),
+                    ),
+                  ),
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('points')
@@ -152,22 +161,17 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'Points: ${data['points']}',
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              Center(
+                                child: Text(
+                                  'Points: ${data['points']}',
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.purple),
+                                ),
                               ),
                             ]);
                       }),
-                  Expanded(
-                    child: SizedBox(
-                      width: 200,
-                      height: 400,
-                      child: ModelViewer(
-                        src: url,
-                      ),
-                    ),
-                  ),
                 ],
               );
             } else {
@@ -984,6 +988,7 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
         //Calls into firebase to retrieve data from workout info document
         stream: FirebaseFirestore.instance
             .collection('workout information')
+            .orderBy('body part')
             .where('user', isEqualTo: authUser!.uid)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -1244,6 +1249,7 @@ Future openDialog(context) => showDialog(
                     .clear(); //Clears the text fields so user can enter new information everytime they press button
                 field3.clear();
                 field4.clear();
+                field5.clear();
 
                 SnackBar mySnack = const SnackBar(
                     content: Text(
@@ -1257,24 +1263,3 @@ Future openDialog(context) => showDialog(
         ],
       ),
     );
-
-final GlobalKey<State> _key = GlobalKey<State>();
-
-void congratsdialog() {
-  showDialog(
-    context: _key.currentContext!,
-    builder: (BuildContext context) {
-      return AlertDialog(
-          title: const Text('CONGRATULAIONS!'),
-          content: const Text("You have leveled up, keep up the progress!"),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pop(); //if user selects no, sends user back to current workout page
-                },
-                child: const Text('OK')),
-          ]);
-    },
-  );
-}
