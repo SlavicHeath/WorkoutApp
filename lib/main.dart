@@ -10,14 +10,15 @@ import 'character_select.dart';
 import 'database_test.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_driver/driver_extension.dart';
 
 ///
 /// [@var		object	async]
 /// [@global]
 ///
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
+  runApp(MaterialApp(title: "WorkoutPet", home: HomeScreen()));
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -33,7 +34,8 @@ void main() async {
 /// [@global]
 ///
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+  //final authUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +46,11 @@ class HomeScreen extends StatelessWidget {
         ),
         body: Container(
           padding: const EdgeInsets.all(8),
-          // decoration: const BoxDecoration(
-          //   image: DecorationImage(
-          //       image: AssetImage(""), fit: BoxFit.cover),
-          // ),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/character/background.png"),
+                fit: BoxFit.cover),
+          ),
           child: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -88,147 +91,6 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Text("SignUp"),
               ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.of(context).push(
-              //       MaterialPageRoute(
-              //           //The right side is the widget you want to go to
-              //           builder: (context) => CharacterSelect()),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     fixedSize: const Size(200, 40),
-              //     backgroundColor: Colors.purple,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: Text("character"),
-              // ),
-              // Personal Tester
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.of(context).push(
-              //       MaterialPageRoute(
-              //           //The right side is the widget you want to go to
-              //           builder: (context) => PersonalInfoPage()),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     fixedSize: const Size(200, 40),
-              //     backgroundColor: Colors.purple,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: Text("Personal"),
-              // ),
-
-              // Workout Test Button
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.of(context).push(
-              //       MaterialPageRoute(
-              //           //The right side is the widget you want to go to
-              //           builder: (context) => WorkoutPage()),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     fixedSize: const Size(200, 40),
-              //     backgroundColor: Colors.purple,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: Text("Workout"),
-              // ),
-
-              // Previous workout Tester
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.of(context).push(
-              //       MaterialPageRoute(
-              //           //The right side is the widget you want to go to
-              //           builder: (context) => PrevWorkPage()),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     fixedSize: const Size(200, 40),
-              //     backgroundColor: Colors.purple,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: const Text(" Previous Workout"),
-              // ),
-
-              // Character view tester
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.of(context).push(
-              //       MaterialPageRoute(
-              //           //The right side is the widget you want to go to
-              //           builder: (context) => DsiplayTest()),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     fixedSize: const Size(200, 40),
-              //     backgroundColor: Colors.purple,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: Text("Character Viewer"),
-              // ),
-
-              // Fight Screen preview test
-              // ElevatedButton(
-              //   onPressed: () {
-              //     final docNum = FirebaseFirestore.instance
-              //         .collection('Battles')
-              //         .doc()
-              //         .get()
-              //         .then((DocumentSnapshot documentSnapshot) {
-              //       if (documentSnapshot.exists) {
-              //         Navigator.of(context).push(
-              //           MaterialPageRoute(
-              //               builder: (context) => BattlePreviewScreen()),
-              //         );
-              //       } else {
-              //         Navigator.of(context).push(
-              //           MaterialPageRoute(
-              //               builder: (context) => UserStatsScreen()),
-              //         );
-              //       }
-              //     });
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     fixedSize: const Size(200, 40),
-              //     backgroundColor: Colors.purple,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: Text("Battle Screen"),
-              // ),
-
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.of(context).push(
-              //       MaterialPageRoute(
-              //           //The right side is the widget you want to go to
-              //           builder: (context) => BattleScreen()),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     fixedSize: const Size(200, 40),
-              //     backgroundColor: Colors.purple,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: Text("Fighting Screen"),
-              // ),
             ]),
           ),
         ));
