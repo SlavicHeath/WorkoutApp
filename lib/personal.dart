@@ -7,6 +7,11 @@ import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/workout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'About.dart';
+import 'battle.dart';
+import 'character_reselect.dart';
+import 'main.dart';
+
 ///
 /// [PersonalInfoPage.]
 ///
@@ -221,7 +226,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,
                       ),
-
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
