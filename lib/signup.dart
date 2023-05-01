@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
+
+  void _addNewDocument() async {
+    // Get the current user
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        // Generate a new document ID using the user's UID
+        final String documentId = user.uid;
+
+        // Create the document reference
+        final DocumentReference documentReference =
+            FirebaseFirestore.instance.collection('points').doc(documentId);
+
+        // Create the data to be added to the document
+        final Map<String, dynamic> data = {
+          // Add your desired fields and values
+          'points': int.parse('0')
+        };
+
+        // Add the document to Firestore
+        await documentReference.set(data);
+
+        // Document added successfully
+        print('New document added to Firestore');
+      } catch (e) {
+        // Error occurred while adding the document
+        print('Error adding document to Firestore: $e');
+      }
+    } else {
+      // User is not authenticated
+      print('User is not authenticated');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,6 +238,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       // pop the navigation stack so people cannot "go back" to the login screen
       // after logging in.
+      _addNewDocument();
       Navigator.of(context).pop();
       // Go to the HomeScreen.
       Navigator.of(context).push(MaterialPageRoute(
