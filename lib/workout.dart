@@ -182,7 +182,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.list),
+              leading: const Icon(Icons.workspace_premium),
               title: const Text("Battle"),
               onTap: () {
                 Navigator.pop(
@@ -227,17 +227,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => HomeScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.list),
-              title: const Text("Personal Information"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const PersonalInfoPage(),
                   ),
                 );
               },
