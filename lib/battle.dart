@@ -13,8 +13,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/battleLog.dart';
 import 'dart:async';
 
-import 'character_select.dart';
-
 ///[Battle] Object used to map stats from Battles documents.
 class Battle {
   int userCurHealth;
@@ -314,16 +312,12 @@ class _UserStatsScreen extends State<UserStatsScreen> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              // Drawer header telling which user is signed in
               DrawerHeader(
-                decoration: BoxDecoration(color: Colors.purple),
-                child: Text(
-                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
-                  style: const TextStyle(color: Colors.white, fontSize: 25),
-                ),
+                decoration: BoxDecoration(color: Colors.black87),
+                child: Text("User Info"),
               ),
               ListTile(
-                leading: const Icon(Icons.home),
+                leading: Icon(Icons.home),
                 title: Text("Home"),
                 onTap: () {
                   Navigator.pop(
@@ -340,7 +334,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                 title: Text("Battle"),
                 onTap: () {
                   Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
+                      context); //To close the drawer when moving to the next page
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => UserStatsScreen(),
@@ -349,25 +343,10 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.swap_horizontal_circle),
-                title: const Text("Change Character"),
+                leading: Icon(Icons.list),
+                title: Text("Personal Information"),
                 onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const CharacterSelect(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings_accessibility),
-                title: const Text("Change BMI"),
-                onTap: () {
-                  Navigator.pop(
-                      context); //To close the drawer wwhen moving to the next page
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => PersonalInfoPage(),
                     ),
@@ -378,7 +357,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                 leading: Icon(Icons.list),
                 title: Text("About"),
                 onTap: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => DescriptionPage(),
                     ),
@@ -389,7 +368,6 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                 leading: Icon(Icons.login),
                 title: Text("Signout"),
                 onTap: () {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => HomeScreen(),
