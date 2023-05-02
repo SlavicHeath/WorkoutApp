@@ -77,24 +77,47 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Widget buildImage() {
     String displayFile = '';
 
-    Future<String> _getCharURL(displayFile) async {
+    Future<String> getCharURL(displayFile) async {
       // here is where we will get the character URL from database
       final snap = await FirebaseFirestore.instance
           .collection('character')
           .doc(authUser?.uid)
           .get();
+
+      final DocumentSnapshot snap2 = await FirebaseFirestore.instance
+          .collection('points')
+          .doc(authUser?.uid)
+          .get();
+
+      //final data2 = snap2.data();
+      int xp = snap2['points'] as int;
+
+      final data = snap.data();
       if (snap.exists) {
-        final data = snap.data();
-        return data!['character']
-            .toString(); // here we convert it to a string so it works in model viewer
+        if (xp <= 50) {
+          // convert second snapshot to integer so we can determine which
+          //character model level needs to be shown
+          return data!['character'].toString();
+        } else if (xp >= 50 && xp <= 100) {
+          return data!['character2']
+              .toString(); // here we convert it to a string so it works in model viewer
+        } else if (xp >= 100 && xp <= 250) {
+          return data!['character3'].toString();
+        } else if (xp >= 250 && xp <= 420) {
+          return data!['character4'].toString();
+        } else if (xp >= 420) {
+          return data!['character5'].toString();
+        } else {
+          return data!['character'].toString();
+        }
       } else {
-        return '';
+        return 'No data found';
       }
     }
 
     return FutureBuilder<String>(
         //Calls into firebase to retrieve data from workout info document
-        future: _getCharURL(
+        future: getCharURL(
             displayFile), //setting this as the future allows the data to be
         //loaded in without causing any errors
         builder: (context, snapshot) {
@@ -113,11 +136,42 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       height: 400,
                       child: ModelViewer(
                         src: url,
-                        ar: true,
-                        autoRotate: true,
                       ),
                     ),
                   ),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('points')
+                          .doc(authUser?.uid)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (!snapshot.hasData) {
+                          return const Text('Document does not exist');
+                        }
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  'Points: ${data['points']}',
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.purple),
+                                ),
+                              ),
+                            ]);
+                      })
                 ],
               );
             } else {
@@ -370,8 +424,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   ),
                 )
               : currindex == 0
-                  ? PrevWorkPage()
-                  : CurrentWorkPage()),
+                  ? const PrevWorkPage()
+                  : const CurrentWorkPage()),
       bottomNavigationBar: BottomNavigationBar(
           //used to navigate within workout page
           // previous button used to see previous workouts
@@ -798,17 +852,13 @@ class CurrentWorkPage extends StatefulWidget {
   /// [@global]
   ///
   @override
-  _CurrentWorkPageState createState() => _CurrentWorkPageState();
+  State<CurrentWorkPage> createState() => _CurrentWorkPageState();
 }
 
 class _CurrentWorkPageState extends State<CurrentWorkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('CURRENT WORKOUTS'),
-        backgroundColor: Colors.purple,
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -859,7 +909,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                                 //otherwise, we access the collection using the specific document ID each workout gets, and remove it promptly
                                                 FirebaseFirestore.instance
                                                     .collection(
-                                                        'workout information')
+                                                        'current workouts')
                                                     .doc(document.id)
                                                     .delete()
                                                     .whenComplete(() {
@@ -871,7 +921,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                               child: const Text('YES'))
                                         ]));
                           },
-                          icon: Icon(Icons.close),
+                          icon: const Icon(Icons.close),
                         )),
                         tileColor: Colors.purple,
                       ),
@@ -890,7 +940,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                     //The right side is the widget you want to go to
-                    builder: (context) => UserStatsScreen()),
+                    builder: (context) => const UserStatsScreen()),
               );
               deleteDoc();
             },
@@ -900,7 +950,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
-            child: const Text("Battle!"),
+            child: const Text("STATS"),
           ),
         ],
       ),
@@ -913,7 +963,7 @@ class PrevWorkPage extends StatefulWidget {
   const PrevWorkPage({super.key});
 
   @override
-  _PrevWorkPageState createState() => _PrevWorkPageState();
+  State<PrevWorkPage> createState() => _PrevWorkPageState();
 }
 
 ///
@@ -926,15 +976,9 @@ class PrevWorkPage extends StatefulWidget {
 /// [@global]
 ///
 class _PrevWorkPageState extends State<PrevWorkPage> {
-  final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('PREVIOUS WORKOUTS'),
-        backgroundColor: Colors.purple,
-      ),
       body: StreamBuilder(
         //Calls into firebase to retrieve data from workout info document
         stream: FirebaseFirestore.instance
@@ -1032,26 +1076,49 @@ TextEditingController field4 = TextEditingController();
 TextEditingController field5 = TextEditingController();
 
 final authUser = FirebaseAuth.instance.currentUser;
+final workout = <String, dynamic>{
+  "user": authUser?.uid,
+  "name": field1.text,
+  "weight": int.parse(field2.text),
+  "sets": int.parse(field3.text),
+  "reps": int.parse(field4.text),
+  "body part": field5.text
+};
 
 _submitInfo() async {
   // used to retrieve data from a specific user for previous workouts
-
-  final workout = <String, dynamic>{
-    "user": authUser?.uid,
-    "name": field1.text,
-    "weight": int.parse(field2.text),
-    "sets": int.parse(field3.text),
-    "reps": int.parse(field4.text),
-    "body part": field5.text
-  };
-
   if (authUser != null) {
     await FirebaseFirestore.instance
         .collection('workout information')
         .add(workout)
-        .then((value) => print(" Information added"))
-        .catchError((error) => print("Failed to add: $error"));
+        .then((value) => {
+              field1.clear(),
+              field2
+                  .clear(), //Clears the text fields so user can enter new information everytime they press button
+              field3.clear(),
+              field4.clear(),
+              field5.clear()
+            });
   }
+
+  if (authUser != null) {
+    await FirebaseFirestore.instance
+        .collection('current workouts')
+        .add(workout)
+        .then((value) => {
+              field1.clear(),
+              field2
+                  .clear(), //Clears the text fields so user can enter new information everytime they press button
+              field3.clear(),
+              field4.clear(),
+              field5.clear()
+            });
+  }
+}
+
+_submitCurrentInfo() async {
+  // used to retrieve data from a specific user for previous workouts
+
   if (authUser != null) {
     await FirebaseFirestore.instance
         .collection('current workouts')
@@ -1170,13 +1237,14 @@ Future openDialog(context) => showDialog(
             child: const Text(
                 'CANCEL'), //User presses this button to cancel/back out if they desire
             onPressed: () {
-              Navigator.of(context)
-                  .pop(); //pops the form field and user can return to muscle group screen
               field1.clear();
               field2
                   .clear(); //Clears the text fields so user can enter new information everytime they press button
               field3.clear();
               field4.clear();
+              field5.clear();
+              Navigator.of(context)
+                  .pop(); //pops the form field and user can return to muscle group screen
             },
           ),
           TextButton(
@@ -1188,13 +1256,8 @@ Future openDialog(context) => showDialog(
                 //if user submissions are valid, saves information to database
                 //and allows user to move on to next input/next screeng
                 _submitInfo();
+                _submitCurrentInfo();
                 Navigator.of(context).pop();
-
-                field1.clear();
-                field2
-                    .clear(); //Clears the text fields so user can enter new information everytime they press button
-                field3.clear();
-                field4.clear();
 
                 SnackBar mySnack = const SnackBar(
                     content: Text(
