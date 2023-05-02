@@ -1442,20 +1442,14 @@ _submitInfo() async {
               field2.clear(),
               field3.clear(),
               field4.clear(),
-              field5.clear()
             });
   }
   if (authUser != null) {
     await FirebaseFirestore.instance
         .collection('current workouts')
         .add(workout)
-        .then((value) => {
-              field1.clear(),
-              field2.clear(),
-              field3.clear(),
-              field4.clear(),
-              field5.clear()
-            });
+        .then((value) =>
+            {field1.clear(), field2.clear(), field3.clear(), field4.clear()});
   }
 }
 
