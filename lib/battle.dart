@@ -1,6 +1,7 @@
 //Ben Williams
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:workoutpet/About.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
@@ -781,6 +782,20 @@ class _BattleScreenState extends State<BattleScreen> {
                           ),
                         ],
                       ),
+                      Row(
+                        children: [
+                          SizedBox(
+                              //where we will display the character model, based on user uid
+                              height: 150,
+                              width: 150,
+                              child: buildImage()),
+                          SizedBox(
+                              //where we will display the character model, based on user uid
+                              height: 150,
+                              width: 150,
+                              child: buildImage2()),
+                        ],
+                      ),
                       Expanded(
                         child: Align(
                           alignment: Alignment.bottomCenter,
@@ -842,4 +857,135 @@ class _BattleScreenState extends State<BattleScreen> {
               }),
         ));
   }
+}
+
+Widget buildImage() {
+  String displayFile = '';
+
+  Future<String> getCharURL(displayFile) async {
+    // here is where we will get the character URL from database
+    final snap = await FirebaseFirestore.instance
+        .collection('character')
+        .doc(authUser?.uid)
+        .get();
+
+    final DocumentSnapshot snap2 = await FirebaseFirestore.instance
+        .collection('points')
+        .doc(authUser?.uid)
+        .get();
+
+    //final data2 = snap2.data();
+    int xp = snap2['points'] as int;
+
+    final data = snap.data();
+    if (snap.exists) {
+      if (xp <= 50) {
+        // convert second snapshot to integer so we can determine which
+        //character model level needs to be shown
+        return data!['character'].toString();
+      } else if (xp >= 500 && xp <= 100) {
+        return data!['character2']
+            .toString(); // here we convert it to a string so it works in model viewer
+      } else if (xp >= 1000 && xp <= 2000) {
+        return data!['character3'].toString();
+      } else if (xp >= 2000 && xp <= 5000) {
+        return data!['character4'].toString();
+      } else if (xp >= 5000) {
+        return data!['character5'].toString();
+      } else {
+        return data!['character'].toString();
+      }
+    } else {
+      return 'No data found';
+    }
+  }
+
+  return FutureBuilder<String>(
+      //Calls into firebase to retrieve data from workout info document
+      future: getCharURL(
+          displayFile), //setting this as the future allows the data to be
+      //loaded in without causing any errors
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          //assures the character loads in
+          if (snapshot.hasData && snapshot.data != null) {
+            String url = snapshot.data!;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    width: 200,
+                    height: 400,
+                    child: ModelViewer(
+                      src: url,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const Text('');
+          }
+        } else {
+          return const Text('');
+        }
+      });
+}
+
+Widget buildImage2() {
+  String displayFile = 'assets/character/balloon1.glb';
+
+  Future<String> getCharURL(displayFile) async {
+    // here is where we will get the character URL from database
+    final snap = await FirebaseFirestore.instance
+        .collection('enemy bot')
+        .doc('auPX7HHUssMUwaosD5LC4l')
+        .get();
+
+    final data = snap.data();
+    if (snap.exists) {
+      // convert second snapshot to integer so we can determine which
+      //character model level needs to be shown
+      return data!['character'].toString();
+    } else {
+      return '';
+    }
+  }
+
+  return FutureBuilder<String>(
+      //Calls into firebase to retrieve data from workout info document
+      future: getCharURL(
+          displayFile), //setting this as the future allows the data to be
+      //loaded in without causing any errors
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          //assures the character loads in
+          if (snapshot.hasData && snapshot.data != null) {
+            String url = snapshot.data!;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    width: 200,
+                    height: 400,
+                    child: ModelViewer(
+                      src: displayFile,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const Text('');
+          }
+        } else {
+          return const Text('');
+        }
+      });
 }

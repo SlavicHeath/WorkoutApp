@@ -24,6 +24,34 @@ class _CharacterReselectState extends State<CharacterReselect> {
     'assets/character/duck1.glb',
     'assets/character/bearbear1.glb',
   ];
+  final displayFile2 = [
+    'assets/character/balloon2.glb',
+    'assets/character/dolphin2.glb',
+    'assets/character/turtle2.glb',
+    'assets/character/duck2.glb',
+    'assets/character/bearbear2.glb',
+  ];
+  final displayFile3 = [
+    'assets/character/balloon3.glb',
+    'assets/character/dolphin3.glb',
+    'assets/character/turtle3.glb',
+    'assets/character/duck3.glb',
+    'assets/character/bearbear3.glb',
+  ];
+  final displayFile4 = [
+    'assets/character/balloon4.glb',
+    'assets/character/dolphin4.glb',
+    'assets/character/turtle4.glb',
+    'assets/character/duck4.glb',
+    'assets/character/bearbear4.glb',
+  ];
+  final displayFile5 = [
+    'assets/character/balloon5.glb',
+    'assets/character/dolphin5.glb',
+    'assets/character/turtle5.glb',
+    'assets/character/duck5.glb',
+    'assets/character/bearbear5.glb',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +89,12 @@ class _CharacterReselectState extends State<CharacterReselect> {
             ElevatedButton(
               //assign character to user
               onPressed: () {
-                _submitCharacter(dislplayFile[activeIndex]);
+                _submitCharacter(
+                    dislplayFile[activeIndex],
+                    displayFile2[activeIndex],
+                    displayFile3[activeIndex],
+                    displayFile4[activeIndex],
+                    displayFile5[activeIndex]);
                 Navigator.of(context).push(
                   MaterialPageRoute(
                       //bmi go to main page
@@ -110,9 +143,16 @@ class _CharacterReselectState extends State<CharacterReselect> {
   }
 }
 
-_submitCharacter(String displayFile) async {
+_submitCharacter(String displayFile, String displayFile2, String displayFile3,
+    String displayFile4, String displayFile5) async {
   final authUser = await FirebaseAuth.instance.currentUser;
-  final character = <String, dynamic>{"character": displayFile};
+  final character = <String, dynamic>{
+    "character": displayFile,
+    "character2": displayFile2,
+    "character3": displayFile3,
+    "character4": displayFile4,
+    "character5": displayFile5
+  };
 
   if (authUser != null) {
     await FirebaseFirestore.instance

@@ -7,7 +7,6 @@ import 'package:workoutpet/About.dart';
 import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
-import 'package:workoutpet/sign_in.dart';
 
 import 'character_select.dart';
 
@@ -130,15 +129,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Expanded(
-                    child: SizedBox(
-                      width: 200,
-                      height: 400,
-                      child: ModelViewer(
-                        src: url,
-                      ),
-                    ),
-                  ),
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('points')
@@ -171,7 +161,18 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                 ),
                               ),
                             ]);
-                      })
+                      }),
+                  Expanded(
+                    child: SizedBox(
+                      width: 200,
+                      height: 400,
+                      child: ModelViewer(
+                        src: url,
+                        ar: true,
+                        autoRotate: true,
+                      ),
+                    ),
+                  )
                 ],
               );
             } else {
@@ -424,8 +425,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   ),
                 )
               : currindex == 0
-                  ? const PrevWorkPage()
-                  : const CurrentWorkPage()),
+                  ? PrevWorkPage()
+                  : CurrentWorkPage()),
       bottomNavigationBar: BottomNavigationBar(
           //used to navigate within workout page
           // previous button used to see previous workouts
@@ -852,7 +853,7 @@ class CurrentWorkPage extends StatefulWidget {
   /// [@global]
   ///
   @override
-  State<CurrentWorkPage> createState() => _CurrentWorkPageState();
+  _CurrentWorkPageState createState() => _CurrentWorkPageState();
 }
 
 class _CurrentWorkPageState extends State<CurrentWorkPage> {
@@ -911,17 +912,15 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                                     .collection(
                                                         'current workouts')
                                                     .doc(document.id)
-                                                    .delete()
-                                                    .whenComplete(() {
-                                                  print('deleted successfully');
-                                                });
+                                                    .delete();
+
                                                 setState(() {});
                                                 Navigator.of(context).pop();
                                               }, //if user selects no, sends user back to current workout page
                                               child: const Text('YES'))
                                         ]));
                           },
-                          icon: const Icon(Icons.close),
+                          icon: Icon(Icons.close),
                         )),
                         tileColor: Colors.purple,
                       ),
@@ -940,9 +939,8 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                     //The right side is the widget you want to go to
-                    builder: (context) => const UserStatsScreen()),
+                    builder: (context) => UserStatsScreen()),
               );
-              deleteDoc();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.purple,
@@ -950,7 +948,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
-            child: const Text("STATS"),
+            child: const Text("Stats"),
           ),
         ],
       ),
@@ -963,7 +961,7 @@ class PrevWorkPage extends StatefulWidget {
   const PrevWorkPage({super.key});
 
   @override
-  State<PrevWorkPage> createState() => _PrevWorkPageState();
+  _PrevWorkPageState createState() => _PrevWorkPageState();
 }
 
 ///
@@ -976,6 +974,8 @@ class PrevWorkPage extends StatefulWidget {
 /// [@global]
 ///
 class _PrevWorkPageState extends State<PrevWorkPage> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1076,69 +1076,42 @@ TextEditingController field4 = TextEditingController();
 TextEditingController field5 = TextEditingController();
 
 final authUser = FirebaseAuth.instance.currentUser;
-final workout = <String, dynamic>{
-  "user": authUser?.uid,
-  "name": field1.text,
-  "weight": int.parse(field2.text),
-  "sets": int.parse(field3.text),
-  "reps": int.parse(field4.text),
-  "body part": field5.text
-};
 
 _submitInfo() async {
   // used to retrieve data from a specific user for previous workouts
+
+  final workout = <String, dynamic>{
+    "user": authUser?.uid,
+    "name": field1.text,
+    "weight": int.parse(field2.text),
+    "sets": int.parse(field3.text),
+    "reps": int.parse(field4.text),
+    "body part": field5.text
+  };
+
   if (authUser != null) {
     await FirebaseFirestore.instance
         .collection('workout information')
         .add(workout)
         .then((value) => {
               field1.clear(),
-              field2
-                  .clear(), //Clears the text fields so user can enter new information everytime they press button
+              field2.clear(),
               field3.clear(),
               field4.clear(),
               field5.clear()
             });
   }
-
   if (authUser != null) {
     await FirebaseFirestore.instance
         .collection('current workouts')
         .add(workout)
         .then((value) => {
               field1.clear(),
-              field2
-                  .clear(), //Clears the text fields so user can enter new information everytime they press button
+              field2.clear(),
               field3.clear(),
               field4.clear(),
               field5.clear()
             });
-  }
-}
-
-_submitCurrentInfo() async {
-  // used to retrieve data from a specific user for previous workouts
-
-  if (authUser != null) {
-    await FirebaseFirestore.instance
-        .collection('current workouts')
-        .add(workout)
-        .then((value) => print(" Information added"))
-        .catchError((error) => print("Failed to add: $error"));
-  }
-}
-
-Future<void> deleteDoc() async {
-  //used to remove current workouts once user hits the battle button.
-  // gives a clean slate to pull points from after each "workout session"
-  final Query<Map<String, dynamic>> currentWork = FirebaseFirestore.instance
-      .collection('current workouts')
-      .where('user', isEqualTo: authUser!.uid);
-  final QuerySnapshot query = await currentWork
-      .get(); //gets all the documents from the user.uid specific collection
-
-  for (DocumentSnapshot documentSnapshot in query.docs) {
-    await documentSnapshot.reference.delete();
   }
 }
 
@@ -1237,14 +1210,13 @@ Future openDialog(context) => showDialog(
             child: const Text(
                 'CANCEL'), //User presses this button to cancel/back out if they desire
             onPressed: () {
+              Navigator.of(context)
+                  .pop(); //pops the form field and user can return to muscle group screen
               field1.clear();
               field2
                   .clear(); //Clears the text fields so user can enter new information everytime they press button
               field3.clear();
               field4.clear();
-              field5.clear();
-              Navigator.of(context)
-                  .pop(); //pops the form field and user can return to muscle group screen
             },
           ),
           TextButton(
@@ -1256,8 +1228,13 @@ Future openDialog(context) => showDialog(
                 //if user submissions are valid, saves information to database
                 //and allows user to move on to next input/next screeng
                 _submitInfo();
-                _submitCurrentInfo();
                 Navigator.of(context).pop();
+
+                field1.clear();
+                field2
+                    .clear(); //Clears the text fields so user can enter new information everytime they press button
+                field3.clear();
+                field4.clear();
 
                 SnackBar mySnack = const SnackBar(
                     content: Text(
