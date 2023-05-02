@@ -255,18 +255,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 );
               },
             ),
-
-            ListTile(
-              leading: const Icon(Icons.list),
-              title: const Text("Personal Information"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const PersonalInfoPage(),
-                  ),
-                );
-              },
-            ),
             ListTile(
               leading: const Icon(Icons.list),
               title: const Text("About"),
