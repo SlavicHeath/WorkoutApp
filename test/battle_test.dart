@@ -278,7 +278,7 @@ void main() {
     expect(botCurHealth, 50);
   });
 
-  test("Testing replay: user hit", () {
+  test("Testing replay: enemy hit", () {
     _logText = "";
     userCurHealth = 100;
     botCurHealth = 100;
