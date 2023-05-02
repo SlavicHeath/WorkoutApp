@@ -1,4 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
+//Mujuni Mutabiilwa
 
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 
-import 'character_select.dart';
+import 'character_reselect.dart';
 
 void main() => runApp(const MyApp());
 
@@ -185,6 +186,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -217,7 +219,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.list),
+              leading: const Icon(Icons.workspace_premium),
               title: const Text("Battle"),
               onTap: () {
                 Navigator.pop(
@@ -237,7 +239,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     context); //To close the drawer wwhen moving to the next page
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const CharacterSelect(),
+                    builder: (context) => const CharacterReselect(),
                   ),
                 );
               },
@@ -431,11 +433,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
               icon: Icon(Icons.arrow_back_outlined),
             ),
             BottomNavigationBarItem(
-              label: 'Information',
+              label: 'Home',
               icon: Icon(Icons.home),
             ),
             BottomNavigationBarItem(
-              label: 'current',
+              label: 'Current',
               icon: Icon(Icons.accessibility_new_rounded),
             )
           ],
@@ -845,7 +847,6 @@ class CurrentWorkPage extends StatefulWidget {
   /// [@global]
   ///
   @override
-  // ignore: library_private_types_in_public_api
   _CurrentWorkPageState createState() => _CurrentWorkPageState();
 }
 
@@ -1017,11 +1018,7 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
                                         FirebaseFirestore.instance
                                             .collection('workout information')
                                             .doc(document.id)
-                                            .delete()
-                                            .whenComplete(() {
-                                          print('deleted successfully');
-                                        });
-                                        setState(() {});
+                                            .delete();
                                         Navigator.of(context).pop();
                                       }, //if user selects no, sends user back to current workout page
                                       child: const Text('YES'))
