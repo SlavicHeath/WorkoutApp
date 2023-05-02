@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,7 +42,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return WorkoutPage();
+    return const WorkoutPage();
   }
 }
 
@@ -195,7 +197,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           children: [
             // Drawer header telling which user is signed in
             DrawerHeader(
-              decoration: BoxDecoration(color: Colors.black87),
+              decoration: const BoxDecoration(color: Colors.purple),
               child: Text(
                 "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
                 style: const TextStyle(color: Colors.white, fontSize: 25),
@@ -203,26 +205,26 @@ class _WorkoutPageState extends State<WorkoutPage> {
             ),
             ListTile(
               leading: const Icon(Icons.home),
-              title: Text("Home"),
+              title: const Text("Home"),
               onTap: () {
                 Navigator.pop(
                     context); //To close the drawer wwhen moving to the next page
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => WorkoutPage(),
+                    builder: (context) => const WorkoutPage(),
                   ),
                 );
               },
             ),
             ListTile(
-              leading: Icon(Icons.list),
-              title: Text("Battle"),
+              leading: const Icon(Icons.list),
+              title: const Text("Battle"),
               onTap: () {
                 Navigator.pop(
                     context); //To close the drawer wwhen moving to the next page
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => UserStatsScreen(),
+                    builder: (context) => const UserStatsScreen(),
                   ),
                 );
               },
@@ -248,40 +250,42 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     context); //To close the drawer wwhen moving to the next page
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => PersonalInfoPage(),
+                    builder: (context) => const PersonalInfoPage(),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.list),
+              title: const Text("Personal Information"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const PersonalInfoPage(),
                   ),
                 );
               },
             ),
             ListTile(
-              leading: Icon(Icons.login),
-              title: Text("Signout"),
+              leading: const Icon(Icons.list),
+              title: const Text("About"),
               onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const DescriptionPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text("Signout"),
+              onTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text("Personal Information"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PersonalInfoPage(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text("About"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => DescriptionPage(),
+                    builder: (context) => const HomeScreen(),
                   ),
                 );
               },
@@ -312,7 +316,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                               TextField(
                                   controller: field5,
                                   decoration: null,
-                                  style: TextStyle(color: Colors.transparent),
+                                  style: const TextStyle(
+                                      color: Colors.transparent),
                                   enabled: false),
                               SizedBox(
                                 height: 60,
@@ -423,8 +428,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   ),
                 )
               : currindex == 0
-                  ? PrevWorkPage()
-                  : CurrentWorkPage()),
+                  ? const PrevWorkPage()
+                  : const CurrentWorkPage()),
       bottomNavigationBar: BottomNavigationBar(
           //used to navigate within workout page
           // previous button used to see previous workouts
@@ -841,6 +846,7 @@ class _ChestPageState extends State<ChestPage> {
 class CurrentWorkPage extends StatefulWidget {
   const CurrentWorkPage({super.key});
 
+  // ignore: duplicate_ignore
   ///
   /// [_CurrentWorkPageState.]
   ///
@@ -851,6 +857,7 @@ class CurrentWorkPage extends StatefulWidget {
   /// [@global]
   ///
   @override
+  // ignore: library_private_types_in_public_api
   _CurrentWorkPageState createState() => _CurrentWorkPageState();
 }
 
@@ -883,8 +890,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                             'name']), // $ allows integer data to be read in
                         subtitle: Text(
                             '${document['weight']} lbs ${document['reps']} reps ${document['sets']} sets'),
-                        trailing: Container(
-                            child: IconButton(
+                        trailing: IconButton(
                           onPressed: () {
                             //Pops up an alert dialog asking the user to confirm deletion of workout
                             showDialog(
@@ -900,7 +906,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                                     MaterialPageRoute(
                                                         //The right side is the widget you want to go to
                                                         builder: (context) =>
-                                                            WorkoutPage())); //if user selects no, sends user back to current workout page
+                                                            const WorkoutPage())); //if user selects no, sends user back to current workout page
                                               },
                                               child: const Text('NO')),
                                           TextButton(
@@ -918,8 +924,8 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                                               child: const Text('YES'))
                                         ]));
                           },
-                          icon: Icon(Icons.close),
-                        )),
+                          icon: const Icon(Icons.close),
+                        ),
                         tileColor: Colors.purple,
                       ),
                     );
@@ -937,7 +943,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                     //The right side is the widget you want to go to
-                    builder: (context) => UserStatsScreen()),
+                    builder: (context) => const UserStatsScreen()),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -972,8 +978,6 @@ class PrevWorkPage extends StatefulWidget {
 /// [@global]
 ///
 class _PrevWorkPageState extends State<PrevWorkPage> {
-  final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1016,7 +1020,7 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
                                             MaterialPageRoute(
                                                 //The right side is the widget you want to go to
                                                 builder: (context) =>
-                                                    WorkoutPage())); //if user selects no, sends user back to current workout page
+                                                    const WorkoutPage())); //if user selects no, sends user back to current workout page
                                       },
                                       child: const Text('NO')),
                                   TextButton(

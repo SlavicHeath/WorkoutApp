@@ -2,7 +2,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:workoutpet/battle.dart';
-import 'package:workoutpet/battleLog.dart';
 //import 'package:workoutpet/battleLog.dart';
 import "dart:math";
 import 'package:flutter/material.dart';
@@ -18,14 +17,14 @@ void action(Battle curBattle, String log) {
       //setState(() {
       //_logColor = Colors.green;
       _logText = "User misses enemy";
-      log = "${log}/m/${_logText}";
+      log = "$log/m/$_logText";
       //});
     } else {
       curBattle.botCurHealth -= curBattle.userStrength;
       //setState(() {
       //_logColor = Colors.green;
       _logText = "User hits enemy for ${curBattle.userStrength} damage";
-      log = "${log}/h${curBattle.userStrength}/${_logText}";
+      log = "$log/h${curBattle.userStrength}/$_logText";
       //});
     }
   } else {
@@ -33,14 +32,14 @@ void action(Battle curBattle, String log) {
       //setState(() {
       //_logColor = Colors.red;
       _logText = "Enemy misses user";
-      log = "${log}/m/${_logText}";
+      log = "$log/m/$_logText";
       //});
     } else {
       curBattle.userCurHealth -= curBattle.botStrength;
       //setState(() {
       //_logColor = Colors.red;
       _logText = "Enemy hits user for ${curBattle.botStrength} damage";
-      log = "${log}/h${curBattle.botStrength}/${_logText}";
+      log = "$log/h${curBattle.botStrength}/$_logText";
       //});
     }
   }
@@ -74,7 +73,7 @@ void replay(String log, int index, int turn) {
   _logText = "";
   while (index < log.length) {
     if (log[index] != "/") {
-      turnAction = "${turnAction}${log[index]}";
+      turnAction = "$turnAction${log[index]}";
       index += 1;
     } else {
       break;
@@ -83,7 +82,7 @@ void replay(String log, int index, int turn) {
   index += 1;
   while (index < log.length) {
     if (log[index] != "/") {
-      _logText = "${_logText}${log[index]}";
+      _logText = "$_logText${log[index]}";
       index += 1;
     } else {
       break;
@@ -104,7 +103,7 @@ void replay(String log, int index, int turn) {
     int j = 1;
     String dmg = "";
     while (j < turnAction.length) {
-      dmg = "${dmg}${turnAction[j]}";
+      dmg = "$dmg${turnAction[j]}";
       j += 1;
     }
     if (turn % 2 == 0) {

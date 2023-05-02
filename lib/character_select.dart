@@ -65,7 +65,8 @@ class _CharacterSelectState extends State<CharacterSelect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("CHOOSE CHARACTER"), backgroundColor: Colors.purple),
+          title: const Text("CHOOSE CHARACTER"),
+          backgroundColor: Colors.purple),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +117,6 @@ class _CharacterSelectState extends State<CharacterSelect> {
                       displayFile3[activeIndex],
                       displayFile4[activeIndex],
                       displayFile5[activeIndex]);
-                  ;
 
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -143,7 +143,7 @@ class _CharacterSelectState extends State<CharacterSelect> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text("Select and go to the next Screen"),
+              child: const Text("Select and go to the next Screen"),
             ),
           ],
         ),
@@ -156,7 +156,7 @@ class _CharacterSelectState extends State<CharacterSelect> {
     return Container(
       height: 20,
       width: 300,
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       child: ModelViewer(
         src: displayFile,
         ar: true,
@@ -170,14 +170,14 @@ class _CharacterSelectState extends State<CharacterSelect> {
     return AnimatedSmoothIndicator(
       activeIndex: activeIndex,
       count: dislplayFile.length,
-      effect: SlideEffect(activeDotColor: Colors.purple),
+      effect: const SlideEffect(activeDotColor: Colors.purple),
     );
   }
 }
 
 _submitCharacter(String displayFile, String displayFile2, String displayFile3,
     String displayFile4, String displayFile5) async {
-  final authUser = await FirebaseAuth.instance.currentUser;
+  final authUser = FirebaseAuth.instance.currentUser;
   final character = <String, dynamic>{
     "character": displayFile,
     "character2": displayFile2,

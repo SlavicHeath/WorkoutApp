@@ -1,5 +1,7 @@
 //Ben Williams
 
+// ignore_for_file: library_private_types_in_public_api, duplicate_ignore
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:workoutpet/About.dart';
@@ -10,9 +12,9 @@ import 'dart:math';
 import 'bot.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workoutpet/battleLog.dart';
 import 'dart:async';
+import 'character_select.dart';
 
 ///[Battle] Object used to map stats from Battles documents.
 class Battle {
@@ -315,62 +317,94 @@ class _UserStatsScreen extends State<UserStatsScreen> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
+              // Drawer header telling which user is signed in
               DrawerHeader(
-                decoration: BoxDecoration(color: Colors.black87),
-                child: Text("User Info"),
+                decoration: const BoxDecoration(color: Colors.purple),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                ),
               ),
               ListTile(
-                leading: Icon(Icons.home),
-                title: Text("Home"),
+                leading: const Icon(Icons.home),
+                title: const Text("Home"),
                 onTap: () {
                   Navigator.pop(
                       context); //To close the drawer wwhen moving to the next page
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => WorkoutPage(),
+                      builder: (context) => const WorkoutPage(),
                     ),
                   );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Battle"),
+                leading: const Icon(Icons.list),
+                title: const Text("Battle"),
                 onTap: () {
                   Navigator.pop(
-                      context); //To close the drawer when moving to the next page
+                      context); //To close the drawer wwhen moving to the next page
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => UserStatsScreen(),
+                      builder: (context) => const UserStatsScreen(),
                     ),
                   );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Personal Information"),
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PersonalInfoPage(),
+                      builder: (context) => const CharacterSelect(),
                     ),
                   );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text("About"),
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => DescriptionPage(),
+                      builder: (context) => const PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+
+              ListTile(
+                leading: const Icon(Icons.list),
+                title: const Text("Personal Information"),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PersonalInfoPage(),
                     ),
                   );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.login),
-                title: Text("Signout"),
+                leading: const Icon(Icons.list),
+                title: const Text("About"),
                 onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const DescriptionPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.login),
+                title: const Text("Signout"),
+                onTap: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => HomeScreen(),
@@ -397,39 +431,39 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                     int userSpeed = userStats.speed;
                     return Column(
                       children: <Widget>[
-                        Text('HEALTH',
+                        const Text('HEALTH',
                             style: TextStyle(
                               letterSpacing: 2.0,
                             )),
-                        SizedBox(height: 10.0),
+                        const SizedBox(height: 10.0),
                         Text('$userHealth',
-                            style: TextStyle(
+                            style: const TextStyle(
                               letterSpacing: 2.0,
                               fontSize: 28.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
                             )),
-                        SizedBox(height: 20.0),
-                        Text('STRENGTH',
+                        const SizedBox(height: 20.0),
+                        const Text('STRENGTH',
                             style: TextStyle(
                               letterSpacing: 2.0,
                             )),
-                        SizedBox(height: 10.0),
+                        const SizedBox(height: 10.0),
                         Text('$userStrength',
-                            style: TextStyle(
+                            style: const TextStyle(
                               letterSpacing: 2.0,
                               fontSize: 28.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
                             )),
-                        SizedBox(height: 20.0),
-                        Text('SPEED',
+                        const SizedBox(height: 20.0),
+                        const Text('SPEED',
                             style: TextStyle(
                               letterSpacing: 2.0,
                             )),
-                        SizedBox(height: 10.0),
+                        const SizedBox(height: 10.0),
                         Text('$userSpeed',
-                            style: TextStyle(
+                            style: const TextStyle(
                               letterSpacing: 2.0,
                               fontSize: 28.0,
                               fontWeight: FontWeight.bold,
@@ -438,7 +472,8 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => BattleLogListScreen()));
+                                builder: (context) =>
+                                    const BattleLogListScreen()));
                           },
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(200, 40),
@@ -463,7 +498,8 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                                           as Map<String, dynamic>);
                                   updateUserStats(curBattle, authUser!.uid);
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => BattleScreen()));
+                                      builder: (context) =>
+                                          const BattleScreen()));
                                 } else if ((userHealth == 0) |
                                     (userStrength == 0)) {
                                   showDialog(
@@ -486,7 +522,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              BattleScreen()));
+                                              const BattleScreen()));
                                   deleteCurrentDoc();
                                 }
                               });
@@ -521,7 +557,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                     );
                   } else {
                     //if database is being loaded
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                 }),
           ),
@@ -547,7 +583,7 @@ class _BattleScreenState extends State<BattleScreen> {
   void _startTimer() {
     setState(() => _isButtonActive = false);
     _counter = 15;
-    _timer = Timer.periodic(Duration(milliseconds: 50), (_) {
+    _timer = Timer.periodic(const Duration(milliseconds: 50), (_) {
       if (_counter > 0) {
         //setState(() {
         _counter--;
@@ -562,21 +598,21 @@ class _BattleScreenState extends State<BattleScreen> {
   }
 
   void action(Battle curBattle, String log) {
-    var rand = new Random();
+    var rand = Random();
     if ((curBattle.userCurHealth <= 0) || curBattle.userCurHealth <= 0) {}
     if (curBattle.turn % 2 == 0) {
       if (rand.nextInt(100) < curBattle.botSpeed) {
         setState(() {
           _logColor = Colors.green;
           _logText = "User misses enemy";
-          log = "${log}/m/${_logText}";
+          log = "$log/m/$_logText";
         });
       } else {
         curBattle.botCurHealth -= curBattle.userStrength;
         setState(() {
           _logColor = Colors.green;
           _logText = "User hits enemy for ${curBattle.userStrength} damage";
-          log = "${log}/h${curBattle.userStrength}/${_logText}";
+          log = "$log/h${curBattle.userStrength}/$_logText";
         });
       }
     } else {
@@ -584,14 +620,14 @@ class _BattleScreenState extends State<BattleScreen> {
         setState(() {
           _logColor = Colors.red;
           _logText = "Enemy misses user";
-          log = "${log}/m/${_logText}";
+          log = "$log/m/$_logText";
         });
       } else {
         curBattle.userCurHealth -= curBattle.botStrength;
         setState(() {
           _logColor = Colors.red;
           _logText = "Enemy hits user for ${curBattle.botStrength} damage";
-          log = "${log}/h${curBattle.botStrength}/${_logText}";
+          log = "$log/h${curBattle.botStrength}/$_logText";
         });
       }
     }
@@ -644,7 +680,7 @@ class _BattleScreenState extends State<BattleScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Row(
-                        children: [
+                        children: const [
                           Expanded(
                             child: Text('HEALTH',
                                 style: TextStyle(
@@ -660,7 +696,7 @@ class _BattleScreenState extends State<BattleScreen> {
                         ],
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Expanded(child: SizedBox(height: 10.0)),
                         ],
                       ),
@@ -668,7 +704,7 @@ class _BattleScreenState extends State<BattleScreen> {
                         children: [
                           Expanded(
                             child: Text('$userCurHealth',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   letterSpacing: 2.0,
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.bold,
@@ -677,7 +713,7 @@ class _BattleScreenState extends State<BattleScreen> {
                           ),
                           Expanded(
                             child: Text('$botCurHealth',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   letterSpacing: 2.0,
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.bold,
@@ -687,12 +723,12 @@ class _BattleScreenState extends State<BattleScreen> {
                         ],
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Expanded(child: SizedBox(height: 20.0)),
                         ],
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Expanded(
                             child: Text('STRENGTH',
                                 style: TextStyle(
@@ -708,7 +744,7 @@ class _BattleScreenState extends State<BattleScreen> {
                         ],
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Expanded(child: SizedBox(height: 10.0)),
                         ],
                       ),
@@ -716,7 +752,7 @@ class _BattleScreenState extends State<BattleScreen> {
                         children: [
                           Expanded(
                             child: Text('$userStrength',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   letterSpacing: 2.0,
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.bold,
@@ -725,7 +761,7 @@ class _BattleScreenState extends State<BattleScreen> {
                           ),
                           Expanded(
                             child: Text('$botStrength',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   letterSpacing: 2.0,
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.bold,
@@ -735,12 +771,12 @@ class _BattleScreenState extends State<BattleScreen> {
                         ],
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Expanded(child: SizedBox(height: 20.0)),
                         ],
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Expanded(
                             child: Text('SPEED',
                                 style: TextStyle(
@@ -756,7 +792,7 @@ class _BattleScreenState extends State<BattleScreen> {
                         ],
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Expanded(child: SizedBox(height: 10.0)),
                         ],
                       ),
@@ -764,7 +800,7 @@ class _BattleScreenState extends State<BattleScreen> {
                         children: [
                           Expanded(
                             child: Text('$userSpeed',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   letterSpacing: 2.0,
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.bold,
@@ -773,7 +809,7 @@ class _BattleScreenState extends State<BattleScreen> {
                           ),
                           Expanded(
                             child: Text('$botSpeed',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   letterSpacing: 2.0,
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.bold,
@@ -852,7 +888,7 @@ class _BattleScreenState extends State<BattleScreen> {
                   );
                 } else {
                   //if database is being loaded
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
               }),
         ));
@@ -964,7 +1000,6 @@ Widget buildImage2() {
         if (snapshot.connectionState == ConnectionState.done) {
           //assures the character loads in
           if (snapshot.hasData && snapshot.data != null) {
-            String url = snapshot.data!;
             return Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,

@@ -59,7 +59,7 @@ class _ForgotPassword extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Forgot Password"),
+        title: const Text("Forgot Password"),
         backgroundColor: Colors.purple,
       ),
       body: Container(
@@ -114,8 +114,6 @@ class _ForgotPassword extends State<ForgotPassword> {
   ///
   void passwordReset() async {
     try {
-      final credential = await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: email.toString());
       const snackbar = SnackBar(
         content: Text("Email sent"),
         backgroundColor: Colors.green,
@@ -124,7 +122,7 @@ class _ForgotPassword extends State<ForgotPassword> {
         margin: EdgeInsets.all(5),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      print("Email Sent to ${email}");
+      print("Email Sent to $email");
       error = null; // clear the error message if exists.
       setState(() {}); // Call setState to trigger a rebuild
 

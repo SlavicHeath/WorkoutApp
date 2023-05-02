@@ -56,7 +56,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Model Test"),
+        title: const Text("Model Test"),
       ),
       body: Center(
         child: Column(
@@ -108,7 +108,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text("Select and go to the next Screen"),
+              child: const Text("Select and go to the next Screen"),
             ),
           ],
         ),
@@ -121,7 +121,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
     return Container(
       height: 20,
       width: 300,
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       color: Colors.grey,
       child: ModelViewer(
         src: displayFile,
@@ -138,14 +138,14 @@ class _CharacterReselectState extends State<CharacterReselect> {
     return AnimatedSmoothIndicator(
       activeIndex: activeIndex,
       count: dislplayFile.length,
-      effect: SlideEffect(activeDotColor: Colors.purple),
+      effect: const SlideEffect(activeDotColor: Colors.purple),
     );
   }
 }
 
 _submitCharacter(String displayFile, String displayFile2, String displayFile3,
     String displayFile4, String displayFile5) async {
-  final authUser = await FirebaseAuth.instance.currentUser;
+  final authUser = FirebaseAuth.instance.currentUser;
   final character = <String, dynamic>{
     "character": displayFile,
     "character2": displayFile2,

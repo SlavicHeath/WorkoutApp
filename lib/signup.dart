@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutpet/character_select.dart';
 import 'package:workoutpet/sign_in.dart';
-import 'main.dart';
 
 ///
 /// [User.]
@@ -109,108 +107,102 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: const Text("Sign Up Page"),
         backgroundColor: Colors.purple,
       ),
-      body: Container(
-        // decoration: const BoxDecoration(
-        //   image: DecorationImage(
-        //       image: AssetImage(""), fit: BoxFit.cover),
-        // ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Email Field
-                TextFormField(
-                    // Prompt user to enter email
-                    decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'Enter your email'),
-                    maxLength: 64,
-                    onChanged: (value) => email = value,
-                    validator: (value) {
-                      // Check for blank email
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email text';
-                      }
-                      return null;
-                    }),
-                // Field for password
-                TextFormField(
-                    controller: _pass,
-                    decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: "Enter a password"),
-                    obscureText: true,
-                    onChanged: (value) => password = value,
-                    validator: (value) {
-                      // if password entered less than 8 or blank
-                      if (value == null || value.length < 8) {
-                        return 'Your password must contain at least 8 characters.';
-                      }
-                      return null;
-                    }),
-                // Repeat Password Field
-                TextFormField(
-                    controller: _confirmPass,
-                    decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: "Enter a password again"),
-                    obscureText: true,
-                    onChanged: (value) => password = value,
-                    validator: (value) {
-                      // Must match previous password and cannot be empty
-                      if (value != _pass.text || value == null) {
-                        return 'Your passwords must match!';
-                      }
-                      return null; // Returning null means "no issues"
-                    }),
-                // Button to submit enterd data
-                ElevatedButton(
-                  child: const Text('Sign Up'),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // This calls all validators() inside the form for us.
-                      trySignUp();
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Email Field
+              TextFormField(
+                  // Prompt user to enter email
+                  decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Enter your email'),
+                  maxLength: 64,
+                  onChanged: (value) => email = value,
+                  validator: (value) {
+                    // Check for blank email
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email text';
                     }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(200, 40),
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+                    return null;
+                  }),
+              // Field for password
+              TextFormField(
+                  controller: _pass,
+                  decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Enter a password"),
+                  obscureText: true,
+                  onChanged: (value) => password = value,
+                  validator: (value) {
+                    // if password entered less than 8 or blank
+                    if (value == null || value.length < 8) {
+                      return 'Your password must contain at least 8 characters.';
+                    }
+                    return null;
+                  }),
+              // Repeat Password Field
+              TextFormField(
+                  controller: _confirmPass,
+                  decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Enter a password again"),
+                  obscureText: true,
+                  onChanged: (value) => password = value,
+                  validator: (value) {
+                    // Must match previous password and cannot be empty
+                    if (value != _pass.text || value == null) {
+                      return 'Your passwords must match!';
+                    }
+                    return null; // Returning null means "no issues"
+                  }),
+              // Button to submit enterd data
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // This calls all validators() inside the form for us.
+                    trySignUp();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                // Return to Home Screen if account already exist
-                ElevatedButton(
-                  child: const Text('Already have account - LogIn'),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(250, 40),
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+                child: const Text('Sign Up'),
+              ),
+              // Return to Home Screen if account already exist
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(250, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                // Check all errors
-                if (error != null)
-                  Text(
-                    "Error: $error",
-                    style: TextStyle(color: Colors.red[800], fontSize: 12),
-                  )
-              ],
-            ),
+                child: const Text('Already have account - LogIn'),
+              ),
+              // Check all errors
+              if (error != null)
+                Text(
+                  "Error: $error",
+                  style: TextStyle(color: Colors.red[800], fontSize: 12),
+                )
+            ],
           ),
         ),
       ),
