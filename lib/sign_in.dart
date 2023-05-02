@@ -95,75 +95,77 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                  decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: 'Enter your email'),
-                  maxLength: 64,
-                  onChanged: (value) => email = value,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                    decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Enter your email'),
+                    maxLength: 64,
+                    onChanged: (value) => email = value,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null; // Returning null means "no issues"
+                    }),
+                TextFormField(
+                    decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: "Enter a password"),
+                    obscureText: true,
+                    onChanged: (value) => password = value,
+                    validator: (value) {
+                      if (value == null || value.length < 8) {
+                        return 'Your password must contain at least 8 characters.';
+                      }
+                      return null; // Returning null means "no issues"
+                    }),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // This calls all validators() inside the form for us.
+                      tryLogin();
                     }
-                    return null; // Returning null means "no issues"
-                  }),
-              TextFormField(
-                  decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: "Enter a password"),
-                  obscureText: true,
-                  onChanged: (value) => password = value,
-                  validator: (value) {
-                    if (value == null || value.length < 8) {
-                      return 'Your password must contain at least 8 characters.';
-                    }
-                    return null; // Returning null means "no issues"
-                  }),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // This calls all validators() inside the form for us.
-                    tryLogin();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(200, 40),
+                    backgroundColor: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
+                  child: const Text('Login'),
                 ),
-                child: const Text('Login'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //The right side is the widget you want to go to
-                        builder: (context) => const ForgotPassword()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 40),
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          //The right side is the widget you want to go to
+                          builder: (context) => const ForgotPassword()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(200, 40),
+                    backgroundColor: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
+                  child: const Text("Forgot Password"),
                 ),
-                child: const Text("Forgot Password"),
-              ),
-              if (error != null)
-                Text(
-                  "Error: $error",
-                  style: TextStyle(color: Colors.red[800], fontSize: 12),
-                )
-            ],
+                if (error != null)
+                  Text(
+                    "Error: $error",
+                    style: TextStyle(color: Colors.red[800], fontSize: 12),
+                  )
+              ],
+            ),
           ),
         ),
       ),
