@@ -282,6 +282,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               leading: const Icon(Icons.login),
               title: const Text("Signout"),
               onTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => const HomeScreen(),
