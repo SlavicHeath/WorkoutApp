@@ -224,6 +224,8 @@ void deleteDoc(docId) {
   battleDoc.delete();
 }
 
+final authUser = FirebaseAuth.instance.currentUser;
+
 Future<void> deleteCurrentDoc() async {
   //does same thing as deleteDoc but for current workouts
   //used to remove current workouts once user hits the battle button.
@@ -503,7 +505,7 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => WorkoutPage()));
+                                builder: (context) => const WorkoutPage()));
                           },
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(200, 40),

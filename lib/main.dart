@@ -72,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text("LogIn"),
+                child: const Text("LogIn"),
               ),
               ElevatedButton(
                 onPressed: () {
