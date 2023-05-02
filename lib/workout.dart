@@ -168,8 +168,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       height: 400,
                       child: ModelViewer(
                         src: url,
-                        ar: true,
-                        autoRotate: true,
                       ),
                     ),
                   )
