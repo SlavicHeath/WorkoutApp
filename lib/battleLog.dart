@@ -1,7 +1,5 @@
-import 'package:workoutpet/main.dart';
-import 'package:workoutpet/workout.dart';
-import 'dart:math';
-import 'bot.dart';
+// ignore_for_file: library_private_types_in_public_api, no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -86,12 +84,10 @@ class BattleLog {
 Widget buildLog(BattleLog battleLog, BuildContext context) => ListTile(
     title: Text(battleLog.getDate()),
     tileColor: Colors.purple,
-    onTap: () => Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => BattleLogListScreen())),
-    trailing: Container(
-      child: Text("${battleLog.determineWinText()}",
-          style: (TextStyle(color: battleLog.determineWinColor()))),
-    ));
+    onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const BattleLogListScreen())),
+    trailing: Text(battleLog.determineWinText(),
+        style: (TextStyle(color: battleLog.determineWinColor()))));
 
 Stream<List<BattleLog>> readBattleLog(userId) => FirebaseFirestore.instance
     .collection('BattleLogs')
@@ -154,9 +150,9 @@ class _BattleLogListScreenState extends State<BattleLogListScreen> {
                           );
                         },
                         separatorBuilder: (context, index) =>
-                            SizedBox(height: 10));
+                            const SizedBox(height: 10));
                   } else {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                 })));
   }
@@ -194,7 +190,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
     _logText = "";
     while (index < log.length) {
       if (log[index] != "/") {
-        turnAction = "${turnAction}${log[index]}";
+        turnAction = "$turnAction${log[index]}";
         index += 1;
       } else {
         break;
@@ -203,7 +199,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
     index += 1;
     while (index < log.length) {
       if (log[index] != "/") {
-        _logText = "${_logText}${log[index]}";
+        _logText = "$_logText${log[index]}";
         index += 1;
       } else {
         break;
@@ -224,7 +220,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
       int j = 1;
       String dmg = "";
       while (j < turnAction.length) {
-        dmg = "${dmg}${turnAction[j]}";
+        dmg = "$dmg${turnAction[j]}";
         j += 1;
       }
       if (turn % 2 == 0) {
@@ -252,7 +248,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('${date} Battle Log'),
+          title: Text('$date Battle Log'),
           backgroundColor: Colors.purple,
         ),
         body: Padding(
@@ -261,7 +257,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  children: [
+                  children: const [
                     Expanded(
                       child: Text('HEALTH',
                           style: TextStyle(
@@ -277,7 +273,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(child: SizedBox(height: 10.0)),
                   ],
                 ),
@@ -285,7 +281,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                   children: [
                     Expanded(
                       child: Text('$userCurHealth',
-                          style: TextStyle(
+                          style: const TextStyle(
                             letterSpacing: 2.0,
                             fontSize: 28.0,
                             fontWeight: FontWeight.bold,
@@ -294,7 +290,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                     ),
                     Expanded(
                       child: Text('$botCurHealth',
-                          style: TextStyle(
+                          style: const TextStyle(
                             letterSpacing: 2.0,
                             fontSize: 28.0,
                             fontWeight: FontWeight.bold,
@@ -304,12 +300,12 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(child: SizedBox(height: 20.0)),
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(
                       child: Text('STRENGTH',
                           style: TextStyle(
@@ -325,7 +321,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(child: SizedBox(height: 10.0)),
                   ],
                 ),
@@ -333,7 +329,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                   children: [
                     Expanded(
                       child: Text('$userStrength',
-                          style: TextStyle(
+                          style: const TextStyle(
                             letterSpacing: 2.0,
                             fontSize: 28.0,
                             fontWeight: FontWeight.bold,
@@ -342,7 +338,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                     ),
                     Expanded(
                       child: Text('$botStrength',
-                          style: TextStyle(
+                          style: const TextStyle(
                             letterSpacing: 2.0,
                             fontSize: 28.0,
                             fontWeight: FontWeight.bold,
@@ -352,12 +348,12 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(child: SizedBox(height: 20.0)),
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(
                       child: Text('SPEED',
                           style: TextStyle(
@@ -373,7 +369,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(child: SizedBox(height: 10.0)),
                   ],
                 ),
@@ -381,7 +377,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                   children: [
                     Expanded(
                       child: Text('$userSpeed',
-                          style: TextStyle(
+                          style: const TextStyle(
                             letterSpacing: 2.0,
                             fontSize: 28.0,
                             fontWeight: FontWeight.bold,
@@ -390,7 +386,7 @@ class _BattleLogScreenState extends State<BattleLogScreen> {
                     ),
                     Expanded(
                       child: Text('$botSpeed',
-                          style: TextStyle(
+                          style: const TextStyle(
                             letterSpacing: 2.0,
                             fontSize: 28.0,
                             fontWeight: FontWeight.bold,

@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:workoutpet/character_select.dart';
 import 'package:workoutpet/forgot_pass.dart';
 import 'package:workoutpet/workout.dart';
-import 'package:workoutpet/character_select.dart';
 
 ///
 /// [User.]
@@ -86,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Log in Page"),
+        title: const Text("Log in Page"),
         backgroundColor: Colors.purple,
       ),
       body: Container(
@@ -128,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   }),
               const SizedBox(height: 16),
               ElevatedButton(
-                child: const Text('Login'),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // This calls all validators() inside the form for us.
@@ -142,13 +139,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
+                child: const Text('Login'),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => ForgotPassword()),
+                        builder: (context) => const ForgotPassword()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -158,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text("Forgot Password"),
+                child: const Text("Forgot Password"),
               ),
               if (error != null)
                 Text(

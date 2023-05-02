@@ -1,24 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:workoutpet/character_update.dart';
-import 'package:workoutpet/personal.dart';
 import 'package:workoutpet/sign_in.dart';
 import 'package:workoutpet/signup.dart';
-import 'package:workoutpet/workout.dart';
-import 'battle.dart';
-import 'character_select.dart';
-import 'database_test.dart';
 import 'firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_driver/driver_extension.dart';
 
 ///
 /// [@var		object	async]
 /// [@global]
 ///
 void main() async {
-  runApp(MaterialApp(title: "WorkoutPet", home: HomeScreen()));
+  runApp(const MaterialApp(title: "WorkoutPet", home: HomeScreen()));
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -34,7 +25,7 @@ void main() async {
 /// [@global]
 ///
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
   //final authUser = FirebaseAuth.instance.currentUser;
 
   @override
@@ -62,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => LoginScreen()),
+                        builder: (context) => const LoginScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -79,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         //The right side is the widget you want to go to
-                        builder: (context) => SignUpScreen()),
+                        builder: (context) => const SignUpScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -89,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text("SignUp"),
+                child: const Text("SignUp"),
               ),
             ]),
           ),
