@@ -82,20 +82,6 @@ class BattleLog {
 }
 
 ///Creates a document in the BattleLogs collection based on various stats from the current battle [curBattle] of a user with a uid matching [userId]
-void initBattleLog(Battle curBattle, int win, userId) {
-  FirebaseFirestore.instance.collection('BattleLogs').add({
-    'user': userId,
-    'userMaxHealth': curBattle.userMaxHealth,
-    'userStrength': curBattle.userStrength,
-    'userSpeed': curBattle.userSpeed,
-    'botMaxHealth': curBattle.botMaxHealth,
-    'botStrength': curBattle.botStrength,
-    'botSpeed': curBattle.botSpeed,
-    'log': curBattle.log,
-    'date': FieldValue.serverTimestamp(),
-    'win': win, // 1 denotes a win
-  });
-}
 
 Widget buildLog(BattleLog battleLog, BuildContext context) => ListTile(
     title: Text(battleLog.getDate()),
@@ -120,6 +106,23 @@ class BattleLogListScreen extends StatefulWidget {
   @override
   _BattleLogListScreenState createState() => _BattleLogListScreenState();
 }
+
+void initBattleLog(Battle curBattle, int win, userId) {
+  FirebaseFirestore.instance.collection('BattleLogs').add({
+    'user': userId,
+    'userMaxHealth': curBattle.userMaxHealth,
+    'userStrength': curBattle.userStrength,
+    'userSpeed': curBattle.userSpeed,
+    'botMaxHealth': curBattle.botMaxHealth,
+    'botStrength': curBattle.botStrength,
+    'botSpeed': curBattle.botSpeed,
+    'log': curBattle.log,
+    'date': FieldValue.serverTimestamp(),
+    'win': win, // 1 denotes a win
+  });
+}
+
+final authUser = FirebaseAuth.instance.currentUser;
 
 class _BattleLogListScreenState extends State<BattleLogListScreen> {
   @override
