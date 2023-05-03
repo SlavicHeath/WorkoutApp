@@ -392,12 +392,11 @@ class _UserStatsScreen extends State<UserStatsScreen> {
                 leading: const Icon(Icons.login),
                 title: const Text("Signout"),
                 onTap: () {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  );
+                  FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
+                      (route) => false);
                 },
               ),
             ],
