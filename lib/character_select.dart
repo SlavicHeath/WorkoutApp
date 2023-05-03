@@ -5,7 +5,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:workoutpet/personal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:workoutpet/workout.dart';
 
 class CharacterSelect extends StatefulWidget {
   const CharacterSelect({super.key});
@@ -68,37 +67,47 @@ class _CharacterSelectState extends State<CharacterSelect> {
           title: const Text("CHOOSE CHARACTER"),
           backgroundColor: Colors.purple),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CarouselSlider.builder(
-              itemCount: dislplayFile.length,
-              itemBuilder: (context, index, realIndex) {
-                final displayFile = dislplayFile[index];
-                return buildImage(displayFile, index);
-              },
-              options: CarouselOptions(
-                height: 250,
-                viewportFraction: 1,
-                onPageChanged: (index, reason) {
-                  setState(
-                    () {
-                      activeIndex = index;
-                    },
-                  );
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CarouselSlider.builder(
+                itemCount: dislplayFile.length,
+                itemBuilder: (context, index, realIndex) {
+                  final displayFile = dislplayFile[index];
+                  return buildImage(displayFile, index);
                 },
+                options: CarouselOptions(
+                  height: 250,
+                  viewportFraction: 1,
+                  onPageChanged: (index, reason) {
+                    setState(
+                      () {
+                        activeIndex = index;
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            // build character
-            buildIndicator(),
+              const SizedBox(height: 10),
+              // build character
+              buildIndicator(),
 
-            // button to go to next page
-            const SizedBox(height: 20),
-            ElevatedButton(
-              //assign character to user
-              onPressed: () {
-                if (bmi == Null) {
+              // button to go to next page
+              const SizedBox(height: 20),
+              ElevatedButton(
+                //assign character to user
+                onPressed: () {
+                  _submitCharacter(
+                      dislplayFile[activeIndex],
+                      displayFile2[activeIndex],
+                      displayFile3[activeIndex],
+                      displayFile4[activeIndex],
+                      displayFile5[activeIndex]);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      //no bmi go to personal page
+                      builder: (context) => const PersonalInfoPage()));
+
                   _submitCharacter(
                       dislplayFile[activeIndex],
                       displayFile2[activeIndex],
@@ -110,42 +119,18 @@ class _CharacterSelectState extends State<CharacterSelect> {
                         //no bmi go to personal page
                         builder: (context) => const PersonalInfoPage()),
                   );
-                } else {
-                  _submitCharacter(
-                      dislplayFile[activeIndex],
-                      displayFile2[activeIndex],
-                      displayFile3[activeIndex],
-                      displayFile4[activeIndex],
-                      displayFile5[activeIndex]);
-
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        //bmi go to main page
-                        builder: (context) => const WorkoutPage()),
-                  );
-                }
-                _submitCharacter(
-                    dislplayFile[activeIndex],
-                    displayFile2[activeIndex],
-                    displayFile3[activeIndex],
-                    displayFile4[activeIndex],
-                    displayFile5[activeIndex]);
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      //no bmi go to personal page
-                      builder: (context) => const PersonalInfoPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(300, 40),
-                backgroundColor: Colors.purple,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(300, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
+                child: const Text("Select and go to the next Screen"),
               ),
-              child: const Text("Select and go to the next Screen"),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

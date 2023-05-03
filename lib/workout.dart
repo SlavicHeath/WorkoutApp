@@ -12,6 +12,7 @@ import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 
 import 'character_reselect.dart';
+import 'signup.dart';
 
 void main() => runApp(const MyApp());
 
@@ -84,12 +85,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
       // here is where we will get the character URL from database
       final snap = await FirebaseFirestore.instance
           .collection('character')
-          .doc(authUser?.uid)
+          .doc(authUser!.uid)
           .get();
 
       final DocumentSnapshot snap2 = await FirebaseFirestore.instance
           .collection('points')
-          .doc(authUser?.uid)
+          .doc(authUser!.uid)
           .get();
 
       //final data2 = snap2.data();
@@ -1219,7 +1220,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
             //Calls into firebase to retrieve data from workout info document
             stream: FirebaseFirestore.instance
                 .collection('current workouts')
-                .where('user', isEqualTo: authUser!.uid)
+                .where('user', isEqualTo: authUser?.uid)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -1331,7 +1332,7 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
         //Calls into firebase to retrieve data from workout info document
         stream: FirebaseFirestore.instance
             .collection('workout information')
-            .where('user', isEqualTo: authUser!.uid)
+            .where('user', isEqualTo: authUser?.uid)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {

@@ -79,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
       print(doc["character"]);
     });
   });
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -87,92 +88,98 @@ class _LoginScreenState extends State<LoginScreen> {
         title: const Text("Log in Page"),
         backgroundColor: Colors.purple,
       ),
-      body: Container(
-        // decoration: const BoxDecoration(
-        //   image: DecorationImage(
-        //       image: AssetImage(""), fit: BoxFit.cover),
-        // ),
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
-                    decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'Enter your email'),
-                    maxLength: 64,
-                    onChanged: (value) => email = value,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null; // Returning null means "no issues"
-                    }),
-                TextFormField(
-                    decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: "Enter a password"),
-                    obscureText: true,
-                    onChanged: (value) => password = value,
-                    validator: (value) {
-                      if (value == null || value.length < 8) {
-                        return 'Your password must contain at least 8 characters.';
-                      }
-                      return null; // Returning null means "no issues"
-                    }),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // This calls all validators() inside the form for us.
-                      tryLogin();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(200, 40),
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              // decoration: const BoxDecoration(
+              //   image: DecorationImage(
+              //       image: AssetImage(""), fit: BoxFit.cover),
+              // ),
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextFormField(
+                          decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: 'Enter your email'),
+                          maxLength: 64,
+                          onChanged: (value) => email = value,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null; // Returning null means "no issues"
+                          }),
+                      TextFormField(
+                          decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: "Enter a password"),
+                          obscureText: true,
+                          onChanged: (value) => password = value,
+                          validator: (value) {
+                            if (value == null || value.length < 8) {
+                              return 'Your password must contain at least 8 characters.';
+                            }
+                            return null; // Returning null means "no issues"
+                          }),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            // This calls all validators() inside the form for us.
+                            tryLogin();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(200, 40),
+                          backgroundColor: Colors.purple,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: const Text('Login'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                //The right side is the widget you want to go to
+                                builder: (context) => const ForgotPassword()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(200, 40),
+                          backgroundColor: Colors.purple,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: const Text("Forgot Password"),
+                      ),
+                      if (error != null)
+                        Text(
+                          "Error: $error",
+                          style:
+                              TextStyle(color: Colors.red[800], fontSize: 12),
+                        )
+                    ],
                   ),
-                  child: const Text('Login'),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          //The right side is the widget you want to go to
-                          builder: (context) => const ForgotPassword()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(200, 40),
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: const Text("Forgot Password"),
-                ),
-                if (error != null)
-                  Text(
-                    "Error: $error",
-                    style: TextStyle(color: Colors.red[800], fontSize: 12),
-                  )
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
-  void tryLogin() async {
+  Future<void> tryLogin() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
@@ -209,7 +216,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Call setState to redraw the widget, which will display
       // the updated error text.
-      setState(() {});
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }
