@@ -80,7 +80,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
     String displayFile = '';
 
     Future<String> getCharURL(displayFile) async {
-      await Future.delayed(const Duration(seconds: 2));
       // here is where we will get the character URL from database
       final snap = await FirebaseFirestore.instance
           .collection('character')
@@ -147,9 +146,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
+
                       if (!snapshot.hasData) {
                         return const Text('Document does not exist');
                       }
@@ -1585,3 +1582,18 @@ Future openDialog(context) => showDialog(
         ],
       ),
     );
+
+class LoadingScreen extends StatelessWidget {
+  const LoadingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      extendBody: false,
+      body: Center(
+        child:
+            CircularProgressIndicator(), // or any other loading indicator widget
+      ),
+    );
+  }
+}
