@@ -12,7 +12,6 @@ import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 
 import 'character_reselect.dart';
-import 'signup.dart';
 
 void main() => runApp(const MyApp());
 
@@ -421,7 +420,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           // previous button used to see previous workouts
           // current button used to show the workouts the user just inputted whilst logged in for that day/time
           backgroundColor: Colors.purple,
-          selectedItemColor: Colors.black,
+          fixedColor: Colors.white,
           currentIndex: currindex,
           items: const [
             BottomNavigationBarItem(
@@ -1278,7 +1277,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                 );
               } else {
                 return const Center(
-                  child: Text('No current workouts selected'),
+                  child: Text(''),
                 );
               }
             },
