@@ -1,4 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
+//Mujuni Mutabiilwa
 
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'package:workoutpet/battle.dart';
 import 'package:workoutpet/main.dart';
 import 'package:workoutpet/personal.dart';
 
-import 'character_select.dart';
+import 'character_reselect.dart';
 
 void main() => runApp(const MyApp());
 
@@ -79,6 +80,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     String displayFile = '';
 
     Future<String> getCharURL(displayFile) async {
+      await Future.delayed(const Duration(seconds: 2));
       // here is where we will get the character URL from database
       final snap = await FirebaseFirestore.instance
           .collection('character')
@@ -95,18 +97,18 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
       final data = snap.data();
       if (snap.exists) {
-        if (xp <= 50) {
+        if (xp < 150) {
           // convert second snapshot to integer so we can determine which
           //character model level needs to be shown
           return data!['character'].toString();
-        } else if (xp >= 50 && xp <= 100) {
+        } else if (xp >= 150 && xp < 1000) {
           return data!['character2']
               .toString(); // here we convert it to a string so it works in model viewer
-        } else if (xp >= 100 && xp <= 250) {
+        } else if (xp >= 1000 && xp < 3000) {
           return data!['character3'].toString();
-        } else if (xp >= 250 && xp <= 420) {
+        } else if (xp >= 3000 && xp < 6000) {
           return data!['character4'].toString();
-        } else if (xp >= 420) {
+        } else if (xp >= 6000) {
           return data!['character5'].toString();
         } else {
           return data!['character'].toString();
@@ -122,68 +124,67 @@ class _WorkoutPageState extends State<WorkoutPage> {
             displayFile), //setting this as the future allows the data to be
         //loaded in without causing any errors
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            //assures the character loads in
-            if (snapshot.hasData && snapshot.data != null) {
-              String url = snapshot.data!;
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('points')
-                          .doc(authUser?.uid)
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
-                        if (!snapshot.hasData) {
-                          return const Text('Document does not exist');
-                        }
-                        Map<String, dynamic> data =
-                            snapshot.data!.data() as Map<String, dynamic>;
-                        return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Text(
-                                  'Points: ${data['points']}',
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.purple),
-                                ),
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          //assures the character loads in
+          else if (snapshot.hasData && snapshot.data != null) {
+            String url = snapshot.data!;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('points')
+                        .doc(authUser?.uid)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (!snapshot.hasData) {
+                        return const Text('Document does not exist');
+                      }
+                      Map<String, dynamic> data =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Points: ${data['points']}',
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purple),
                               ),
-                            ]);
-                      }),
-                  Expanded(
-                    child: SizedBox(
-                      width: 200,
-                      height: 400,
-                      child: ModelViewer(
-                        src: url,
-                      ),
-                    ),
-                  )
-                ],
-              );
-            } else {
-              return const Text('no data');
-            }
+                            ),
+                          ]);
+                    }),
+                SizedBox(
+                  width: 200,
+                  height: 400,
+                  child: ModelViewer(
+                    src: url,
+                  ),
+                ),
+              ],
+            );
           } else {
             return const Text('no data');
           }
         });
   }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,7 +218,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.list),
+              leading: const Icon(Icons.workspace_premium),
               title: const Text("Battle"),
               onTap: () {
                 Navigator.pop(
@@ -237,7 +238,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     context); //To close the drawer wwhen moving to the next page
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const CharacterSelect(),
+                    builder: (context) => const CharacterReselect(),
                   ),
                 );
               },
@@ -287,130 +288,128 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   height: double.infinity,
                   width: double.infinity,
                   color: Colors.white,
-                  child: Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextField(
-                                  controller: field5,
-                                  decoration: null,
-                                  style: const TextStyle(
-                                      color: Colors.transparent),
-                                  enabled: false),
-                              SizedBox(
-                                height: 60,
-                                width: 150,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: workoutButton,
-                                    onPressed: () {
-                                      final button = buttonName;
-                                      field5.text = button;
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const ArmPage();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text(buttonName,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
-                                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextField(
+                                controller: field5,
+                                decoration: null,
+                                style:
+                                    const TextStyle(color: Colors.transparent),
+                                enabled: false),
+                            SizedBox(
+                              height: 60,
+                              width: 150,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: workoutButton,
+                                  onPressed: () {
+                                    final button = buttonName;
+                                    field5.text = button;
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return const ArmPage();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Text(buttonName,
+                                      style:
+                                          const TextStyle(color: Colors.white)),
                                 ),
                               ),
-                              SizedBox(
-                                height: 60,
-                                width: 150,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: workoutButton,
-                                    onPressed: () {
-                                      final button = butt2Name;
-                                      field5.text = button;
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const LegPage();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text(butt2Name,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
-                                  ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              width: 150,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: workoutButton,
+                                  onPressed: () {
+                                    final button = butt2Name;
+                                    field5.text = button;
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return const LegPage();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Text(butt2Name,
+                                      style:
+                                          const TextStyle(color: Colors.white)),
                                 ),
                               ),
-                              SizedBox(
-                                height: 60,
-                                width: 150,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: workoutButton,
-                                    onPressed: () {
-                                      final button = butt3Name;
-                                      field5.text = button;
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const BackPage();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text(butt3Name,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
-                                  ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              width: 150,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: workoutButton,
+                                  onPressed: () {
+                                    final button = butt3Name;
+                                    field5.text = button;
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return const BackPage();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Text(butt3Name,
+                                      style:
+                                          const TextStyle(color: Colors.white)),
                                 ),
                               ),
-                              SizedBox(
-                                height: 60,
-                                width: 150,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: workoutButton,
-                                    onPressed: () {
-                                      final button = butt4Name;
-                                      field5.text = button;
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                            return const ChestPage();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Text(butt4Name,
-                                        style: const TextStyle(
-                                            color: Colors.white)),
-                                  ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              width: 150,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  style: workoutButton,
+                                  onPressed: () {
+                                    final button = butt4Name;
+                                    field5.text = button;
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return const ChestPage();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Text(butt4Name,
+                                      style:
+                                          const TextStyle(color: Colors.white)),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                            //where we will display the character model, based on user uid
-                            height: 600,
-                            width: 150,
-                            child: buildImage()),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                          //where we will display the character model, based on user uid
+                          height: 600,
+                          width: 150,
+                          child: buildImage()),
+                    ],
                   ),
                 )
               : currindex == 0
@@ -429,11 +428,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
               icon: Icon(Icons.arrow_back_outlined),
             ),
             BottomNavigationBarItem(
-              label: 'Information',
+              label: 'Home',
               icon: Icon(Icons.home),
             ),
             BottomNavigationBarItem(
-              label: 'current',
+              label: 'Current',
               icon: Icon(Icons.accessibility_new_rounded),
             )
           ],
@@ -483,6 +482,96 @@ class _ArmPageState extends State<ArmPage> {
         appBar: AppBar(
           title: const Center(child: Text('ARMS')),
           backgroundColor: Colors.purple,
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              // Drawer header telling which user is signed in
+              DrawerHeader(
+                decoration: const BoxDecoration(color: Colors.purple),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.home),
+                title: const Text("Home"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const WorkoutPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.workspace_premium),
+                title: const Text("Battle"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CharacterReselect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.list),
+                title: const Text("About"),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const DescriptionPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.login),
+                title: const Text("Signout"),
+                onTap: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: Center(
             child: Container(
@@ -577,6 +666,96 @@ class _LegPageState extends State<LegPage> {
         appBar: AppBar(
           title: const Center(child: Text('LEGS')),
           backgroundColor: Colors.purple,
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              // Drawer header telling which user is signed in
+              DrawerHeader(
+                decoration: const BoxDecoration(color: Colors.purple),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.home),
+                title: const Text("Home"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const WorkoutPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.workspace_premium),
+                title: const Text("Battle"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CharacterReselect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.list),
+                title: const Text("About"),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const DescriptionPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.login),
+                title: const Text("Signout"),
+                onTap: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: Center(
             child: Container(
@@ -673,6 +852,96 @@ class _BackPageState extends State<BackPage> {
         appBar: AppBar(
           title: const Center(child: Text('BACK')),
           backgroundColor: Colors.purple,
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              // Drawer header telling which user is signed in
+              DrawerHeader(
+                decoration: const BoxDecoration(color: Colors.purple),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.home),
+                title: const Text("Home"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const WorkoutPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.workspace_premium),
+                title: const Text("Battle"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CharacterReselect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.list),
+                title: const Text("About"),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const DescriptionPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.login),
+                title: const Text("Signout"),
+                onTap: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: Center(
             child: Container(
@@ -771,6 +1040,96 @@ class _ChestPageState extends State<ChestPage> {
           title: const Center(child: Text('CHEST')),
           backgroundColor: Colors.purple,
         ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              // Drawer header telling which user is signed in
+              DrawerHeader(
+                decoration: const BoxDecoration(color: Colors.purple),
+                child: Text(
+                  "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.home),
+                title: const Text("Home"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const WorkoutPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.workspace_premium),
+                title: const Text("Battle"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const UserStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.swap_horizontal_circle),
+                title: const Text("Change Character"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CharacterReselect(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_accessibility),
+                title: const Text("Change BMI"),
+                onTap: () {
+                  Navigator.pop(
+                      context); //To close the drawer wwhen moving to the next page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PersonalInfoPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.list),
+                title: const Text("About"),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const DescriptionPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.login),
+                title: const Text("Signout"),
+                onTap: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
         body: Center(
             child: Container(
           height: double.infinity,
@@ -843,7 +1202,6 @@ class CurrentWorkPage extends StatefulWidget {
   /// [@global]
   ///
   @override
-  // ignore: library_private_types_in_public_api
   _CurrentWorkPageState createState() => _CurrentWorkPageState();
 }
 
@@ -977,7 +1335,7 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
           if (!snapshot.hasData) {
             // Will prompt user that there's no data therefore no previous workouts
             return const Center(
-              child: Text('There are no previous workouts'),
+              child: Text(''),
             );
           }
           return ListView(
@@ -1015,11 +1373,7 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
                                         FirebaseFirestore.instance
                                             .collection('workout information')
                                             .doc(document.id)
-                                            .delete()
-                                            .whenComplete(() {
-                                          print('deleted successfully');
-                                        });
-                                        setState(() {});
+                                            .delete();
                                         Navigator.of(context).pop();
                                       }, //if user selects no, sends user back to current workout page
                                       child: const Text('YES'))
