@@ -80,16 +80,15 @@ class _WorkoutPageState extends State<WorkoutPage> {
     String displayFile = '';
 
     Future<String> getCharURL(displayFile) async {
-      await Future.delayed(const Duration(seconds: 2));
       // here is where we will get the character URL from database
       final snap = await FirebaseFirestore.instance
           .collection('character')
-          .doc(authUser?.uid)
+          .doc(authUser!.uid)
           .get();
 
       final DocumentSnapshot snap2 = await FirebaseFirestore.instance
           .collection('points')
-          .doc(authUser?.uid)
+          .doc(authUser!.uid)
           .get();
 
       //final data2 = snap2.data();
@@ -147,9 +146,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
+
                       if (!snapshot.hasData) {
                         return const Text('Document does not exist');
                       }
@@ -420,7 +417,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           // previous button used to see previous workouts
           // current button used to show the workouts the user just inputted whilst logged in for that day/time
           backgroundColor: Colors.purple,
-          selectedItemColor: Colors.black,
+          fixedColor: Colors.white,
           currentIndex: currindex,
           items: const [
             BottomNavigationBarItem(
@@ -1217,7 +1214,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
             //Calls into firebase to retrieve data from workout info document
             stream: FirebaseFirestore.instance
                 .collection('current workouts')
-                .where('user', isEqualTo: authUser!.uid)
+                .where('user', isEqualTo: authUser?.uid)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -1277,7 +1274,7 @@ class _CurrentWorkPageState extends State<CurrentWorkPage> {
                 );
               } else {
                 return const Center(
-                  child: Text('No current workouts selected'),
+                  child: Text(''),
                 );
               }
             },
@@ -1329,7 +1326,7 @@ class _PrevWorkPageState extends State<PrevWorkPage> {
         //Calls into firebase to retrieve data from workout info document
         stream: FirebaseFirestore.instance
             .collection('workout information')
-            .where('user', isEqualTo: authUser!.uid)
+            .where('user', isEqualTo: authUser?.uid)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -1440,20 +1437,14 @@ _submitInfo() async {
               field2.clear(),
               field3.clear(),
               field4.clear(),
-              field5.clear()
             });
   }
   if (authUser != null) {
     await FirebaseFirestore.instance
         .collection('current workouts')
         .add(workout)
-        .then((value) => {
-              field1.clear(),
-              field2.clear(),
-              field3.clear(),
-              field4.clear(),
-              field5.clear()
-            });
+        .then((value) =>
+            {field1.clear(), field2.clear(), field3.clear(), field4.clear()});
   }
 }
 
@@ -1591,3 +1582,18 @@ Future openDialog(context) => showDialog(
         ],
       ),
     );
+
+class LoadingScreen extends StatelessWidget {
+  const LoadingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      extendBody: false,
+      body: Center(
+        child:
+            CircularProgressIndicator(), // or any other loading indicator widget
+      ),
+    );
+  }
+}

@@ -6,6 +6,11 @@ import 'package:workoutpet/workout.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'About.dart';
+import 'battle.dart';
+import 'main.dart';
+import 'personal.dart';
+
 class CharacterReselect extends StatefulWidget {
   const CharacterReselect({super.key});
 
@@ -56,7 +61,98 @@ class _CharacterReselectState extends State<CharacterReselect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Character Select"),
+        title: const Text("Change Character"),
+        backgroundColor: Colors.purple,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // Drawer header telling which user is signed in
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.purple),
+              child: Text(
+                "Signed in as: ${FirebaseAuth.instance.currentUser?.email}",
+                style: const TextStyle(color: Colors.white, fontSize: 25),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text("Home"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const WorkoutPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.workspace_premium),
+              title: const Text("Battle"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const UserStatsScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.swap_horizontal_circle),
+              title: const Text("Change Character"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CharacterReselect(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings_accessibility),
+              title: const Text("Change BMI"),
+              onTap: () {
+                Navigator.pop(
+                    context); //To close the drawer wwhen moving to the next page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const PersonalInfoPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.list),
+              title: const Text("About"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const DescriptionPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text("Signout"),
+              onTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: Column(
@@ -82,14 +178,14 @@ class _CharacterReselectState extends State<CharacterReselect> {
             ),
             const SizedBox(height: 10),
             // build character
-            buildIndicator(),
+            buildIndicator2(),
 
             // button to go to next page
             const SizedBox(height: 20),
             ElevatedButton(
               //assign character to user
               onPressed: () {
-                _submitCharacter(
+                _submitCharacter2(
                     dislplayFile[activeIndex],
                     displayFile2[activeIndex],
                     displayFile3[activeIndex],
@@ -122,7 +218,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
       height: 20,
       width: 300,
       margin: const EdgeInsets.symmetric(horizontal: 10),
-      color: Colors.grey,
+      color: Colors.transparent,
       child: ModelViewer(
         src: displayFile,
         alt: "Character model",
@@ -134,7 +230,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
   }
 
 // Switching characters indicator
-  Widget buildIndicator() {
+  Widget buildIndicator2() {
     return AnimatedSmoothIndicator(
       activeIndex: activeIndex,
       count: dislplayFile.length,
@@ -143,7 +239,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
   }
 }
 
-_submitCharacter(String displayFile, String displayFile2, String displayFile3,
+_submitCharacter2(String displayFile, String displayFile2, String displayFile3,
     String displayFile4, String displayFile5) async {
   final authUser = FirebaseAuth.instance.currentUser;
   final character = <String, dynamic>{
