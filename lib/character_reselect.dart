@@ -56,7 +56,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Model Test"),
+        title: const Text("Character Select"),
       ),
       body: Center(
         child: Column(
@@ -125,7 +125,7 @@ class _CharacterReselectState extends State<CharacterReselect> {
       color: Colors.grey,
       child: ModelViewer(
         src: displayFile,
-        alt: "A 3D model of an astronaut",
+        alt: "Character model",
         ar: true,
         autoRotate: true,
         cameraControls: true,

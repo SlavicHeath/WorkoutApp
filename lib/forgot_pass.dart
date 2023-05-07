@@ -88,13 +88,21 @@ class _ForgotPassword extends State<ForgotPassword> {
                   }),
               const SizedBox(height: 16),
               ElevatedButton(
-                  child: const Text('Reset Password'),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // This calls all validators() inside the form for us.
-                      passwordReset();
-                    }
-                  }),
+                child: const Text('Reset Password'),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // This calls all validators() inside the form for us.
+                    passwordReset();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 40),
+                  backgroundColor: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
               if (error != null)
                 Text(
                   "Error: $error",
